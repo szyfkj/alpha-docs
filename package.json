@@ -48,5 +48,12 @@
   "engines": {
     "node": ">=20.0"
   },
-  "description": "Public developer documentation for the Alpha Cargo suite"
+  "description": "Public developer documentation for the Alpha Cargo suite",
+  "packageManager": "pnpm@10.28.0",
+  "pnpm": {
+    "ignoredBuiltDependencies": [
+      "@swc/core",
+      "core-js"
+    ]
+  }
 }
