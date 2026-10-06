@@ -19,17 +19,25 @@ terms exactly; don't invent a translation for a label the app already has.
 For the idea pipeline (szyfkj/alpha-ideas), which works unattended on the dev box, and for
 anyone who wants CI's verdict before pushing.
 
-1. **`npm ci`**, **`npm run typecheck`**, **`npm run build`**. The build renders every locale
+1. **`pnpm install --frozen-lockfile`**, **`pnpm typecheck`**, **`pnpm build`**. The build renders every locale
    and fails on broken links; the PR's `Build` check runs the build.
 2. **A failure is yours only if it doesn't also fail on `origin/main`.** Check before fixing or
    reporting it. The PR's CI result outranks a local one.
-3. **Look at every changed page**, in zh-Hans and, for the user guide, en: `npm run serve --
-   --port <free port>` after the build, then the page's URL (English under `/en/…`). Check that
+3. **Look at every changed page**, in zh-Hans and, for the user guide, en: `pnpm serve --port
+   <free port>` after the build, then the page's URL (English under `/en/…`). Check that
    links between the two guides are absolute site paths (`/tms/…`); the build can't catch a
    relative one that happens to resolve.
 4. Changing a zh-Hans user-guide page means changing its English twin under `i18n/en/` in the
    same PR.
 5. Whatever you couldn't verify goes in the PR under **Not verified**, with the reason.
+
+## pnpm only
+
+The version is pinned by `packageManager`; corepack provides it. Never run `npm install` or
+commit a `package-lock.json`. Import only packages declared in `package.json` (pnpm doesn't
+hoist). A new dependency with an install script goes in `pnpm.onlyBuiltDependencies`, or in
+`pnpm.ignoredBuiltDependencies` when the script isn't needed (as for `@swc/core`, whose binary
+comes from an optional platform package, and `core-js`).
 
 ## Branches
 

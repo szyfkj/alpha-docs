@@ -35,14 +35,14 @@ own — neither move changes a published URL.
 ## Local development
 
 ```bash
-npm install
-npm start                    # dev server with hot reload (zh-Hans)
-npm start -- --locale en     # dev server in English
-npm run build                # production build — fails on broken links
-npm run serve                # serve the production build
+pnpm install                 # pnpm only; corepack provides the pinned version
+pnpm start                   # dev server with hot reload (zh-Hans)
+pnpm start --locale en       # dev server in English
+pnpm build                   # production build — fails on broken links
+pnpm serve                   # serve the production build
 ```
 
-`npm run build` builds every locale and throws on broken links, so it is also
+`pnpm build` builds every locale and throws on broken links, so it is also
 the check that no cross-guide link has rotted.
 
 > Links between the two guides must be absolute site paths (`/tms/webhooks`).
