@@ -16,14 +16,17 @@ back to the Chinese pages.
 ```
 docs/                 TMS developer guide                     → /tms
 guide/                user guide, one folder per product
-  index.md              hub listing the three products        → /guide
+  index.md              hub listing every product             → /guide
   tms/                  authored                              → /guide/tms
-  wms/, voice/          stubs                                 → /guide/wms, /guide/voice
+  wms/, voice/,         stubs                                 → /guide/wms, /guide/voice,
+  liteimport/, video/                                           /guide/liteimport, /guide/video
 i18n/en/              English translations + theme strings     → /en/…
 sidebars.ts           developer guide sidebar
 sidebars-guide.ts     one sidebar per product guide
 TERMINOLOGY.md        zh/en glossary of product UI wording (not published)
 src/pages/index.tsx   Landing page
+src/components/       <Staging> (staging flags, see below)
+src/theme/            swizzles: MDXComponents, DocItem/Content (page banner)
 static/               CNAME, Postman collection + environment
 .github/workflows/    Pages deployment
 ```
@@ -55,6 +58,38 @@ Node 20+ is required.
 
 Every push to `main` builds and deploys. The custom domain is set by
 `static/CNAME`; do not delete that file.
+
+## Staging flags
+
+The apps ship in two steps: a merge to their `develop` branch goes to the staging
+environment, and a release (`develop` → `main`) takes it to production. Docs for a
+change are written when it reaches staging, flagged until it ships:
+
+- **Inside a page**, wrap the new or changed part in `<Staging>`. It needs no import,
+  and the blank lines around its Markdown body are required:
+
+  ```mdx
+  <Staging source="tms#205">
+
+  You can now set an account code when importing customers.
+
+  </Staging>
+  ```
+
+- **A whole new page** gets `staging: tms#205` in its front matter, which puts a
+  banner above it.
+
+`source` is `<app>#<pr>`: the app's key (`tms`, `wms`, `voice`, `wms-android`,
+`liteimport`, `video`) and the number of the merged pull request. When the release
+ships that PR, its blocks are unwrapped and its front matter key deleted. Use the
+same `source` in zh-Hans and in the English twin.
+
+When a change alters behaviour that is already live, keep the production text as it
+is and add a `<Staging>` block describing the new behaviour. The release replaces the
+old text with it. A reverted PR's blocks are deleted.
+
+These edits are normally made by the docs-sync run of the idea pipeline, which is
+filed automatically for every merge in the app repositories.
 
 ## Writing rules
 

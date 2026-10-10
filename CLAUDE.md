@@ -31,6 +31,22 @@ anyone who wants CI's verdict before pushing.
    same PR.
 5. Whatever you couldn't verify goes in the PR under **Not verified**, with the reason.
 
+## Staging flags
+
+Docs for a change merged to an app's `develop` branch describe behaviour that is on
+staging only. Flag it with `<Staging source="<app>#<pr>">` around the section, or
+`staging: <app>#<pr>` in a new page's front matter; README.md's **Staging flags** has
+the rules. In short:
+
+- A **staging** docs sync adds flags. A change to live behaviour keeps the production
+  text and adds a flagged block describing the new behaviour.
+- A **release** docs sync (develop → main) finds every flag whose `source` is one of
+  the released PRs, unwraps it, replaces the superseded production text and deletes
+  the front matter key. `grep -rn 'tms#205' guide i18n docs` finds them all.
+- A **hotfix** (merged straight to `main`) is documented as live, with no flag.
+- zh-Hans and English carry the same flags.
+- `source` uses the app key, never a repository name: this repository is public.
+
 ## pnpm only
 
 The version is pinned by `packageManager`; corepack provides it. Never run `npm install` or

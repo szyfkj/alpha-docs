@@ -396,5 +396,21 @@
   },
   "home.cta.api": {
     "message": "Start integrating"
+  },
+  "staging.block.title": {
+    "message": "Staging · not yet live",
+    "description": "Title of an inline block documenting behaviour that is on staging only"
+  },
+  "staging.block.note": {
+    "message": "This section describes behaviour that is on the staging environment only and hasn't been released to production yet.",
+    "description": "Note inside an inline staging block"
+  },
+  "staging.page.title": {
+    "message": "Staging · not yet live",
+    "description": "Title of the banner on a page that is on staging only"
+  },
+  "staging.page.note": {
+    "message": "This whole page describes behaviour that is on the staging environment only and hasn't been released to production yet.",
+    "description": "Note in the banner on a page that is on staging only"
   }
 }
