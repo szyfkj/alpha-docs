@@ -34,6 +34,18 @@ The **Packages** block lists every piece, each with its own package number.
 - an **Ext. No.** is shown when one exists;
 - **package photos** uploaded by the driver appear here.
 
+<Staging source="tms#208">
+
+In each package's **Products** list, a product that carries custom data (an HS code,
+country of origin or batch number for customs, for example) gets a small box underneath
+listing it as name / value rows, read-only. After 3 rows the rest collapse: click
+**Show all (n)** to expand and **Show less** to fold them again. The data comes from the
+integration that created the waybill (see the developer guide's
+[Waybills API](/tms/waybills)) and can't be edited on the page; products without it
+show no box.
+
+</Staging>
+
 ### Sub-waybills
 
 When a consignment travels in legs, the system generates a **sub-waybill** per leg. The
