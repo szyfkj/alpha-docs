@@ -75,6 +75,27 @@ POST /api/waybills
 
 `productList` 每项：`sku`、`name` 必填，`quantity`、`weight`、`length`、`width`、`height` 可选。
 
+<Staging source="tms#208">
+
+`productList` 每项还可以带一个可选的 `metadata` 对象，存放这件产品的自定义信息，比如报关用的生产资料：
+
+```json
+{
+  "sku": "SKU-001",
+  "name": "Wireless Mouse",
+  "quantity": 2,
+  "metadata": { "hsCode": "8471.60", "origin": "CN", "manufacturer": "Example Electronics Ltd" }
+}
+```
+
+- 任意 JSON 对象，按 UTF-8 编码的 JSON 计不超过 8 KB。超过 8 KB 或不是对象（比如字符串），返回 `422` 参数校验失败。
+- [详情](#详情)接口在 `packages[].products[].metadata` 里原样返回；没传的产品返回 `null`。
+- 用 `overwrite=overwrite` 重新推送同一张单时，同一包裹里 `sku` 相同的产品如果**没传** `metadata`，保留原来的值；传 `null` 则清空。
+- 新增包裹接口（`POST /api/waybills/{waybillNo}/packages`）的 `parcel.productList` 同样接受 `metadata`。
+- TMS 后台的运单详情页会把它按“名称 / 值”逐行显示出来，只读，不能在页面上改。
+
+</Staging>
+
 ### 常用可选字段
 
 | 字段 | 类型 | 说明 |
