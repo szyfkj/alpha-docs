@@ -27,6 +27,19 @@ missed scan, or a subcontractor who just phones in an update. Then you add one b
 
 Every ticked waybill gets the same event.
 
+<Staging source="tms#188">
+
+**Photos upload after the event is saved.** When you click **Add Event**, the event is saved
+first and the photos go up after it. Each photo is shrunk to 1600 px on its longest side
+(JPEG) before it uploads, so large photos get through too.
+
+If the photos don't make it, the event is still saved and the message says "Event saved, but
+the photos didn't upload. Add them again from the event's POD section." Open the waybill's
+details, find the event in the [tracking timeline](./detail#the-tracking-timeline) and add the
+photos again under it. If that fails too, you'll see **Photos Not Uploaded**; just try again.
+
+</Staging>
+
 ## Watch out
 
 - **Use the real time.** The customer's tracking is ordered by it; putting "now" on a
