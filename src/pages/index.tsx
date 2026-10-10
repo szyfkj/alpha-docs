@@ -16,12 +16,10 @@ type Guide = {
   products: { name: string; ready: boolean }[];
 };
 
-// Both guides list all three products: what differs is which are written yet.
-const PRODUCTS = (tms: boolean, wms: boolean, voice: boolean) => [
-  { name: 'TMS', ready: tms },
-  { name: 'WMS', ready: wms },
-  { name: 'Voice', ready: voice },
-];
+// Both guides list every product: what differs is which are written yet.
+const PRODUCT_NAMES = ['TMS', 'WMS', 'Voice', 'Liteimport', 'Video'];
+const PRODUCTS = (...ready: string[]) =>
+  PRODUCT_NAMES.map((name) => ({ name, ready: ready.includes(name) }));
 
 function useGuides(): Guide[] {
   return [
@@ -36,7 +34,7 @@ function useGuides(): Guide[] {
         message: '录单、排车、扫码、对账——按菜单逐项说明怎么操作。',
       }),
       to: '/guide/',
-      products: PRODUCTS(true, false, false),
+      products: PRODUCTS('TMS'),
     },
     {
       title: translate({ id: 'home.guide.dev.title', message: '开发者指南' }),
@@ -49,7 +47,7 @@ function useGuides(): Guide[] {
         message: '签名鉴权、运单接口、地址解析、装载规划与事件推送。',
       }),
       to: '/tms/',
-      products: PRODUCTS(true, false, false),
+      products: PRODUCTS('TMS'),
     },
   ];
 }

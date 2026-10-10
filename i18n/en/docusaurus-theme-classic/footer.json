@@ -38,5 +38,13 @@
   "link.item.label.Alpha Cargo TMS": {
     "message": "Alpha Cargo TMS",
     "description": "The label of footer link with label=Alpha Cargo TMS linking to /"
+  },
+  "link.item.label.Liteimport 跨境代采": {
+    "message": "Liteimport Cross-border Purchasing",
+    "description": "The label of footer link with label=Liteimport 跨境代采 linking to /guide/liteimport/"
+  },
+  "link.item.label.Video 短视频": {
+    "message": "Video",
+    "description": "The label of footer link with label=Video 短视频 linking to /guide/video/"
   }
 }

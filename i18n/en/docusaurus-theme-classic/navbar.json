@@ -30,5 +30,13 @@
   "item.label.Voice 语音": {
     "message": "Voice",
     "description": "Navbar item with label Voice 语音"
+  },
+  "item.label.Liteimport 跨境代采": {
+    "message": "Liteimport Cross-border Purchasing",
+    "description": "Navbar item with label Liteimport 跨境代采"
+  },
+  "item.label.Video 短视频": {
+    "message": "Video",
+    "description": "Navbar item with label Video 短视频"
   }
 }

@@ -56,6 +56,19 @@ flowchart LR
 | Numbers | Digits only, no units |
 | Country | Only supported countries; a bad value is flagged in validation |
 
+<Staging source="tms#205">
+
+**The first column (sender account) takes either code:**
+
+- the sender account's **code** (e.g. `ABCDE`), as before;
+- the **account code** you gave that account yourself (e.g. `EK-0001`), in **any letter case**, so `ek-0001` works too.
+
+If a value is one account's code and another account's account code, the **code** wins.
+The header doesn't change; the sample CSV's guidance line now names both. A sample CSV
+downloaded in the Chinese or Thai UI imports as is, header untouched.
+
+</Staging>
+
 ## Validation and results
 
 The whole sheet is validated first. Problems are listed **per row**, for example:

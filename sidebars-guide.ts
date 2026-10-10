@@ -105,6 +105,10 @@ const sidebars: SidebarsConfig = {
   guideWmsSidebar: ['wms/index'],
 
   guideVoiceSidebar: ['voice/index'],
+
+  guideLiteimportSidebar: ['liteimport/index'],
+
+  guideVideoSidebar: ['video/index'],
 };
 
 export default sidebars;

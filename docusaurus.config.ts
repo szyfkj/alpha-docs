@@ -15,7 +15,7 @@ const config: Config = {
   baseUrl: '/',
   trailingSlash: false,
 
-  organizationName: 'phoenixluo',
+  organizationName: 'szyfkj',
   projectName: 'alpha-docs',
 
   // A broken link is a broken promise to an integrator — fail the build.
@@ -67,7 +67,7 @@ const config: Config = {
     [
       '@docusaurus/plugin-content-docs',
       {
-        // The user guide. One instance holding all three products, each in
+        // The user guide. One instance holding every product, each in
         // its own folder, so /guide/wms can be split out into an instance of
         // its own later without moving a single published URL.
         id: 'guide',
@@ -127,6 +127,18 @@ const config: Config = {
               sidebarId: 'guideVoiceSidebar',
               label: 'Voice 语音',
             },
+            {
+              type: 'docSidebar',
+              docsPluginId: 'guide',
+              sidebarId: 'guideLiteimportSidebar',
+              label: 'Liteimport 跨境代采',
+            },
+            {
+              type: 'docSidebar',
+              docsPluginId: 'guide',
+              sidebarId: 'guideVideoSidebar',
+              label: 'Video 短视频',
+            },
           ],
         },
         {
@@ -155,6 +167,8 @@ const config: Config = {
             { label: 'TMS 运输管理', to: '/guide/tms/' },
             { label: 'WMS 仓储管理', to: '/guide/wms/' },
             { label: 'Voice 语音', to: '/guide/voice/' },
+            { label: 'Liteimport 跨境代采', to: '/guide/liteimport/' },
+            { label: 'Video 短视频', to: '/guide/video/' },
           ],
         },
         {
