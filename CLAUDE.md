@@ -47,13 +47,22 @@ the rules. In short:
 - zh-Hans and English carry the same flags.
 - `source` uses the app key, never a repository name: this repository is public.
 
+## API reference
+
+`/tms/api` is generated at build time from `openapi/tms.json`, a verbatim copy of the OpenAPI
+spec the TMS generates (the docs-sync stage in the idea pipeline says where it lives). Never
+edit it by hand, and don't add `<Staging>` flags to it: the reference describes production,
+so it's copied only on production docs syncs (a release or hotfix), from the merge commit on
+`main`. Staging API changes are flagged in the guide pages as usual.
+
 ## pnpm only
 
 The version is pinned by `packageManager`; corepack provides it. Never run `npm install` or
 commit a `package-lock.json`. Import only packages declared in `package.json` (pnpm doesn't
 hoist). A new dependency with an install script goes in `pnpm.onlyBuiltDependencies`, or in
 `pnpm.ignoredBuiltDependencies` when the script isn't needed (as for `@swc/core`, whose binary
-comes from an optional platform package, and `core-js`).
+comes from an optional platform package, `core-js`, `@parcel/watcher` (same) and
+`postman-code-generators`, whose code samples work without it).
 
 ## Branches
 
