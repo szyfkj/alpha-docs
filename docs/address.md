@@ -8,7 +8,7 @@ sidebar_position: 4
 
 把一行自由文本、一个地图链接或一对经纬度，变成结构化地址 + 坐标。
 
-这个接口**不受套餐限制**，两个场景都会用到：
+这个接口**不受套餐限制**，但仍需鉴权（签名或会话，见[组织鉴权](./authentication.md)）。两个场景都会用到：
 
 1. **建单前** —— 规范化收件地址，拿到标准的省/市/区/邮编再填进运单
 2. **报价前** —— 拿到经纬度。报价接口强制要求坐标且**永不代你做地理编码**，详见[配送规划与跟踪](./delivery.md#4b-报价--支付--下单--跟踪)
@@ -53,13 +53,13 @@ POST /api/address/resolve
   "lat": 13.7563,
   "lng": 100.5018,
   "country": "TH",
-  "province": "Bangkok",
-  "district": "Pathum Wan",
-  "subdistrict": "Lumphini",
+  "province": "กรุงเทพมหานคร",
+  "district": "เขตปทุมวัน",
+  "subdistrict": "แขวงปทุมวัน",
   "postal_code": "10330",
-  "formatted_address": "Rama I Rd, Pathum Wan, Bangkok 10330, Thailand",
-  "place_name": "CentralWorld",
-  "confidence": 0.92,
+  "formatted_address": "ถนน พระรามที่ 1 แขวงปทุมวัน เขตปทุมวัน กรุงเทพมหานคร 10330 ไทย",
+  "place_name": null,
+  "confidence": 0.95,
   "source": "google_geocoding"
 }
 ```
@@ -67,14 +67,27 @@ POST /api/address/resolve
 | 字段 | 说明 |
 |---|---|
 | `confidence` | 0–1 的匹配可信度 |
-| `source` | 命中的数据源：`google_geocoding`、`google_places`、`longdo`、`postal_centroid`、`province_centroid` |
+| `source` | 命中的数据源：`google_geocoding`、`google_places`、`postal_centroid`、`province_centroid` |
+| `place_name` | 地点名称，只有 `source` 为 `google_places`（按地标/商场等检索命中）时才有值，其余为 `null` |
+
+:::note 返回的是当地语言
+省/区/街道等行政区名称和 `formatted_address` 按 `country` 对应的当地语言返回：`TH` 返回泰文，`VN` 返回越南文，`CN` 返回中文，其他国家返回英文；不传 `country` 时按泰国处理。请求里写英文地址也一样。例外是两种中心点兜底结果（`postal_centroid`、`province_centroid`）：它们的 `province` 一般是英文省名。
+:::
 
 ## 务必判断 `confidence`
 
 :::danger 解析器总会返回点什么
 这个接口采用逐级兜底策略：精确地理编码 → 地点检索 → 仅按行政区匹配 → 邮编中心点 → **省中心点**。最后一级的 `confidence` 只有 `0.32`，坐标落在省会城市中心，和真实地址可能差上百公里。
 
-所以它**几乎不会返回 404** —— 判断"这个结果能不能用"的责任在你这边。
+所以只要能匹配到邮编或省份，它就会返回结果 —— 判断"这个结果能不能用"的责任在你这边。
+:::
+
+:::note 404 也是正常结果
+以下情况会返回 `404`，请当作"解析不到"处理，而不是系统故障：
+
+- 自由文本：地理编码和地点检索都没有足够可信（`confidence` ≥ 0.68）的结果，文本里也识别不出可用的邮编或省份
+- 地图链接：链接里取不到坐标，或坐标反查不到地址
+- 经纬度：该坐标反查不到地址
 :::
 
 建议的处理策略：
@@ -98,7 +111,9 @@ if (from.confidence < 0.68 || from.source === 'province_centroid') {
 | HTTP | 说明 |
 |---|---|
 | `400` | 三种输入模式一个都没给，或经纬度超出范围（纬度 ±90、经度 ±180） |
-| `404` | 确实解析不出任何结果 |
+| `401` | 签名缺失或无效，见[鉴权排查](./authentication.md#排查) |
+| `404` | 解析不出任何结果，见上文 |
+| `500` | 地理编码服务暂时出错，可稍后重试 |
 
 ## 行政区查询
 
@@ -109,20 +124,33 @@ GET /api/regions?country=TH
 GET /api/regions?country=TH&postal_code=10330
 ```
 
-`country` 必填，否则返回 `400`。返回三级嵌套结构：
+`country` 必填，否则返回 `400`。它按**大写 ISO-2 国家码精确匹配**：`th` 或不支持的国家不会报错，而是返回空列表 `{"provinces": []}`。传 `postal_code` 时只返回该邮编下的行政区。
+
+返回三级嵌套结构（直接是这个对象，没有 `data` 包裹）：
 
 ```json
 {
   "provinces": [
     {
-      "name": "Bangkok",
+      "name": "กรุงเทพมหานคร",
       "cities": [
-        { "name": "Bangkok", "districts": [{ "name": "Pathum Wan", "code": "102801" }] }
+        { "name": "เขต ปทุมวัน", "districts": [{ "name": "ปทุมวัน", "code": "10330" }] }
       ]
     }
   ]
 }
 ```
+
+注意键名和实际层级的对应关系：
+
+| 键 | 实际层级 |
+|---|---|
+| `provinces[]` | 省 |
+| `provinces[].cities[]` | 区/县（泰国的 อำเภอ / เขต） |
+| `provinces[].cities[].districts[]` | 街道/乡（泰国的 ตำบล / แขวง） |
+| `districts[].code` | 该街道的**邮编**，不是行政区划代码。多个街道可能共用一个邮编 |
+
+名称都是当地语言（泰国为泰文）。
 
 查询支持的国家列表：
 
@@ -130,4 +158,10 @@ GET /api/regions?country=TH&postal_code=10330
 GET /api/regions/countries
 ```
 
-这两个接口同样不受套餐限制。
+返回有行政区数据的国家码列表：
+
+```json
+{ "data": ["TH", "VN"] }
+```
+
+这两个接口同样不受套餐限制，但同样需要鉴权，未通过返回 `401`。
