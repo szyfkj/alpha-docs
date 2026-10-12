@@ -27,6 +27,20 @@ POST /api/address/resolve
 | 地图链接 | `url` (string) | Google Maps 分享链接或短链 |
 | 反查 | `lat` + `lng` (number) | 已有坐标，反查结构化地址 |
 
+<Staging source="tms#220">
+
+`url` 只接受 Google Maps 链接，其他链接直接返回 `400`，不会被访问。认可的形式：
+
+- `maps.app.goo.gl/…`、`goo.gl/maps/…` 短链
+- `maps.google.<域名后缀>/…`
+- `www.google.<域名后缀>/maps/…`、`google.<域名后缀>/maps/…`
+
+`<域名后缀>` 可以是 `com`、两位国家后缀（如 `de`），或 `co.xx`、`com.xx` 形式（如 `co.th`、`com.hk`）。`http://` 链接按 `https://` 处理；带端口号或用户名密码的链接不接受。
+
+短链的跳转只在上述地址之间跟随，最多 5 次。跳到其他页面（例如部分地区先跳到的 Google 同意页）时解析不出坐标，返回 `404`；这时改传链接里的经纬度，或直接传地址文本。
+
+</Staging>
+
 可选字段：
 
 | 字段 | 类型 | 说明 |
@@ -114,6 +128,12 @@ if (from.confidence < 0.68 || from.source === 'province_centroid') {
 | `401` | 签名缺失或无效，见[鉴权排查](./authentication.md#排查) |
 | `404` | 解析不出任何结果，见上文 |
 | `500` | 地理编码服务暂时出错，可稍后重试 |
+
+<Staging source="tms#220">
+
+`400` 还包括：`url` 不是 Google Maps 链接（见上文“地图链接”的认可形式），返回 `{ "error": "url must be a Google Maps link" }`。此前这类链接会先被尝试解析，失败时返回 `404`。
+
+</Staging>
 
 ## 行政区查询
 
