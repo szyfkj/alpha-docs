@@ -343,6 +343,27 @@ GET /api/quotes/{id}
 
 `provider` 可能是 `lalamove`、`deliveree`、`internal`（自有车队）、`subcontractor`（分包给下游）或 `null`。
 
+<Staging source="tms#221">
+
+`GET /api/quotes/{id}` 的响应**不再包含 `provider`**，与创建报价（`POST /api/quotes`）的响应一致：由谁承运不对客户公开。如果你的页面展示了承运方，请改为在没有这个字段时不显示。
+
+`snapshot` 是报价时的请求和价格，只包含下面这些字段（报价里没有的字段不会出现）：
+
+| 字段 | 含义 |
+|---|---|
+| `request_id` | 报价时传入的 `request_id` |
+| `pickup`、`delivery` | 报价时的取货地址和送货地址（注意：这里的 `delivery` 是地址，不是顶层表示运单的 `delivery` 字段） |
+| `items` | 报价时的货物 |
+| `addon_keys` | 请求的增值服务 |
+| `addons` | 每项增值服务的价格，`{ key, amount }` |
+| `base_amount` | 运费 |
+| `is_composition` | 是否为多车组合 |
+| `composition` | 多车组合时每台车一条：`{ vehicleType, cost, items }`，`cost` 是这台车的运费 |
+
+不要依赖这张表之外的字段。
+
+</Staging>
+
 ### 第 3 步：查可用支付方式
 
 渲染收银台之前调它，不要硬编码支付方式列表：
