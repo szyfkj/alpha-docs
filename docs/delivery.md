@@ -30,7 +30,7 @@ sidebar_position: 5
 
 | 参数 | 含义 | 怎么获取 |
 |---|---|---|
-| `origin_unit_id` | 发车网点 | `GET /api/organization-units` |
+| `origin_unit_id` | 发车网点 | `GET /api/organization-units`（只列出已填写地址的网点） |
 | `service_id` | 本次跑车用的整车服务 | **后台复制** |
 | `service_area_id` | 服务区域 | **后台复制** |
 | `vehicle_type_id` | 车型 | **后台复制** |
@@ -54,6 +54,17 @@ POST /api/load-planning/fit-check
 
 `vehicle_type_id` 和 `delivery_id` 至少给一个。这一步**不创建任何数据**，纯试算，用来回答"这批货一辆这种车装不装得下"。
 
+传 `delivery_id` 时，会把这趟配送已有的货一起算进去，车型默认用该配送的车型。`waybill_ids` 最多 500 个 UUID，不存在或不属于你组织的 ID 会被忽略。
+
+返回的主要字段：
+
+| 字段 | 说明 |
+|---|---|
+| `status` | `fits`（全部装下）、`partial`（只装下一部分）、`none`（一件都装不下）、`unusable`（装箱引擎无法评估这批货）、`no_cargo`（没有任何带尺寸的包裹可算） |
+| `metrics` | 装载指标：`total_units` / `loaded_units` / `unplaced_units`（件数）、`volume_util` / `weight_util`（0–1 的容积 / 载重利用率）等。`no_cargo` 时为 `null` |
+| `cargo` | 参与试算的货物总量：`units`、`weight_kg`、`volume_m3` |
+| `problems` | 没法参与计算的包裹，每项带 `waybill_no`、`package_no` 和 `reason`（`missing_dimensions` 缺尺寸、`missing_weight` 缺重量、`suspect_units` 尺寸疑似按米填写） |
+
 ### 第 2 步：让系统给出分车方案
 
 ```http
@@ -72,10 +83,10 @@ POST /api/load-planning/split
 
 | 字段 | 说明 |
 |---|---|
-| `waybill_ids` | 要排的运单 |
+| `waybill_ids` | 要排的运单 UUID，最多 500 个。不存在或不属于你组织的 ID 会被忽略 |
 | `vehicle_type_ids` | 可用车型，最多 10 种 |
 | `objective` | `fewest_vehicles`（默认，车次最少）或 `smallest_vehicles`（车型最小） |
-| `max_vehicles` | 最多用几台车 |
+| `max_vehicles` | 最多用几台车，不超过 20 |
 | `keep_recipient_together` | 同一收件人的货尽量装同一台车 |
 
 返回按车型分好的组。**这一步仍然什么都不创建**，你可以拿着方案给调度员确认，或者改一改再提交。
@@ -99,7 +110,7 @@ POST /api/load-planning/split
 }
 ```
 
-**每个 group 创建一趟配送**，并自动计算装载方案。返回：
+**每个 group 创建一趟配送**（最多 20 个 group），并自动计算装载方案。返回：
 
 ```json
 {
@@ -115,14 +126,18 @@ POST /api/load-planning/split
 `accept` 不会盲信你提交的分组，会重新检查：同一张运单不能出现在两个组里、运单不能已经被其他配送占用、车型必须仍然存在。中途失败时已创建的配送会被自动回滚，不会留下半截数据。
 :::
 
-常见错误：
+常见错误（装载规划几个接口通用）：
 
-| `error` | 含义 |
-|---|---|
-| `invalid_groups` | 分组为空，或同一运单出现在多个组 |
-| `waybills_assigned` | 有运单已经被其他配送占用了，刷新后重新排 |
-| `no_vehicle_type` | 车型不存在 |
-| `create_failed` | 创建失败，已回滚 |
+| `error` | HTTP | 含义 |
+|---|---|---|
+| `invalid_json` | 400 | 请求体不是合法 JSON |
+| `validation_failed` | 400 | 参数校验失败（如 ID 不是 UUID、超出数量上限），`details` 里有具体字段 |
+| `invalid_groups` | 422 | 分组为空，或同一运单出现在多个组 |
+| `waybills_assigned` | 409 | 有运单已经被其他配送占用了，刷新后重新排 |
+| `no_vehicle_type` | 422 | 车型不存在 |
+| `no_cargo` | 422 | 这些运单里没有任何带尺寸的包裹可以排，`problems` 列出缺数据的包裹（试算接口不报错，而是返回 `status: "no_cargo"`） |
+| `load_planning_unavailable` | 503 | 装箱引擎暂时不可用，按 `Retry-After` 响应头指示的秒数重试 |
+| `create_failed` | 500 | 创建失败，已回滚 |
 
 ### 第 4 步：查看装载方案
 
@@ -131,6 +146,13 @@ GET /api/load-planning/deliveries/{id}/plan
 ```
 
 `{id}` 是上一步返回的配送 `id`。
+
+| 字段 | 说明 |
+|---|---|
+| `plan` | 当前的装载方案，从没算过时为 `null` |
+| `freshness` | `fresh`（方案与配送当前的货和车型一致）、`stale`（之后货或车型变过，方案已过期）、`missing`（还没有方案） |
+| `staleReason` | `stale` 时的原因，如 `inputs_changed`、`no_vehicle_type`；否则为 `null` |
+| `problems` | 没法参与计算的包裹，格式同试算接口 |
 
 ### 派车
 
@@ -262,10 +284,12 @@ POST /api/quotes
 | `error` | HTTP | 含义 |
 |---|---|---|
 | `missing_required_field` | 400 | 参数校验失败，`detail` 里有具体字段 |
+| `forbidden` | 403 | 带了 `X-Sender-Account-Id`，但这个客户账号不属于你的组织 |
 | `unsupported_route` | 422 | 这条线路没有配置可用服务 |
 | `no_vehicle_fits` | 422 | 没有车（也没有多车组合）装得下，`detail` 说明原因 |
 | `unsupported_addon` | 422 | 请求了不支持的增值服务 |
 | `load_planning_unavailable` | 503 | 装箱引擎暂时不可用，按 `Retry-After` 响应头指示的秒数重试 |
+| — | 500 | 服务端内部错误，可稍后重试 |
 
 错误响应形如：
 
@@ -296,7 +320,10 @@ GET /api/quotes/{id}
   "expires_at": "2026-09-23T10:30:00Z",
   "estimated_total": 4500.00,
   "currency": "THB",
-  "breakdown": {},
+  "breakdown": [
+    { "kind": "base", "amount": 4200.00 },
+    { "kind": "addon", "key": "tail_lift", "amount": 300.00 }
+  ],
   "snapshot": {},
   "provider": "lalamove",
   "delivery": null,
@@ -305,12 +332,14 @@ GET /api/quotes/{id}
 ```
 
 :::caution 读取无主报价会"认领"它
-第 1 步不带 `X-Sender-Account-Id` 报出来的价是无主的。**谁第一个读它，它就归谁**（前提是仍然 `active` 且未过期）。之后只有这个客户账号能查看、支付、取消它。
+第 1 步不带 `X-Sender-Account-Id` 报出来的价是无主的。**谁第一个读它，它就归谁**（前提是仍然 `active` 且未过期）。`GET /api/quotes/{id}` 和 `GET /api/quotes/{id}/payment-methods` 都算"读"。之后只有这个客户账号能查看、支付、取消它。
 
-支付和取消**不会**认领 —— 必须先读一次。
+支付和取消**不会**认领 —— 对还没被认领的报价直接支付或取消会返回 `403 {"error":"forbidden"}`，必须先读一次。
 
 不属于你的报价一律返回 `404 {"error":"not_found_or_forbidden"}`。
 :::
+
+`breakdown` 与报价响应里的格式相同：每项 `{ kind, key?, amount }`，`kind` 为 `base`（运费，多车组合时每台车一条）或 `addon`（增值服务，带 `key`）。
 
 `provider` 可能是 `lalamove`、`deliveree`、`internal`（自有车队）、`subcontractor`（分包给下游）或 `null`。
 
@@ -389,9 +418,11 @@ POST /api/quotes/{id}/pay
 
 | `error` | HTTP | 含义 |
 |---|---|---|
-| `forbidden` | 403 | 这个报价不属于该客户 |
+| （说明文字） | 400 | `type` 不是 `qr`、`app`、`bank_transfer`、`wallet` 之一 |
+| `forbidden` | 403 | 这个报价不属于该客户，或还没被认领 |
 | `not_found` | 404 | 报价或订单不存在 |
 | `payment_method_not_allowed` | 409 | 该支付方式不被允许，`allowed` 字段列出可用的 |
+| `no_bank_account_available` | 409 | 银行转账：当前没有能收这笔款的收款账户，请换一种支付方式 |
 | `not_payable` | 409 | 报价/订单当前状态不可支付（已过期、已支付等） |
 | `insufficient_balance` | 409 | 钱包余额不足 |
 | `flashpay_not_configured` | 503 | 组织未配置支付网关 |
@@ -409,7 +440,7 @@ POST /api/quotes/{id}/cancel
 - `{"status":"quote_canceled"}` —— 取消的是尚未支付的报价
 - `{"status":"order_canceled"}` —— 已生成待付款订单，取消的是订单
 
-已是终态时返回 `409 {"error":"already_terminal","status":"..."}`。
+已是终态时返回 `409 {"error":"already_terminal","status":"..."}`。`status` 是当前状态：取消报价时是报价状态（如 `canceled`、`expired`），取消订单时是订单的付款状态（如 `paid`、`canceled`）。
 
 ### 第 6 步：跟踪订单
 
@@ -453,11 +484,11 @@ GET /api/orders/{id}/tracking
 }
 ```
 
-- `provider` 是 `lalamove`、`deliveree` 或 `internal`。自有车队时 `external_order_id` 是空字符串，且 `vehicle`、`current_location`、`stops`、ETA 等字段会是空值。
+- `provider` 是 `lalamove`、`deliveree` 或 `internal`。自有车队时 `external_order_id` 是空字符串，`stops` 是空数组 `[]`，`vehicle`、`current_location`、两个 ETA 和 `pod` 都是 `null`，只有 `status` 和 `driver`（还没派司机时为 `null`）有内容。
 - `stops[].status`：`pending`、`arrived`、`completed`、`failed`。
 - **跟踪状态** `status`：`pending`、`assigning_driver`、`driver_assigned`、`picked_up`、`in_transit`、`delivered`、`canceled`、`failed`。注意这里是美式拼写 `canceled`（单 l）。
 
-其他返回：`403 {"error":"forbidden"}`、`404 {"error":"not_found"}`。
+其他返回：`403 {"error":"forbidden"}`（订单不属于该客户，或不是通过报价下的单 —— 只有报价生成的订单能用这个接口跟踪）、`404 {"error":"not_found"}`。
 
 :::note 轮询建议
 服务端对结果有 5 秒缓存，所以比 5 秒更密的轮询没有意义。建议**每 10 秒轮询一次**，直到状态变成 `delivered`、`canceled` 或 `failed`。
