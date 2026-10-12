@@ -515,6 +515,29 @@ GET /api/orders/{id}/tracking
 服务端对结果有 5 秒缓存，所以比 5 秒更密的轮询没有意义。建议**每 10 秒轮询一次**，直到状态变成 `delivered`、`canceled` 或 `failed`。
 :::
 
+<Staging source="tms#223">
+
+### ID 格式不对、服务端出错时
+
+报价和订单接口路径里的 `{id}` 是 UUID。传入格式不对的 `{id}`（如 `/api/quotes/abc`）时，当作不存在处理，返回该接口原有的 404：
+
+| 接口 | 返回 |
+|---|---|
+| `GET /api/quotes/{id}`、`GET /api/quotes/{id}/payment-methods` | `404 {"error":"not_found_or_forbidden"}` |
+| `POST /api/quotes/{id}/pay`、`POST /api/quotes/{id}/cancel`、`GET /api/orders/{id}/tracking` | `404 {"error":"not_found"}` |
+
+身份校验仍然在前：签名不对、或 `X-Sender-Account-Id` 不属于你的组织时，先返回 401 / 403。
+
+下面三个接口出现服务端内部错误时，返回带错误码的 JSON，可稍后重试：
+
+| 接口 | 返回 |
+|---|---|
+| `GET /api/quotes/{id}` | `500 {"error":"get_failed"}` |
+| `POST /api/quotes/{id}/cancel` | `500 {"error":"cancel_failed"}` |
+| `GET /api/orders/{id}/tracking` | `500 {"error":"tracking_failed"}`（包括承运方接口出错） |
+
+</Staging>
+
 ### 报价状态
 
 `active`、`accepted`（已支付下单）、`canceled`、`expired`
