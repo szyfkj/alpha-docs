@@ -12,7 +12,7 @@
     "serve": "docusaurus serve",
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
-    "typecheck": "tsc",
+    "typecheck": "pnpm gen-api && tsc",
     "gen-api": "docusaurus clean-api-docs all && docusaurus gen-api-docs all"
   },
   "dependencies": {
@@ -59,8 +59,10 @@
   "packageManager": "pnpm@10.28.0",
   "pnpm": {
     "ignoredBuiltDependencies": [
+      "@parcel/watcher",
       "@swc/core",
-      "core-js"
+      "core-js",
+      "postman-code-generators"
     ]
   }
 }

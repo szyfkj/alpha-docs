@@ -74,8 +74,8 @@ const config: Config = {
         id: 'openapi',
         docsPluginId: 'classic',
         config: {
-          // openapi/tms.json is the TMS repo's docs/openapi.json, generated
-          // from the Zod schemas the routes validate with. Never edit it here.
+          // openapi/tms.json is copied verbatim from the TMS, which generates
+          // it. Never edit it here.
           tms: {
             specPath: 'openapi/tms.json',
             outputDir: 'docs/api',
