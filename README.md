@@ -15,6 +15,8 @@ back to the Chinese pages.
 
 ```
 docs/                 TMS developer guide                     → /tms
+  api/                  API reference, generated at build time  → /tms/api
+openapi/tms.json      TMS OpenAPI spec (copy of the TMS repo's docs/openapi.json)
 guide/                user guide, one folder per product
   index.md              hub listing every product             → /guide
   tms/                  authored                              → /guide/tms

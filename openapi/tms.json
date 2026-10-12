@@ -1,0 +1,2070 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Alpha Cargo TMS API",
+    "version": "1.0.0",
+    "description": "The Alpha Cargo TMS API for integrators.\n\nEvery server-side request is signed with your organization's API key; see\n[Authentication](https://docs.alphacargo.io/tms/authentication).\n\n## Errors\n\nA failed request answers with a non-2xx status and `{ \"error\": \"<message>\" }`.\nThe message is localized per `Accept-Language` (`en`, `th`, `zh`).\n\nOrganizations set up for the legacy format, and requests sending\n`X-Legacy-Response: true`, get every response in the legacy\nenvelope instead: HTTP 200 with `{ code, message, data, extra, success }`.\nIts `code` is one of:\n\n| code | Meaning |\n|---|---|\n| `0` | Success |\n| `1000` | Invalid parameters |\n| `1001` | Unknown merchant / missing organization context |\n| `1002` | Invalid signature |\n| `1003` | Waybill already exists |\n| `1004` | Origin could not be matched |\n| `1005` | Destination could not be matched |\n| `1006` | Waybill not found |\n| `1007` | No carrier assigned |\n| `1008` | Package already exists |\n| `-1` | System error |\n"
+  },
+  "servers": [
+    {
+      "url": "https://staging.alphacargo.io",
+      "description": "Staging"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Waybills",
+      "description": "Create, query, update and cancel waybills; tracking and labels."
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "signature": {
+        "type": "apiKey",
+        "in": "query",
+        "name": "api_key",
+        "description": "Organization API key + HMAC-SHA256 signature. `api_key`, `nonceStr` and `sign` travel beside the business fields: in the JSON body for POST/PATCH/DELETE, in the query string for GET. See https://docs.alphacargo.io/tms/authentication."
+      },
+      "bearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Supabase session token of a signed-in user."
+      }
+    },
+    "schemas": {
+      "WaybillStatus": {
+        "type": "string",
+        "enum": [
+          "draft",
+          "created",
+          "picked_up",
+          "accepted",
+          "delivering",
+          "delivered",
+          "failed",
+          "exception",
+          "canceled",
+          "rescheduled",
+          "returning",
+          "returned",
+          "in_transit_sorted",
+          "in_transit_hub_inbound",
+          "in_transit_hub_outbound"
+        ]
+      },
+      "WaybillSummary": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "waybill_no": {
+            "type": "string"
+          },
+          "external_waybill_no": {
+            "type": "string"
+          },
+          "reference_no": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "$ref": "#/components/schemas/WaybillStatus"
+          },
+          "latest_station_name": {
+            "type": "string"
+          },
+          "service_area_name": {
+            "type": "string"
+          },
+          "service_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "service_name": {
+            "type": "string"
+          },
+          "route_id": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid"
+          },
+          "weight": {
+            "type": "number"
+          },
+          "volume": {
+            "type": "number"
+          },
+          "volumetric_weight": {
+            "type": "number"
+          },
+          "sender_account_code": {
+            "type": "string",
+            "nullable": true
+          },
+          "payment_status": {
+            "type": "string"
+          },
+          "is_consolidated": {
+            "type": "boolean",
+            "description": "True for a consolidation parent."
+          }
+        },
+        "required": [
+          "id",
+          "waybill_no",
+          "external_waybill_no",
+          "status",
+          "latest_station_name",
+          "service_area_name",
+          "weight",
+          "volume",
+          "volumetric_weight"
+        ]
+      },
+      "WaybillPage": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WaybillSummary"
+            }
+          },
+          "total": {
+            "type": "integer"
+          },
+          "page": {
+            "type": "integer"
+          },
+          "pageSize": {
+            "type": "integer"
+          },
+          "totalPages": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "data",
+          "total",
+          "page",
+          "pageSize",
+          "totalPages"
+        ]
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "description": "Human-readable message, localized per Accept-Language (en, th, zh)."
+          }
+        },
+        "required": [
+          "error"
+        ]
+      },
+      "Address": {
+        "type": "object",
+        "nullable": true,
+        "properties": {
+          "street_line": {
+            "type": "string",
+            "nullable": true
+          },
+          "block_floor_room": {
+            "type": "string",
+            "nullable": true
+          },
+          "town": {
+            "type": "string",
+            "nullable": true,
+            "description": "District."
+          },
+          "city": {
+            "type": "string",
+            "nullable": true
+          },
+          "state": {
+            "type": "string",
+            "nullable": true,
+            "description": "Province."
+          },
+          "zip_code": {
+            "type": "string",
+            "nullable": true
+          },
+          "country": {
+            "type": "string",
+            "nullable": true
+          },
+          "formatted_address": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "street_line",
+          "block_floor_room",
+          "town",
+          "city",
+          "state",
+          "zip_code",
+          "country",
+          "formatted_address"
+        ]
+      },
+      "Package": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "package_no": {
+            "type": "string",
+            "description": "System package (tracking) number."
+          },
+          "external_package_no": {
+            "type": "string",
+            "nullable": true,
+            "description": "Your outParcelNo."
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/WaybillStatus"
+              },
+              {
+                "nullable": true
+              }
+            ]
+          },
+          "weight": {
+            "type": "number",
+            "nullable": true,
+            "description": "kg"
+          },
+          "length": {
+            "type": "number",
+            "nullable": true,
+            "description": "cm"
+          },
+          "width": {
+            "type": "number",
+            "nullable": true,
+            "description": "cm"
+          },
+          "height": {
+            "type": "number",
+            "nullable": true,
+            "description": "cm"
+          },
+          "piece_count": {
+            "type": "integer"
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          },
+          "photos": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            }
+          },
+          "products": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {}
+            }
+          }
+        },
+        "required": [
+          "id",
+          "package_no",
+          "external_package_no",
+          "status",
+          "weight",
+          "length",
+          "width",
+          "height",
+          "piece_count",
+          "notes",
+          "photos",
+          "products"
+        ]
+      },
+      "Waybill": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "waybill_no": {
+            "type": "string",
+            "description": "System waybill number."
+          },
+          "external_waybill_no": {
+            "type": "string",
+            "nullable": true,
+            "description": "Your outTradeNo."
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/WaybillStatus"
+              },
+              {
+                "nullable": true
+              }
+            ]
+          },
+          "payment_status": {
+            "type": "string"
+          },
+          "reference_no": {
+            "type": "string",
+            "nullable": true
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          },
+          "tags": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            }
+          },
+          "priority": {
+            "type": "integer",
+            "nullable": true
+          },
+          "requires_signature": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "weight": {
+            "type": "number",
+            "nullable": true,
+            "description": "kg"
+          },
+          "volume": {
+            "type": "number",
+            "nullable": true
+          },
+          "volumetric_weight": {
+            "type": "number",
+            "nullable": true
+          },
+          "estimated_weight": {
+            "type": "number",
+            "nullable": true
+          },
+          "estimated_volume": {
+            "type": "number",
+            "nullable": true
+          },
+          "product_category": {
+            "type": "string",
+            "nullable": true
+          },
+          "product_category_id": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid"
+          },
+          "route_id": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid"
+          },
+          "sender_account_id": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid"
+          },
+          "picked_up_time": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time"
+          },
+          "delivered_time": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time"
+          },
+          "created_at": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time"
+          },
+          "recipient": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "phone": {
+                "type": "string",
+                "nullable": true
+              },
+              "email": {
+                "type": "string",
+                "nullable": true
+              },
+              "address": {
+                "$ref": "#/components/schemas/Address"
+              }
+            },
+            "required": [
+              "name",
+              "phone",
+              "email",
+              "address"
+            ]
+          },
+          "sender": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "name": {
+                "type": "string"
+              },
+              "code": {
+                "type": "string"
+              },
+              "phone": {
+                "type": "string",
+                "nullable": true
+              },
+              "address": {
+                "$ref": "#/components/schemas/Address"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "code",
+              "phone",
+              "address"
+            ],
+            "description": "The sender location (organization unit)."
+          },
+          "packages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Package"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "waybill_no",
+          "external_waybill_no",
+          "status",
+          "payment_status",
+          "reference_no",
+          "notes",
+          "tags",
+          "priority",
+          "requires_signature",
+          "weight",
+          "volume",
+          "volumetric_weight",
+          "estimated_weight",
+          "estimated_volume",
+          "product_category",
+          "product_category_id",
+          "route_id",
+          "sender_account_id",
+          "picked_up_time",
+          "delivered_time",
+          "created_at",
+          "updated_at",
+          "recipient",
+          "sender",
+          "packages"
+        ],
+        "description": "A waybill with its recipient, sender and packages. The response carries more fields than listed here; unlisted fields are internal and may change without notice."
+      },
+      "Tracking": {
+        "type": "object",
+        "properties": {
+          "trackingNo": {
+            "type": "string"
+          },
+          "state": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/WaybillStatus"
+              },
+              {
+                "description": "Latest state."
+              }
+            ]
+          },
+          "stateText": {
+            "type": "string"
+          },
+          "licensePlate": {
+            "type": "string"
+          },
+          "courierPhone": {
+            "type": "string"
+          },
+          "podImages": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Proof-of-delivery image URLs."
+          },
+          "returnedItems": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "sku": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "quantity": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "sku",
+                "quantity"
+              ]
+            }
+          },
+          "routes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "state": {
+                  "$ref": "#/components/schemas/WaybillStatus"
+                },
+                "stateText": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                },
+                "createdAt": {
+                  "type": "integer",
+                  "description": "UTC timestamp in milliseconds."
+                }
+              },
+              "required": [
+                "state",
+                "message",
+                "createdAt"
+              ]
+            },
+            "description": "Events, oldest first."
+          }
+        },
+        "required": [
+          "trackingNo",
+          "state",
+          "routes"
+        ]
+      },
+      "ErrorWithDetails": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string"
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "waybill_no": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "waybill_no",
+                "error"
+              ]
+            }
+          }
+        },
+        "required": [
+          "error",
+          "details"
+        ]
+      },
+      "LegacyEnvelope": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "enum": [
+              0,
+              -1,
+              1000,
+              1001,
+              1002,
+              1003,
+              1004,
+              1005,
+              1006,
+              1007,
+              1008
+            ],
+            "description": "0 on success; see the error code table."
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "nullable": true
+          },
+          "extra": {
+            "nullable": true
+          },
+          "success": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "extra",
+          "success"
+        ],
+        "description": "Legacy response envelope. Always HTTP 200; check `success` and `code`. Used by organizations configured for the legacy format, by requests sending `X-Legacy-Response: true`, and always by POST /api/waybills/{waybillNo}/packages."
+      }
+    },
+    "parameters": {}
+  },
+  "paths": {
+    "/api/waybills": {
+      "get": {
+        "tags": [
+          "Waybills"
+        ],
+        "operationId": "listWaybills",
+        "summary": "List waybills",
+        "security": [
+          {
+            "signature": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": false,
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": false,
+            "name": "pageSize",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "description": "Waybill numbers, separated by spaces or commas."
+            },
+            "required": false,
+            "name": "search",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "description": "Comma-separated statuses."
+            },
+            "required": false,
+            "name": "statuses",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "description": "Comma-separated tags."
+            },
+            "required": false,
+            "name": "tags",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": false,
+            "name": "service_id",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": false,
+            "name": "route_id",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "name": "sender_account_code",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "description": "Exact match; an empty value matches waybills without one."
+            },
+            "required": false,
+            "description": "Exact match; an empty value matches waybills without one.",
+            "name": "reference_no",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "description": "Created on or after (ISO 8601)."
+            },
+            "required": false,
+            "description": "Created on or after (ISO 8601).",
+            "name": "date_from",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "description": "Created on or before (ISO 8601)."
+            },
+            "required": false,
+            "description": "Created on or before (ISO 8601).",
+            "name": "date_to",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "description": "e.g. paid, unpaid."
+            },
+            "required": false,
+            "description": "e.g. paid, unpaid.",
+            "name": "payment_status",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ],
+              "description": "true: only consolidation parents; false: exclude them."
+            },
+            "required": false,
+            "description": "true: only consolidation parents; false: exclude them.",
+            "name": "is_consolidated",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "One page of waybills.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WaybillPage"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "System error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Waybills"
+        ],
+        "operationId": "createWaybill",
+        "summary": "Create a waybill",
+        "description": "Field names are camelCase for compatibility with early integrations. Without `route_id`, `senderPhone` and the receiver fields (all but `receiverDistrictName`) are required.",
+        "security": [
+          {
+            "signature": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "overwrite",
+                "return_existing",
+                "reject",
+                "return_if_accepted",
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "description": "What to do when `outTradeNo` already exists. `overwrite` (default, also `1`): update it in place, keeping its ID. `return_existing` (`2`): return it unchanged. `reject` (`3`): 409. `return_if_accepted` (`4`): return it once a carrier accepted it, otherwise 422."
+            },
+            "required": false,
+            "name": "overwrite",
+            "in": "query"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "mchId": {
+                    "type": "string",
+                    "description": "Deprecated: legacy merchant ID. Sign with api_key instead.",
+                    "deprecated": true
+                  },
+                  "api_key": {
+                    "type": "string",
+                    "description": "Organization API key (signature auth)."
+                  },
+                  "nonceStr": {
+                    "type": "string",
+                    "description": "Current time in milliseconds, as a string (signature auth)."
+                  },
+                  "sign": {
+                    "type": "string",
+                    "description": "HMAC-SHA256 signature, 64 uppercase hex characters (signature auth)."
+                  },
+                  "outTradeNo": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Your own order number, the idempotency key. A repeat push is handled per the overwrite query parameter."
+                  },
+                  "owner": {
+                    "type": "string",
+                    "description": "Deprecated: legacy owner code, mapped to a sender account.",
+                    "deprecated": true
+                  },
+                  "senderName": {
+                    "type": "string"
+                  },
+                  "senderPhone": {
+                    "type": "string",
+                    "description": "Required without route_id. Matched against your registered sender locations (organization units)."
+                  },
+                  "senderphone": {
+                    "type": "string",
+                    "description": "Deprecated: legacy spelling of senderPhone.",
+                    "deprecated": true
+                  },
+                  "senderCityName": {
+                    "type": "string"
+                  },
+                  "senderDistrictName": {
+                    "type": "string"
+                  },
+                  "senderPostCode": {
+                    "type": "string"
+                  },
+                  "senderAddress": {
+                    "type": "string"
+                  },
+                  "receiverName": {
+                    "type": "string",
+                    "description": "Required without route_id."
+                  },
+                  "receiverPhone": {
+                    "type": "string",
+                    "description": "Required without route_id."
+                  },
+                  "receiverPhone2": {
+                    "type": "string"
+                  },
+                  "receiverProvinceName": {
+                    "type": "string",
+                    "description": "Required without route_id."
+                  },
+                  "receiverCityName": {
+                    "type": "string",
+                    "description": "Required without route_id."
+                  },
+                  "receiverDistrictName": {
+                    "type": "string",
+                    "description": "Optional, but strongly recommended."
+                  },
+                  "receiverPostCode": {
+                    "type": "string",
+                    "description": "Required without route_id."
+                  },
+                  "receiverAddress": {
+                    "type": "string",
+                    "description": "Required without route_id. Street address."
+                  },
+                  "parcelList": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "outParcelNo": {
+                          "type": "string",
+                          "minLength": 1,
+                          "description": "Your own parcel number."
+                        },
+                        "itemDesc": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "itemValue": {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        "weight": {
+                          "type": "number",
+                          "minimum": 0,
+                          "description": "kg"
+                        },
+                        "length": {
+                          "type": "number",
+                          "minimum": 0,
+                          "description": "cm"
+                        },
+                        "width": {
+                          "type": "number",
+                          "minimum": 0,
+                          "description": "cm"
+                        },
+                        "height": {
+                          "type": "number",
+                          "minimum": 0,
+                          "description": "cm"
+                        },
+                        "piece_count": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "exclusiveMinimum": true,
+                          "description": "Identical pieces this parcel represents as one lot (default 1). Only honoured with autoSplit=false."
+                        },
+                        "load_properties": {
+                          "type": "object",
+                          "properties": {
+                            "orientation": {
+                              "type": "string",
+                              "enum": [
+                                "longship",
+                                "rotatable",
+                                "tiltable"
+                              ]
+                            },
+                            "stackable": {
+                              "type": "boolean"
+                            },
+                            "fragile": {
+                              "type": "boolean"
+                            },
+                            "bottom_only": {
+                              "type": "boolean"
+                            },
+                            "max_layers": {
+                              "type": "integer",
+                              "minimum": 1,
+                              "maximum": 100
+                            },
+                            "max_load_kg": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 100000
+                            },
+                            "geometry": {
+                              "type": "string",
+                              "enum": [
+                                "box",
+                                "cylinder"
+                              ]
+                            }
+                          },
+                          "additionalProperties": false
+                        },
+                        "productList": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "sku": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "name": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "number": {
+                                "type": "number",
+                                "description": "Deprecated: legacy alias of quantity.",
+                                "deprecated": true
+                              },
+                              "quantity": {
+                                "type": "number",
+                                "minimum": 0,
+                                "exclusiveMinimum": true
+                              },
+                              "weight": {
+                                "type": "number",
+                                "minimum": 0,
+                                "description": "kg"
+                              },
+                              "height": {
+                                "type": "number",
+                                "minimum": 0,
+                                "description": "cm"
+                              },
+                              "width": {
+                                "type": "number",
+                                "minimum": 0,
+                                "description": "cm"
+                              },
+                              "length": {
+                                "type": "number",
+                                "minimum": 0,
+                                "description": "cm"
+                              },
+                              "metadata": {
+                                "type": "object",
+                                "nullable": true,
+                                "additionalProperties": {
+                                  "nullable": true
+                                },
+                                "description": "Free-form custom data (e.g. production details for customs), any JSON object up to 8 KB. null clears it on a re-push; leaving it out keeps the stored value."
+                              }
+                            },
+                            "required": [
+                              "sku",
+                              "name"
+                            ]
+                          }
+                        },
+                        "photos": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          },
+                          "description": "Photo URLs."
+                        }
+                      },
+                      "required": [
+                        "outParcelNo",
+                        "itemDesc",
+                        "itemValue"
+                      ]
+                    },
+                    "minItems": 1
+                  },
+                  "remark": {
+                    "type": "string"
+                  },
+                  "reference_no": {
+                    "type": "string"
+                  },
+                  "product_category": {
+                    "type": "string"
+                  },
+                  "product_category_id": {
+                    "type": "string",
+                    "nullable": true,
+                    "format": "uuid"
+                  },
+                  "service_id": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "route_id": {
+                    "type": "string",
+                    "format": "uuid",
+                    "description": "Derive sender and receiver from the route's first and last stop; the sender and receiver fields become optional."
+                  },
+                  "sender_account": {
+                    "type": "object",
+                    "properties": {
+                      "code": {
+                        "type": "string"
+                      },
+                      "id": {
+                        "type": "string"
+                      }
+                    },
+                    "description": "The customer account the waybill belongs to, by code or ID."
+                  },
+                  "additional_service_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "description": "Add-on services."
+                  },
+                  "insurance": {
+                    "type": "object",
+                    "properties": {
+                      "declaredValue": {
+                        "type": "number",
+                        "minimum": 0,
+                        "exclusiveMinimum": true
+                      },
+                      "inputAmount": {
+                        "type": "number",
+                        "minimum": 0,
+                        "exclusiveMinimum": true
+                      },
+                      "inputCurrency": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "declaredValue"
+                    ],
+                    "description": "Insurance. declaredValue is in the organization's billing currency; inputAmount/inputCurrency only record what the customer entered."
+                  },
+                  "autoSplit": {
+                    "type": "boolean",
+                    "description": "true: each product unit becomes its own package. false: each parcel is one package carrying piece_count. Defaults to the organization's setting."
+                  },
+                  "volumetricWeight": {
+                    "type": "number",
+                    "minimum": 0,
+                    "description": "Billing total for the whole waybill."
+                  },
+                  "estimatedWeight": {
+                    "type": "number",
+                    "minimum": 0,
+                    "description": "Billing total for the whole waybill (kg)."
+                  },
+                  "estimatedVolume": {
+                    "type": "number",
+                    "minimum": 0,
+                    "description": "Billing total for the whole waybill."
+                  }
+                },
+                "required": [
+                  "outTradeNo",
+                  "parcelList"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The existing waybill (`return_existing`, `return_if_accepted`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Waybill"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "The created or overwritten waybill.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Waybill"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Sender location not found for `senderPhone`, or `senderPhone` missing.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The `outTradeNo` belongs to another organization, or the request carries no organization context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Waybill already exists (`overwrite=reject`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation failed (the message names each field), or no carrier assigned (`return_if_accepted`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "System error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/waybills/{waybillNo}": {
+      "get": {
+        "tags": [
+          "Waybills"
+        ],
+        "operationId": "getWaybill",
+        "summary": "Get a waybill",
+        "security": [
+          {
+            "signature": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "description": "Waybill number, or your own outTradeNo — both are accepted.",
+              "example": "WB2610120001"
+            },
+            "required": true,
+            "name": "waybillNo",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The waybill.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Waybill"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Waybill not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "System error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Waybills"
+        ],
+        "operationId": "updateWaybill",
+        "summary": "Update a waybill",
+        "description": "Only these fields can be changed; others are ignored. To change addresses, parcels or weights, push the whole waybill again with `overwrite=overwrite`.",
+        "security": [
+          {
+            "signature": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "description": "Waybill number, or your own outTradeNo — both are accepted.",
+              "example": "WB2610120001"
+            },
+            "required": true,
+            "name": "waybillNo",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "reference_no": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "notes": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "tags": {
+                    "type": "array",
+                    "nullable": true,
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "priority": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "requires_signature": {
+                    "type": "boolean",
+                    "nullable": true
+                  },
+                  "sender_account_id": {
+                    "type": "string",
+                    "nullable": true,
+                    "format": "uuid"
+                  },
+                  "product_category_id": {
+                    "type": "string",
+                    "nullable": true,
+                    "format": "uuid"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated waybill.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Waybill"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed, or no updatable field given.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Waybill not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "System error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Waybills"
+        ],
+        "operationId": "cancelWaybill",
+        "summary": "Cancel a waybill",
+        "security": [
+          {
+            "signature": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "description": "Waybill number, or your own outTradeNo — both are accepted.",
+              "example": "WB2610120001"
+            },
+            "required": true,
+            "name": "waybillNo",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Canceled.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Waybill is not in a cancelable state.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Waybill not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "System error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/waybills/{waybillNo}/events": {
+      "get": {
+        "tags": [
+          "Waybills"
+        ],
+        "operationId": "trackWaybill",
+        "summary": "Track a waybill",
+        "security": [
+          {
+            "signature": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "description": "Waybill number, or your own outTradeNo — both are accepted.",
+              "example": "WB2610120001"
+            },
+            "required": true,
+            "name": "waybillNo",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The waybill's tracking events.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Tracking"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Waybill not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "System error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/waybills/{waybillNo}/label": {
+      "get": {
+        "tags": [
+          "Waybills"
+        ],
+        "operationId": "getWaybillLabel",
+        "summary": "Print a waybill label",
+        "security": [
+          {
+            "signature": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "description": "Waybill number, or your own outTradeNo — both are accepted.",
+              "example": "WB2610120001"
+            },
+            "required": true,
+            "name": "waybillNo",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "description": "Print only this package: its ID, package number or outParcelNo."
+            },
+            "required": false,
+            "description": "Print only this package: its ID, package number or outParcelNo.",
+            "name": "packageId",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The label PDF.",
+            "content": {
+              "application/pdf": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The waybill belongs to another organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Waybill or package not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "System error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/waybills/batch-label": {
+      "post": {
+        "tags": [
+          "Waybills"
+        ],
+        "operationId": "batchWaybillLabels",
+        "summary": "Print labels for several waybills",
+        "description": "Merges the labels into one PDF. Waybills that are not found, belong to another organization or are still `created` are skipped; the request fails only when none can be printed.",
+        "security": [
+          {
+            "signature": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "waybill_nos": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "minItems": 1,
+                    "maxItems": 100,
+                    "description": "Waybill numbers or IDs, at most 100."
+                  }
+                },
+                "required": [
+                  "waybill_nos"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The merged label PDF.",
+            "content": {
+              "application/pdf": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid `waybill_nos`, or no label could be generated (`details` lists why per waybill).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorWithDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "System error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/waybills/allocate-number": {
+      "post": {
+        "tags": [
+          "Waybills"
+        ],
+        "operationId": "allocateWaybillNumber",
+        "summary": "Reserve a waybill number",
+        "description": "Reserves a number before the waybill exists, e.g. to print a label first.",
+        "security": [
+          {
+            "signature": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The reserved number.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "number": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "number"
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "System error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/waybills/{waybillNo}/packages": {
+      "post": {
+        "tags": [
+          "Waybills"
+        ],
+        "operationId": "addWaybillPackage",
+        "summary": "Add a package to a waybill",
+        "description": "Always answers in the legacy envelope with HTTP 200: check `success` and `code` (`1000` invalid parameters or waybill not found, `1008` package already exists, `-1` system error).",
+        "security": [
+          {
+            "signature": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "description": "Waybill number, or your own outTradeNo — both are accepted.",
+              "example": "WB2610120001"
+            },
+            "required": true,
+            "name": "waybillNo",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "mchId": {
+                    "type": "string"
+                  },
+                  "api_key": {
+                    "type": "string"
+                  },
+                  "nonceStr": {
+                    "type": "string"
+                  },
+                  "sign": {
+                    "type": "string"
+                  },
+                  "parcel": {
+                    "type": "object",
+                    "properties": {
+                      "outParcelNo": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "itemDesc": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "itemValue": {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      "weight": {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      "length": {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      "width": {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      "height": {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      "piece_count": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "exclusiveMinimum": true
+                      },
+                      "load_properties": {
+                        "type": "object",
+                        "properties": {
+                          "orientation": {
+                            "type": "string",
+                            "enum": [
+                              "longship",
+                              "rotatable",
+                              "tiltable"
+                            ]
+                          },
+                          "stackable": {
+                            "type": "boolean"
+                          },
+                          "fragile": {
+                            "type": "boolean"
+                          },
+                          "bottom_only": {
+                            "type": "boolean"
+                          },
+                          "max_layers": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 100
+                          },
+                          "max_load_kg": {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 100000
+                          },
+                          "geometry": {
+                            "type": "string",
+                            "enum": [
+                              "box",
+                              "cylinder"
+                            ]
+                          }
+                        },
+                        "additionalProperties": false
+                      },
+                      "productList": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "sku": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "name": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "number": {
+                              "type": "number",
+                              "description": "Deprecated: legacy alias of quantity.",
+                              "deprecated": true
+                            },
+                            "quantity": {
+                              "type": "number",
+                              "minimum": 0,
+                              "exclusiveMinimum": true
+                            },
+                            "weight": {
+                              "type": "number",
+                              "minimum": 0,
+                              "description": "kg"
+                            },
+                            "height": {
+                              "type": "number",
+                              "minimum": 0,
+                              "description": "cm"
+                            },
+                            "width": {
+                              "type": "number",
+                              "minimum": 0,
+                              "description": "cm"
+                            },
+                            "length": {
+                              "type": "number",
+                              "minimum": 0,
+                              "description": "cm"
+                            },
+                            "metadata": {
+                              "type": "object",
+                              "nullable": true,
+                              "additionalProperties": {
+                                "nullable": true
+                              },
+                              "description": "Free-form custom data (e.g. production details for customs), any JSON object up to 8 KB. null clears it on a re-push; leaving it out keeps the stored value."
+                            }
+                          },
+                          "required": [
+                            "sku",
+                            "name"
+                          ]
+                        },
+                        "default": []
+                      },
+                      "photos": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "containedPackageIds": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "required": [
+                      "outParcelNo",
+                      "itemDesc"
+                    ]
+                  }
+                },
+                "required": [
+                  "parcel"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Result envelope.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/LegacyEnvelope"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "mchId": {
+                              "type": "string"
+                            },
+                            "waybillNo": {
+                              "type": "string"
+                            },
+                            "trackingNo": {
+                              "type": "string",
+                              "description": "System package number."
+                            },
+                            "outParcelNo": {
+                              "type": "string"
+                            },
+                            "displayParcelNo": {
+                              "type": "string",
+                              "description": "The number printed on the label."
+                            },
+                            "sortCode": {
+                              "type": "string"
+                            },
+                            "sortDesc": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "mchId",
+                            "waybillNo",
+                            "trackingNo",
+                            "outParcelNo",
+                            "displayParcelNo"
+                          ]
+                        }
+                      }
+                    }
+                  ],
+                  "description": "Legacy response envelope. Always HTTP 200; check `success` and `code`. Used by organizations configured for the legacy format, by requests sending `X-Legacy-Response: true`, and always by POST /api/waybills/{waybillNo}/packages."
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
