@@ -1,6 +1,7 @@
 import { themes as prismThemes } from 'prism-react-renderer';
 import type { Config } from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
+import type * as OpenApiPlugin from 'docusaurus-plugin-openapi-docs';
 
 const config: Config = {
   title: 'Alpha Docs',
@@ -30,7 +31,7 @@ const config: Config = {
 
   // Flow diagrams mix CJK and ASCII, which no monospace font aligns
   // consistently — they are drawn as real diagrams, not as text art.
-  themes: ['@docusaurus/theme-mermaid'],
+  themes: ['@docusaurus/theme-mermaid', 'docusaurus-theme-openapi-docs'],
 
   i18n: {
     // zh-Hans rather than zh: Docusaurus ships translated theme strings for it.
@@ -54,6 +55,9 @@ const config: Config = {
           // Namespaced so WMS and Voice can get their own instances later
           // without moving any URL that has already been published.
           routeBasePath: '/tms',
+          // Renders the generated API reference pages; plain pages fall
+          // through to the stock doc layout.
+          docItemComponent: '@theme/ApiItem',
         },
         blog: false,
         theme: {
@@ -64,6 +68,23 @@ const config: Config = {
   ],
 
   plugins: [
+    [
+      'docusaurus-plugin-openapi-docs',
+      {
+        id: 'openapi',
+        docsPluginId: 'classic',
+        config: {
+          // openapi/tms.json is the TMS repo's docs/openapi.json, generated
+          // from the Zod schemas the routes validate with. Never edit it here.
+          tms: {
+            specPath: 'openapi/tms.json',
+            outputDir: 'docs/api',
+            sidebarOptions: { groupPathsBy: 'tag', categoryLinkSource: 'tag' },
+            hideSendButton: true,
+          },
+        } satisfies Record<string, OpenApiPlugin.Options>,
+      },
+    ],
     [
       '@docusaurus/plugin-content-docs',
       {
@@ -91,6 +112,13 @@ const config: Config = {
   ],
 
   themeConfig: {
+    // API reference samples: only the languages the authentication guide
+    // shows how to sign in. The generated samples leave nonceStr/sign out.
+    languageTabs: [
+      { highlight: 'bash', language: 'curl', logoClass: 'curl' },
+      { highlight: 'javascript', language: 'nodejs', logoClass: 'nodejs' },
+      { highlight: 'python', language: 'python', logoClass: 'python' },
+    ],
     colorMode: {
       respectPrefersColorScheme: true,
     },

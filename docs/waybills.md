@@ -116,10 +116,14 @@ POST /api/waybills
 
 | 值 | 行为 |
 |---|---|
-| `reject` | **默认**，返回 `409` 重复运单 |
-| `overwrite` | 覆盖原运单（原地更新，运单 ID 不变） |
+| `overwrite` | **默认**，覆盖原运单（原地更新，运单 ID 不变） |
+| `reject` | 返回 `409` 重复运单 |
 | `return_existing` | 原样返回已有运单，不做修改 |
-| `return_if_accepted` | 已接单则返回，否则覆盖 |
+| `return_if_accepted` | 已接单则原样返回，否则返回 `422`（未分配承运商） |
+
+:::caution
+不传 `overwrite` 时，重复推送会**直接覆盖**已有运单。如果你需要防止重复建单，请显式传 `overwrite=reject`。
+:::
 
 ```http
 POST /api/waybills?overwrite=return_existing
