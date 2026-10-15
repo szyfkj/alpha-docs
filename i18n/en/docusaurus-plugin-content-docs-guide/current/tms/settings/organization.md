@@ -37,6 +37,10 @@ The units under your organization. The **Station** you choose in delivery planni
 from here, and a station's address is the route origin — so fill addresses in fully.
 **A station without coordinates can't have a route planned.**
 
+A unit that waybills, users or routes still refer to can't be deleted: you'll see
+"Waybills, users or routes still refer to this unit, so it can't be deleted." Move them
+to another unit first.
+
 ## Subscription
 
 Shows what your current plan includes. Request a change here; you'll be told the request

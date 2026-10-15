@@ -89,17 +89,12 @@ sidebar_position: 6
 | `data.waybill_no` | 系统运单号 |
 | `data.external_waybill_no` | 你自己的单号（建单时传的 `outTradeNo`） |
 | `data.event_type` | 事件类型，见[运单状态枚举](./waybills.md#运单状态) |
+| `data.secondary_event_type` | 跨境里程碑（见[回传轨迹事件](./delivery.md#跨境里程碑)），比如 `customs_finished`；普通事件为 `null` |
 | `data.event_time` | 事件发生时间（UTC） |
 | `data.place` | 发生地点名称 |
 | `data.contractor_id` | 上游委托方，没有则为 `null` |
 | `context.taskId` | 本次推送任务 ID |
 | `additional` | 你配置的 `body_template` 渲染后的结果 |
-
-<Staging source="tms#233">
-
-`data.secondary_event_type`：跨境里程碑（见[回传轨迹事件](./delivery.md#跨境里程碑)），比如 `customs_finished`；普通事件为 `null`。
-
-</Staging>
 
 ### `body_template`
 

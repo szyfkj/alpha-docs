@@ -16,8 +16,6 @@ Goods crossing regions don't go direct; they move leg by leg, and the system gen
 **sub-waybill** for each. Those appear on the
 [waybill detail pane](../waybills/detail).
 
-<Staging source="tms#233">
-
 ### Leg type
 
 Every leg has a **Leg Type**: **Domestic** or **Cross-border**, chosen in the **Add Leg** /
@@ -28,8 +26,6 @@ Waybills on a cross-border leg are tracked with cross-border events (container l
 customs cleared, …): when you [add a tracking event](../waybills/events#cross-border-waybills)
 to them, you choose from the cross-border list. A waybill counts as cross-border if its own
 leg is cross-border, or if any leg of its route is.
-
-</Staging>
 
 [Importing waybills](../waybills/import) lets you pick a route; when only one is
 available it's selected automatically.
