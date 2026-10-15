@@ -95,6 +95,12 @@ sidebar_position: 6
 | `context.taskId` | 本次推送任务 ID |
 | `additional` | 你配置的 `body_template` 渲染后的结果 |
 
+<Staging source="tms#233">
+
+`data.secondary_event_type`：跨境里程碑（见[回传轨迹事件](./delivery.md#跨境里程碑)），比如 `customs_finished`；普通事件为 `null`。
+
+</Staging>
+
 ### `body_template`
 
 用 `{{字段名}}` 从 `data` 里取值。例如模板：

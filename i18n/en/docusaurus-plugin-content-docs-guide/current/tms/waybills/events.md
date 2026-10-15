@@ -40,6 +40,37 @@ photos again under it. If that fails too, you'll see **Photos Not Uploaded**; ju
 
 </Staging>
 
+<Staging source="tms#233">
+
+## Cross-border waybills
+
+When a waybill travels a [cross-border leg](../settings/routes#leg-type), the **Event Type**
+dropdown offers cross-border events instead. Each one is also recorded as an ordinary status,
+so the waybill and package statuses move on as usual:
+
+| Cross-border event | Description | Waybill status |
+|---|---|---|
+| **Picked Up** | The package has been picked up for cross-border transport | Picked Up |
+| **Container Loaded** | The package has been loaded into a container | Waybill Sorted |
+| **Export Customs Cleared** | The package has cleared export customs | In Transit, Hub Outbound |
+| **Departed** | The package has departed for the destination country | In Transit, Hub Outbound |
+| **Arrived** | The package has arrived in the destination country | In Transit, Hub Inbound |
+| **Import Customs Cleared** | The package has cleared import customs | Waybill Sorted |
+| **Delivered** | The package has been delivered | Delivered |
+
+**Failed Delivery**, **Exception**, **Rescheduled**, **Returning** and **Returned** are there
+too, as for domestic waybills. **Delivered** still takes proof of delivery photos.
+
+The waybill's [tracking timeline](./detail) and the [public tracking page](../customers/tracking)
+show the cross-border event's name and description, e.g. "Export Customs Cleared", rather than
+the status it's recorded as.
+
+Domestic and cross-border waybills can't get an event together: with both kinds ticked, the
+dialog says "Select only domestic or only cross-border waybills: they have different tracking
+events." and **Add Event** stays disabled. Tick them in two rounds.
+
+</Staging>
+
 ## Watch out
 
 - **Use the real time.** The customer's tracking is ordered by it; putting "now" on a
