@@ -623,6 +623,34 @@ POST /api/delivery-events
 
 </Staging>
 
+<Staging source="tms#233">
+
+### 跨境里程碑
+
+走跨境路段的运单可以回传跨境里程碑：请求里加 `secondary_event_type`。每个里程碑对应一个普通的 `event_type`，运单和包裹状态按这个 `event_type` 变化；`event_type` 可以不传，由系统补上，传了就必须是对应的那个，否则返回 `400`。
+
+| `secondary_event_type` | 里程碑 | 对应的 `event_type` |
+|---|---|---|
+| `transport_collecting` | 已接 | `picked_up` |
+| `transport_originalport` | 已装柜 | `in_transit_sorted` |
+| `customs_finished` | 出口清关完成 | `in_transit_hub_outbound` |
+| `transport_departed` | 已离港 | `in_transit_hub_outbound` |
+| `transport_arrived` | 已到港 | `in_transit_hub_inbound` |
+| `transport_finished` | 进口清关完成 | `in_transit_sorted` |
+| `transport_handover` | 已送达 | `delivered` |
+
+```json
+{
+  "waybill_id": "uuid",
+  "secondary_event_type": "customs_finished",
+  "event_time": "2026-10-15T08:00:00Z"
+}
+```
+
+返回的事件里带 `secondary_event_type`，普通事件为 `null`。
+
+</Staging>
+
 ## 三套状态枚举别混用
 
 系统里有三套不同的状态，含义和取值都不一样：
