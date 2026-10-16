@@ -13,8 +13,44 @@
   ],
   "tags": [
     {
+      "name": "Organization",
+      "description": "Your organization; the connectivity self-check."
+    },
+    {
+      "name": "Sender accounts",
+      "description": "Your customers' accounts."
+    },
+    {
+      "name": "Organization units",
+      "description": "Your stations and warehouses."
+    },
+    {
+      "name": "Address",
+      "description": "Resolve free text, a map link or coordinates to a structured address."
+    },
+    {
+      "name": "Regions",
+      "description": "Administrative region reference data (provinces, districts, subdistricts)."
+    },
+    {
       "name": "Waybills",
       "description": "Create, query, update and cancel waybills; tracking and labels."
+    },
+    {
+      "name": "Load planning",
+      "description": "Fit waybills onto vehicles and split them into deliveries."
+    },
+    {
+      "name": "Delivery events",
+      "description": "Record events on a waybill."
+    },
+    {
+      "name": "Quotes",
+      "description": "Quote, pay for and cancel a delivery on a customer's behalf."
+    },
+    {
+      "name": "Orders",
+      "description": "Track a delivery created from a paid quote."
     }
   ],
   "components": {
@@ -28,10 +64,676 @@
       "bearer": {
         "type": "http",
         "scheme": "bearer",
-        "description": "Supabase session token of a signed-in user."
+        "description": "Session token of a user signed in to the TMS web app."
       }
     },
     "schemas": {
+      "Organization": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "description": "business, individual or enterprise."
+          },
+          "size": {
+            "type": "string",
+            "description": "small, medium, large or enterprise."
+          },
+          "status": {
+            "type": "string",
+            "nullable": true,
+            "description": "active, suspended or pending."
+          },
+          "country": {
+            "type": "string",
+            "description": "Country code, e.g. TH."
+          },
+          "slug": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "website": {
+            "type": "string",
+            "nullable": true
+          },
+          "logo_url": {
+            "type": "string",
+            "nullable": true
+          },
+          "primary_color": {
+            "type": "string",
+            "nullable": true
+          },
+          "secondary_color": {
+            "type": "string",
+            "nullable": true
+          },
+          "custom_domain": {
+            "type": "string",
+            "nullable": true
+          },
+          "domain_verified": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "address_id": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid"
+          },
+          "owner_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "User ID of the organization owner."
+          },
+          "waybill_number_prefix": {
+            "type": "string",
+            "nullable": true
+          },
+          "settings": {
+            "type": "object",
+            "nullable": true,
+            "properties": {},
+            "description": "Organization preferences; the shape is internal."
+          },
+          "subscription_plan_id": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid"
+          },
+          "subscription_status": {
+            "type": "string",
+            "nullable": true
+          },
+          "subscription_ends_at": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time"
+          },
+          "created_at": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "type",
+          "size",
+          "status",
+          "country",
+          "slug",
+          "description",
+          "email",
+          "phone",
+          "website",
+          "logo_url",
+          "primary_color",
+          "secondary_color",
+          "custom_domain",
+          "domain_verified",
+          "address_id",
+          "owner_id",
+          "waybill_number_prefix",
+          "settings",
+          "subscription_plan_id",
+          "subscription_status",
+          "subscription_ends_at",
+          "created_at",
+          "updated_at"
+        ],
+        "description": "The organization the request authenticated as. Unlisted fields are internal and may change without notice."
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "description": "Human-readable message, localized per Accept-Language (en, th, zh)."
+          }
+        },
+        "required": [
+          "error"
+        ]
+      },
+      "SenderAccount": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Send this as `X-Sender-Account-Id` on sender-scoped routes."
+          },
+          "organization_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sender_code": {
+            "type": "string",
+            "description": "System-assigned account code, unique per organization."
+          },
+          "slug": {
+            "type": "string",
+            "nullable": true,
+            "description": "Your own alternate account code (e.g. from a previous system)."
+          },
+          "name": {
+            "type": "string"
+          },
+          "company_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "type": {
+            "type": "string",
+            "nullable": true,
+            "description": "Customer type, e.g. retail (the default)."
+          },
+          "is_active": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "metadata": {
+            "type": "object",
+            "nullable": true,
+            "properties": {}
+          },
+          "created_at": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "organization_id",
+          "sender_code",
+          "slug",
+          "name",
+          "company_name",
+          "email",
+          "phone",
+          "type",
+          "is_active",
+          "metadata",
+          "created_at",
+          "updated_at"
+        ],
+        "description": "A customer (shipper) account of your organization."
+      },
+      "OffsetPagination": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "description": "Total matching records."
+          },
+          "limit": {
+            "type": "integer",
+            "description": "The `limit` you sent (or the default)."
+          },
+          "offset": {
+            "type": "integer",
+            "description": "The `offset` you sent (or the default), as sent."
+          },
+          "page": {
+            "type": "integer",
+            "description": "The page actually returned: floor(offset / limit) + 1."
+          },
+          "pageSize": {
+            "type": "integer"
+          },
+          "totalPages": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "total",
+          "limit",
+          "offset",
+          "page",
+          "pageSize",
+          "totalPages"
+        ]
+      },
+      "SenderAccountPage": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SenderAccount"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/OffsetPagination"
+          }
+        },
+        "required": [
+          "data",
+          "pagination"
+        ]
+      },
+      "UnitAddress": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "street_line": {
+            "type": "string",
+            "nullable": true
+          },
+          "block_floor_room": {
+            "type": "string",
+            "nullable": true
+          },
+          "town": {
+            "type": "string",
+            "nullable": true,
+            "description": "District."
+          },
+          "city": {
+            "type": "string",
+            "nullable": true
+          },
+          "state": {
+            "type": "string",
+            "nullable": true,
+            "description": "Province."
+          },
+          "zip_code": {
+            "type": "string",
+            "nullable": true
+          },
+          "country": {
+            "type": "string",
+            "nullable": true
+          },
+          "formatted_address": {
+            "type": "string",
+            "nullable": true
+          },
+          "coordinates": {
+            "type": "object",
+            "nullable": true,
+            "properties": {}
+          }
+        },
+        "required": [
+          "id",
+          "street_line",
+          "block_floor_room",
+          "town",
+          "city",
+          "state",
+          "zip_code",
+          "country",
+          "formatted_address",
+          "coordinates"
+        ]
+      },
+      "OrganizationUnit": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Use as `origin_unit_id` when planning deliveries."
+          },
+          "organization_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "code": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "description": "branch, warehouse, office, hub, division or department."
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "is_active": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "address_id": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid"
+          },
+          "parent_unit_id": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid"
+          },
+          "manager_user_id": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid"
+          },
+          "metadata": {
+            "type": "object",
+            "nullable": true,
+            "properties": {}
+          },
+          "created_at": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time"
+          },
+          "address": {
+            "$ref": "#/components/schemas/UnitAddress"
+          },
+          "organization": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "name"
+            ],
+            "description": "The owning organization, same shape as GET /api/organizations."
+          }
+        },
+        "required": [
+          "id",
+          "organization_id",
+          "code",
+          "name",
+          "type",
+          "description",
+          "phone",
+          "email",
+          "is_active",
+          "address_id",
+          "parent_unit_id",
+          "manager_user_id",
+          "metadata",
+          "created_at",
+          "updated_at",
+          "address",
+          "organization"
+        ],
+        "description": "A branch, warehouse, hub or other location of your organization, with its address."
+      },
+      "OrganizationUnitPage": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrganizationUnit"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/OffsetPagination"
+          }
+        },
+        "required": [
+          "data",
+          "pagination"
+        ]
+      },
+      "ResolvedAddress": {
+        "type": "object",
+        "properties": {
+          "lat": {
+            "type": "number",
+            "description": "For lat+lng and url input, the caller's own point echoed back."
+          },
+          "lng": {
+            "type": "number"
+          },
+          "country": {
+            "type": "string",
+            "nullable": true,
+            "description": "ISO-2 country code."
+          },
+          "province": {
+            "type": "string",
+            "nullable": true
+          },
+          "district": {
+            "type": "string",
+            "nullable": true
+          },
+          "subdistrict": {
+            "type": "string",
+            "nullable": true
+          },
+          "postal_code": {
+            "type": "string",
+            "nullable": true
+          },
+          "formatted_address": {
+            "type": "string",
+            "nullable": true
+          },
+          "place_name": {
+            "type": "string",
+            "nullable": true,
+            "description": "Place name; only set by `google_places`."
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "0–1. Free text only returns Google matches at ≥ 0.68; `postal_centroid` is always 0.55 and `province_centroid` 0.32. lat+lng and url results are returned at whatever Google's precision gives (0.2–0.95). Treat < 0.68 as unreliable."
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "google_geocoding",
+              "google_places",
+              "postal_centroid",
+              "province_centroid"
+            ],
+            "description": "Which step matched. `postal_centroid` / `province_centroid` are area centers, not the address itself; lat+lng and url input always give `google_geocoding`."
+          }
+        },
+        "required": [
+          "lat",
+          "lng",
+          "country",
+          "province",
+          "district",
+          "subdistrict",
+          "postal_code",
+          "formatted_address",
+          "place_name",
+          "confidence",
+          "source"
+        ],
+        "description": "Component names come in the language picked by `country` (Thai by default), except `province` on a `province_centroid` result, which is the English name."
+      },
+      "ResolveAddressRequest": {
+        "type": "object",
+        "properties": {
+          "address": {
+            "type": "string",
+            "description": "Free-text address. Used when neither lat+lng nor url is given; must be non-blank."
+          },
+          "url": {
+            "type": "string",
+            "description": "Google Maps link (full or maps.app.goo.gl / goo.gl short link). Other hosts are rejected with 400. The coordinates are read from the link (short-link redirects are followed only while they stay on Google Maps hosts) and reverse-geocoded. Used when lat+lng is absent; must be non-blank."
+          },
+          "lat": {
+            "type": "number",
+            "minimum": -90,
+            "maximum": 90,
+            "description": "Latitude to reverse-geocode. Must be a JSON number and sent together with lng; takes precedence over url and address."
+          },
+          "lng": {
+            "type": "number",
+            "minimum": -180,
+            "maximum": 180,
+            "description": "Longitude to reverse-geocode. Must be a JSON number and sent together with lat."
+          },
+          "country": {
+            "type": "string",
+            "description": "ISO-2 country hint (e.g. TH, VN, CN). Biases the geocoder's region, picks the response language (TH→Thai, VN→Vietnamese, CN→Chinese, others English; omitted → Thai) and scopes the postal/province fallbacks. Without it the cascade biases toward Thailand."
+          },
+          "logResolution": {
+            "type": "boolean",
+            "description": "Record the resolution in the internal resolution log. Only `false` disables it; default true."
+          }
+        }
+      },
+      "RegionSubdistrict": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Subdistrict (tambon) name in the local language."
+          },
+          "code": {
+            "type": "string",
+            "nullable": true,
+            "description": "The subdistrict's postal code (not an administrative code)."
+          }
+        },
+        "required": [
+          "name",
+          "code"
+        ]
+      },
+      "RegionDistrict": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "District (amphoe) name in the local language."
+          },
+          "districts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RegionSubdistrict"
+            },
+            "description": "Subdistricts, despite the key name."
+          }
+        },
+        "required": [
+          "name",
+          "districts"
+        ]
+      },
+      "RegionProvince": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Province name in the local language."
+          },
+          "cities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RegionDistrict"
+            },
+            "description": "Districts, despite the key name."
+          }
+        },
+        "required": [
+          "name",
+          "cities"
+        ]
+      },
+      "RegionHierarchy": {
+        "type": "object",
+        "properties": {
+          "provinces": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RegionProvince"
+            }
+          }
+        },
+        "required": [
+          "provinces"
+        ],
+        "description": "Three levels keyed `provinces` → `cities` → `districts`, which hold province → district → subdistrict. Entries are not sorted."
+      },
+      "CountryList": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "ISO-2 country codes, sorted."
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
       "WaybillStatus": {
         "type": "string",
         "enum": [
@@ -151,18 +853,6 @@
           "page",
           "pageSize",
           "totalPages"
-        ]
-      },
-      "Error": {
-        "type": "object",
-        "properties": {
-          "error": {
-            "type": "string",
-            "description": "Human-readable message, localized per Accept-Language (en, th, zh)."
-          }
-        },
-        "required": [
-          "error"
         ]
       },
       "Address": {
@@ -573,7 +1263,7 @@
                 },
                 "createdAt": {
                   "type": "integer",
-                  "description": "UTC timestamp in milliseconds."
+                  "description": "Unix timestamp in seconds."
                 }
               },
               "required": [
@@ -661,11 +1351,2720 @@
           "success"
         ],
         "description": "Legacy response envelope. Always HTTP 200; check `success` and `code`. Used by organizations configured for the legacy format, by requests sending `X-Legacy-Response: true`, and always by POST /api/waybills/{waybillNo}/packages."
+      },
+      "LoadPlanMetrics": {
+        "type": "object",
+        "nullable": true,
+        "properties": {
+          "total_units": {
+            "type": "integer",
+            "description": "Units (pieces) checked."
+          },
+          "loaded_units": {
+            "type": "integer"
+          },
+          "unplaced_units": {
+            "type": "integer"
+          },
+          "loaded_volume_m3": {
+            "type": "number",
+            "description": "m³"
+          },
+          "vehicle_volume_m3": {
+            "type": "number",
+            "description": "m³"
+          },
+          "volume_util": {
+            "type": "number",
+            "description": "0–1 share of the vehicle's inside volume used."
+          },
+          "loaded_weight_kg": {
+            "type": "number",
+            "description": "kg"
+          },
+          "payload_kg": {
+            "type": "number",
+            "nullable": true,
+            "description": "kg; null when the vehicle type has no payload set."
+          },
+          "weight_util": {
+            "type": "number",
+            "nullable": true,
+            "description": "0–1 share of payload; null without a payload."
+          }
+        },
+        "required": [
+          "total_units",
+          "loaded_units",
+          "unplaced_units",
+          "loaded_volume_m3",
+          "vehicle_volume_m3",
+          "volume_util",
+          "loaded_weight_kg",
+          "payload_kg",
+          "weight_util"
+        ],
+        "description": "Null with `no_cargo`."
+      },
+      "LoadPlanCargoProblem": {
+        "type": "object",
+        "properties": {
+          "package_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "package_no": {
+            "type": "string",
+            "nullable": true
+          },
+          "waybill_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "waybill_no": {
+            "type": "string",
+            "nullable": true
+          },
+          "reason": {
+            "type": "string",
+            "enum": [
+              "missing_dimensions",
+              "missing_weight",
+              "suspect_units"
+            ],
+            "description": "`missing_dimensions`: left out of the plan. `suspect_units`: dimensions look like metres rather than cm; left out. `missing_weight`: planned with an assumed weight."
+          }
+        },
+        "required": [
+          "package_id",
+          "package_no",
+          "waybill_id",
+          "waybill_no",
+          "reason"
+        ],
+        "description": "A package that could not be planned, or was planned with an assumed value."
+      },
+      "LoadPlanFitCheck": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "fits",
+              "partial",
+              "none",
+              "unusable",
+              "no_cargo"
+            ],
+            "description": "`fits`: every unit placed. `partial`: some placed. `none`: nothing placed. `unusable`: the engine could not evaluate the cargo. `no_cargo`: no package has usable dimensions."
+          },
+          "basic": {
+            "type": "boolean",
+            "description": "True when a simpler fallback packer answered because the main engine was unavailable."
+          },
+          "vehicleTypeId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "metrics": {
+            "$ref": "#/components/schemas/LoadPlanMetrics"
+          },
+          "cargo": {
+            "type": "object",
+            "properties": {
+              "units": {
+                "type": "integer"
+              },
+              "weight_kg": {
+                "type": "number",
+                "description": "kg"
+              },
+              "volume_m3": {
+                "type": "number",
+                "description": "m³, from package dimensions."
+              }
+            },
+            "required": [
+              "units",
+              "weight_kg",
+              "volume_m3"
+            ],
+            "description": "Everything checked, loaded or not."
+          },
+          "problems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LoadPlanCargoProblem"
+            }
+          }
+        },
+        "required": [
+          "status",
+          "basic",
+          "vehicleTypeId",
+          "metrics",
+          "cargo",
+          "problems"
+        ]
+      },
+      "LoadPlanRequestError": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "enum": [
+              "invalid_json",
+              "validation_failed",
+              "invalid_delivery_id"
+            ]
+          },
+          "details": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": "With `validation_failed`: messages per field name. An unknown field is named with the message `Unknown field`."
+          }
+        },
+        "required": [
+          "error"
+        ]
+      },
+      "LoadPlanErrorCode": {
+        "type": "string",
+        "enum": [
+          "not_found",
+          "no_vehicle_type",
+          "no_cargo",
+          "plan_conflict",
+          "invalid_groups",
+          "waybills_assigned",
+          "create_failed",
+          "load_planning_unavailable"
+        ]
+      },
+      "LoadPlanError": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/LoadPlanErrorCode"
+          },
+          "message": {
+            "type": "string",
+            "description": "Human-readable explanation (English)."
+          },
+          "problems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LoadPlanCargoProblem"
+            },
+            "description": "Present with `no_cargo`: why each package was left out."
+          }
+        },
+        "required": [
+          "error",
+          "message"
+        ]
+      },
+      "LoadPlanInternalError": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "enum": [
+              "internal_error"
+            ]
+          }
+        },
+        "required": [
+          "error"
+        ]
+      },
+      "LoadPlanFitCheckRequest": {
+        "type": "object",
+        "properties": {
+          "waybill_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "maxItems": 500,
+            "description": "Waybill IDs (not numbers), at most 500. Unknown IDs are ignored."
+          },
+          "vehicle_type_id": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid",
+            "description": "Vehicle type to check against. Defaults to the delivery's vehicle type when `delivery_id` is given."
+          },
+          "delivery_id": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid",
+            "description": "Existing delivery the waybills would join; its current cargo is included in the check."
+          }
+        },
+        "required": [
+          "waybill_ids"
+        ],
+        "additionalProperties": false,
+        "description": "`vehicle_type_id` or `delivery_id` is required. Unknown fields are rejected; the signature fields (`api_key`, `nonceStr`, `sign`) are allowed beside them."
+      },
+      "LoadPlanSplitGroup": {
+        "type": "object",
+        "properties": {
+          "index": {
+            "type": "integer",
+            "description": "Vehicle index in the plan; the display order."
+          },
+          "vehicleTypeId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "waybillIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "units": {
+            "type": "integer",
+            "description": "Units (pieces) loaded in this vehicle."
+          },
+          "loadedVolumeM3": {
+            "type": "number",
+            "description": "m³"
+          },
+          "loadedWeightKg": {
+            "type": "number",
+            "description": "kg"
+          },
+          "volumeUtil": {
+            "type": "number",
+            "description": "0–1 share of the vehicle's volume."
+          },
+          "weightUtil": {
+            "type": "number",
+            "nullable": true,
+            "description": "0–1 share of payload; null when the vehicle type has no payload."
+          }
+        },
+        "required": [
+          "index",
+          "vehicleTypeId",
+          "waybillIds",
+          "units",
+          "loadedVolumeM3",
+          "loadedWeightKg",
+          "volumeUtil",
+          "weightUtil"
+        ]
+      },
+      "LoadPlanSplitProposal": {
+        "type": "object",
+        "properties": {
+          "proposal": {
+            "type": "object",
+            "properties": {
+              "groups": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/LoadPlanSplitGroup"
+                },
+                "description": "One proposed delivery per vehicle."
+              },
+              "unplacedWaybillIds": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "description": "Waybills no vehicle could take."
+              },
+              "splitWaybillIds": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "description": "Waybills the engine spread over more than one vehicle; left out of every group."
+              }
+            },
+            "required": [
+              "groups",
+              "unplacedWaybillIds",
+              "splitWaybillIds"
+            ]
+          },
+          "fingerprint": {
+            "type": "string",
+            "description": "Opaque hash of the cargo and vehicles the proposal was computed from."
+          },
+          "problems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LoadPlanCargoProblem"
+            }
+          },
+          "waybillNumbers": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "nullable": true
+            },
+            "description": "Waybill ID → waybill number."
+          }
+        },
+        "required": [
+          "proposal",
+          "fingerprint",
+          "problems",
+          "waybillNumbers"
+        ]
+      },
+      "LoadPlanSplitAccepted": {
+        "type": "object",
+        "properties": {
+          "deliveries": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "description": "Delivery ID; use it with the plan endpoint."
+                },
+                "deliveryNo": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "vehicleTypeId": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "waybillCount": {
+                  "type": "integer"
+                },
+                "planned": {
+                  "type": "boolean",
+                  "description": "False when the delivery was created but its load plan could not be computed; compute it later."
+                }
+              },
+              "required": [
+                "id",
+                "deliveryNo",
+                "vehicleTypeId",
+                "waybillCount",
+                "planned"
+              ]
+            }
+          }
+        },
+        "required": [
+          "deliveries"
+        ]
+      },
+      "LoadPlanSplitProposeRequest": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "propose"
+            ]
+          },
+          "waybill_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "minItems": 1,
+            "maxItems": 500,
+            "description": "Waybill IDs, at most 500. Unknown IDs are ignored."
+          },
+          "vehicle_type_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "minItems": 1,
+            "maxItems": 10,
+            "description": "Vehicle types the split may use."
+          },
+          "objective": {
+            "type": "string",
+            "enum": [
+              "fewest_vehicles",
+              "smallest_vehicles"
+            ],
+            "default": "fewest_vehicles",
+            "description": "`fewest_vehicles`: fewest vehicles in total. `smallest_vehicles`: prefer filling small vehicles."
+          },
+          "max_vehicles": {
+            "type": "integer",
+            "nullable": true,
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "maximum": 20,
+            "description": "Most vehicles in total; the proposal may use fewer. At most 20."
+          },
+          "keep_recipient_together": {
+            "type": "boolean",
+            "description": "Keep each recipient's cargo in one vehicle. Otherwise each waybill is kept in one vehicle."
+          }
+        },
+        "required": [
+          "action",
+          "waybill_ids",
+          "vehicle_type_ids"
+        ],
+        "description": "Propose a split. Nothing is created."
+      },
+      "LoadPlanSplitAcceptRequest": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "accept"
+            ]
+          },
+          "origin_unit_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Departure location (organization unit)."
+          },
+          "service_area_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "service_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "FTL service every created delivery runs under."
+          },
+          "groups": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "vehicle_type_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "waybill_ids": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "minItems": 1
+                }
+              },
+              "required": [
+                "vehicle_type_id",
+                "waybill_ids"
+              ]
+            },
+            "minItems": 1,
+            "maxItems": 20,
+            "description": "One delivery per group, at most 20. A waybill may appear in only one group."
+          }
+        },
+        "required": [
+          "action",
+          "origin_unit_id",
+          "service_area_id",
+          "service_id",
+          "groups"
+        ],
+        "description": "Create one delivery per group, then compute each one's load plan. The groups are re-checked, not trusted. If any delivery fails to create, those already created by this request are removed."
+      },
+      "LoadPlan": {
+        "type": "object",
+        "nullable": true,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "delivery_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "version": {
+            "type": "integer",
+            "description": "Increments with every saved plan."
+          },
+          "is_current": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "final"
+            ]
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "auto_split",
+              "manual_edit"
+            ]
+          },
+          "engine": {
+            "type": "string",
+            "description": "Which planner produced the plan."
+          },
+          "vehicle_type_id": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid"
+          },
+          "is_stale": {
+            "type": "boolean"
+          },
+          "stale_reason": {
+            "type": "string",
+            "nullable": true
+          },
+          "stale_at": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time"
+          },
+          "manifest": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string"
+                },
+                "index": {
+                  "type": "integer"
+                },
+                "package_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "package_no": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "waybill_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "waybill_no": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "piece_count": {
+                  "type": "integer"
+                },
+                "stop_seq": {
+                  "type": "integer",
+                  "nullable": true,
+                  "description": "1 = first stop; null when the waybill has no stop order."
+                }
+              },
+              "required": [
+                "label",
+                "index",
+                "package_id",
+                "package_no",
+                "waybill_id",
+                "waybill_no",
+                "piece_count",
+                "stop_seq"
+              ]
+            },
+            "description": "The packages planned; `index` links them to placements."
+          },
+          "containers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {}
+            },
+            "description": "Per-vehicle placements as returned by the engine. The shape is not stable."
+          },
+          "unplaced": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string"
+                },
+                "package_id": {
+                  "type": "string",
+                  "nullable": true,
+                  "format": "uuid"
+                },
+                "qty": {
+                  "type": "integer"
+                },
+                "reason": {
+                  "type": "string",
+                  "nullable": true
+                }
+              },
+              "required": [
+                "label",
+                "package_id",
+                "qty",
+                "reason"
+              ]
+            }
+          },
+          "metrics": {
+            "$ref": "#/components/schemas/LoadPlanMetrics"
+          },
+          "vendor_status": {
+            "type": "string",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "created_by": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "id",
+          "delivery_id",
+          "version",
+          "is_current",
+          "status",
+          "source",
+          "engine",
+          "vehicle_type_id",
+          "is_stale",
+          "stale_reason",
+          "stale_at",
+          "manifest",
+          "containers",
+          "unplaced",
+          "metrics",
+          "vendor_status",
+          "created_at",
+          "created_by"
+        ],
+        "description": "A saved load plan version. Unlisted fields are internal and may change without notice."
+      },
+      "LoadPlanDeliveryPlan": {
+        "type": "object",
+        "properties": {
+          "deliveryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "vehicleTypeId": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid"
+          },
+          "plan": {
+            "$ref": "#/components/schemas/LoadPlan"
+          },
+          "freshness": {
+            "type": "string",
+            "enum": [
+              "missing",
+              "fresh",
+              "stale"
+            ],
+            "description": "`missing`: no plan. `fresh`: matches the delivery's cargo and vehicle. `stale`: recompute it."
+          },
+          "staleReason": {
+            "type": "string",
+            "nullable": true,
+            "description": "Why the plan is stale, e.g. `waybill_added`, `waybill_removed`, `stop_order_changed`, `packages_changed`, `vehicle_type_changed`, `no_vehicle_type`, `inputs_changed`."
+          },
+          "problems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LoadPlanCargoProblem"
+            },
+            "description": "Packages that cannot be planned with the delivery's current cargo."
+          }
+        },
+        "required": [
+          "deliveryId",
+          "vehicleTypeId",
+          "plan",
+          "freshness",
+          "staleReason",
+          "problems"
+        ]
+      },
+      "DeliveryEventType": {
+        "type": "string",
+        "enum": [
+          "created",
+          "picked_up",
+          "accepted",
+          "delivering",
+          "delivered",
+          "failed",
+          "exception",
+          "canceled",
+          "rescheduled",
+          "returning",
+          "returned",
+          "in_transit_sorted",
+          "in_transit_hub_inbound",
+          "in_transit_hub_outbound"
+        ],
+        "description": "The waybill statuses other than `draft`, which no event can record."
+      },
+      "SecondaryEventType": {
+        "type": "string",
+        "nullable": true,
+        "enum": [
+          "transport_collecting",
+          "transport_originalport",
+          "customs_finished",
+          "transport_departed",
+          "transport_arrived",
+          "transport_finished",
+          "transport_handover"
+        ],
+        "description": "A cross-border milestone. Each is recorded as one `event_type`, which sets the package status: `transport_collecting` → `picked_up`, `transport_originalport` → `in_transit_sorted`, `customs_finished` → `in_transit_hub_outbound`, `transport_departed` → `in_transit_hub_outbound`, `transport_arrived` → `in_transit_hub_inbound`, `transport_finished` → `in_transit_sorted`, `transport_handover` → `delivered`."
+      },
+      "DeliveryEvent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "waybill_id": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid"
+          },
+          "waybill_no": {
+            "type": "string",
+            "nullable": true
+          },
+          "package_id": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid"
+          },
+          "package_no": {
+            "type": "string",
+            "nullable": true
+          },
+          "event_type": {
+            "$ref": "#/components/schemas/DeliveryEventType"
+          },
+          "secondary_event_type": {
+            "$ref": "#/components/schemas/SecondaryEventType"
+          },
+          "event_time": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time"
+          },
+          "event_description": {
+            "type": "string",
+            "nullable": true,
+            "description": "The `notes` sent."
+          },
+          "location_address": {
+            "type": "string",
+            "nullable": true
+          },
+          "location_coordinates": {
+            "type": "string",
+            "nullable": true,
+            "description": "The `coordinates` sent, formatted `\"(x,y)\"`."
+          },
+          "metadata": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "pod_images": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string",
+                      "format": "uri"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "url"
+                  ]
+                },
+                "description": "Proof-of-delivery photos."
+              }
+            }
+          },
+          "created_at": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time"
+          },
+          "created_by": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "id",
+          "waybill_id",
+          "waybill_no",
+          "package_id",
+          "package_no",
+          "event_type",
+          "secondary_event_type",
+          "event_time",
+          "event_description",
+          "location_address",
+          "location_coordinates",
+          "metadata",
+          "created_at",
+          "created_by"
+        ],
+        "description": "A recorded delivery event. Unlisted fields are internal and may change without notice."
+      },
+      "DeliveryEventConflict": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "description": "All `messages` joined."
+          },
+          "conflict": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "messages": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "First the conflict, then one line per existing later event (ID, type, time)."
+          }
+        },
+        "required": [
+          "error",
+          "conflict",
+          "messages"
+        ]
+      },
+      "DeliveryEventCreateRequest": {
+        "type": "object",
+        "properties": {
+          "waybill_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Waybill ID (not the waybill number). Records the event on every package of the waybill. Ignored when `package_id` is given."
+          },
+          "package_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Package ID (not the package number). Records the event on that package only; takes precedence over `waybill_id`."
+          },
+          "event_type": {
+            "$ref": "#/components/schemas/DeliveryEventType"
+          },
+          "secondary_event_type": {
+            "$ref": "#/components/schemas/SecondaryEventType"
+          },
+          "event_time": {
+            "type": "string",
+            "description": "When it happened (ISO 8601). Defaults to now. An unparseable value fails with 400."
+          },
+          "coordinates": {
+            "type": "string",
+            "description": "Point as `\"x,y\"` or `\"(x,y)\"`; send latitude first, e.g. `\"13.7563,100.5018\"`."
+          },
+          "notes": {
+            "type": "string",
+            "description": "Event description; returned as `event_description`."
+          },
+          "photos": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Proof-of-delivery photos as data URLs (`data:image/<type>;base64,...`). Stored with the created event."
+          },
+          "ignore_conflicts": {
+            "type": "boolean",
+            "description": "`true`: record the event even when a later event already exists. The package status is then still updated."
+          }
+        },
+        "description": "Either `waybill_id` or `package_id` is required, and `event_type` or `secondary_event_type`."
+      },
+      "QuoteBreakdownLine": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "base",
+              "addon"
+            ],
+            "description": "`base`: the fare (one per vehicle for a composition). `addon`: one requested add-on."
+          },
+          "key": {
+            "type": "string",
+            "description": "Add-on key; `addon` lines only."
+          },
+          "amount": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "kind",
+          "amount"
+        ]
+      },
+      "QuoteCreated": {
+        "type": "object",
+        "properties": {
+          "quotation_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The saved quotation; use it to read, pay or cancel the quote."
+          },
+          "request_id": {
+            "type": "string",
+            "description": "Your `request_id`, or the generated one."
+          },
+          "vehicle": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "type": {
+                "type": "string",
+                "description": "Vehicle type key."
+              },
+              "max_payload_kg": {
+                "type": "integer",
+                "description": "Rated payload, rounded to whole kg."
+              }
+            },
+            "required": [
+              "type",
+              "max_payload_kg"
+            ],
+            "description": "The vehicle priced. Null for a multi-vehicle composition, and when the winning price is not tied to a vehicle."
+          },
+          "vehicles": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "object",
+              "properties": {
+                "vehicle_type": {
+                  "type": "string"
+                },
+                "price": {
+                  "type": "number"
+                },
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "qty": {
+                        "type": "integer"
+                      }
+                    },
+                    "required": [
+                      "name",
+                      "qty"
+                    ]
+                  },
+                  "description": "The cargo lines loaded on this vehicle."
+                }
+              },
+              "required": [
+                "vehicle_type",
+                "price",
+                "items"
+              ]
+            },
+            "description": "Multi-vehicle composition, offered when no single vehicle fits the cargo. Null for an ordinary quote."
+          },
+          "estimated_total": {
+            "type": "number",
+            "description": "Quoted price; for a composition, the sum of the vehicle prices."
+          },
+          "currency": {
+            "type": "string",
+            "description": "ISO 4217 code."
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the quote stops being valid; 30 minutes unless the carrier sets its own expiry."
+          },
+          "breakdown": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuoteBreakdownLine"
+            }
+          }
+        },
+        "required": [
+          "quotation_id",
+          "request_id",
+          "vehicle",
+          "vehicles",
+          "estimated_total",
+          "currency",
+          "expires_at",
+          "breakdown"
+        ]
+      },
+      "QuoteCreateError": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "enum": [
+              "missing_required_field",
+              "unsupported_route",
+              "no_vehicle_fits",
+              "unsupported_addon",
+              "load_planning_unavailable"
+            ],
+            "description": "Error code. Note that internal errors (500) also report `missing_required_field`."
+          },
+          "detail": {
+            "type": "string",
+            "description": "Explanation. For a 400 it is a JSON string mapping each invalid field to its messages."
+          },
+          "request_id": {
+            "type": "string",
+            "description": "Your `request_id`, or the generated one; empty when the body could not be read."
+          }
+        },
+        "required": [
+          "error",
+          "detail",
+          "request_id"
+        ]
+      },
+      "QuoteError": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "description": "Machine-readable code, e.g. `forbidden`, `not_found`. Not localized."
+          },
+          "detail": {
+            "type": "string",
+            "description": "Free-text explanation, when there is one."
+          }
+        },
+        "required": [
+          "error"
+        ]
+      },
+      "QuoteStatus": {
+        "type": "string",
+        "enum": [
+          "active",
+          "accepted",
+          "canceled",
+          "expired"
+        ],
+        "description": "`active`: open. `accepted`: an order was created from it (Pay). `canceled`. `expired`: past `expires_at` without an order; a lapsed quote reads `expired` (and is marked so) the next time it is read, paid or canceled."
+      },
+      "QuoteOrderRef": {
+        "type": "object",
+        "nullable": true,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Order (delivery) ID; use it with Get order tracking."
+          },
+          "status": {
+            "type": "string",
+            "nullable": true,
+            "description": "Delivery status: `pending`, `ready_for_pickup`, `assigned`, `in_transit`, `delivered`, `failed`, `cancelled`."
+          },
+          "payment_status": {
+            "type": "string",
+            "description": "e.g. `pending`, `paid`, `canceled`."
+          }
+        },
+        "required": [
+          "id",
+          "status",
+          "payment_status"
+        ],
+        "description": "The order created from the quote; null until Pay is called."
+      },
+      "QuoteSummary": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "$ref": "#/components/schemas/QuoteStatus"
+          },
+          "estimated_total": {
+            "type": "number"
+          },
+          "currency": {
+            "type": "string",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "delivery": {
+            "$ref": "#/components/schemas/QuoteOrderRef"
+          }
+        },
+        "required": [
+          "id",
+          "status",
+          "estimated_total",
+          "currency",
+          "created_at",
+          "expires_at",
+          "delivery"
+        ]
+      },
+      "QuoteList": {
+        "type": "object",
+        "properties": {
+          "quotes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuoteSummary"
+            }
+          }
+        },
+        "required": [
+          "quotes"
+        ]
+      },
+      "QuoteSnapshot": {
+        "type": "object",
+        "nullable": true,
+        "properties": {
+          "request_id": {
+            "type": "string",
+            "description": "Your `request_id`, or the generated one."
+          },
+          "pickup": {
+            "type": "object",
+            "properties": {
+              "address": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Free-text address line."
+              },
+              "lat": {
+                "type": "number",
+                "minimum": -90,
+                "maximum": 90,
+                "description": "Latitude. Required: resolve free text through POST /api/address/resolve first; quoting never geocodes."
+              },
+              "lng": {
+                "type": "number",
+                "minimum": -180,
+                "maximum": 180,
+                "description": "Longitude. Required, like `lat`."
+              },
+              "country": {
+                "type": "string",
+                "nullable": true,
+                "description": "Country."
+              },
+              "province": {
+                "type": "string",
+                "nullable": true,
+                "description": "Province."
+              },
+              "district": {
+                "type": "string",
+                "nullable": true,
+                "description": "District."
+              },
+              "postal_code": {
+                "type": "string",
+                "nullable": true,
+                "description": "Postal code."
+              },
+              "phone": {
+                "type": "string",
+                "nullable": true,
+                "description": "Contact phone at this address."
+              }
+            },
+            "required": [
+              "address",
+              "lat",
+              "lng"
+            ],
+            "description": "Pickup address."
+          },
+          "delivery": {
+            "type": "object",
+            "properties": {
+              "address": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Free-text address line."
+              },
+              "lat": {
+                "type": "number",
+                "minimum": -90,
+                "maximum": 90,
+                "description": "Latitude. Required: resolve free text through POST /api/address/resolve first; quoting never geocodes."
+              },
+              "lng": {
+                "type": "number",
+                "minimum": -180,
+                "maximum": 180,
+                "description": "Longitude. Required, like `lat`."
+              },
+              "country": {
+                "type": "string",
+                "nullable": true,
+                "description": "Country."
+              },
+              "province": {
+                "type": "string",
+                "nullable": true,
+                "description": "Province."
+              },
+              "district": {
+                "type": "string",
+                "nullable": true,
+                "description": "District."
+              },
+              "postal_code": {
+                "type": "string",
+                "nullable": true,
+                "description": "Postal code."
+              },
+              "phone": {
+                "type": "string",
+                "nullable": true,
+                "description": "Contact phone at this address."
+              }
+            },
+            "required": [
+              "address",
+              "lat",
+              "lng"
+            ],
+            "description": "Delivery address."
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "qty": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "exclusiveMinimum": true,
+                  "description": "Number of identical pieces."
+                },
+                "length_cm": {
+                  "type": "number",
+                  "minimum": 0,
+                  "exclusiveMinimum": true,
+                  "description": "Length of one piece, cm."
+                },
+                "width_cm": {
+                  "type": "number",
+                  "minimum": 0,
+                  "exclusiveMinimum": true,
+                  "description": "Width of one piece, cm."
+                },
+                "height_cm": {
+                  "type": "number",
+                  "minimum": 0,
+                  "exclusiveMinimum": true,
+                  "description": "Height of one piece, cm."
+                },
+                "weight_kg": {
+                  "type": "number",
+                  "minimum": 0,
+                  "exclusiveMinimum": true,
+                  "description": "Weight of one piece, kg."
+                },
+                "volume_m3": {
+                  "type": "number",
+                  "nullable": true,
+                  "minimum": 0,
+                  "exclusiveMinimum": true,
+                  "description": "Volume of one piece, m³. Defaults to length × width × height."
+                },
+                "stackable": {
+                  "type": "boolean",
+                  "nullable": true,
+                  "description": "Whether other pieces may be stacked on this one."
+                },
+                "fragile": {
+                  "type": "boolean",
+                  "nullable": true,
+                  "description": "Whether the piece is fragile."
+                },
+                "flipable": {
+                  "type": "boolean",
+                  "nullable": true,
+                  "description": "Whether the piece may be tipped onto another face during loading. Unset: decided from its size and weight."
+                },
+                "name": {
+                  "type": "string",
+                  "nullable": true,
+                  "description": "Item name."
+                },
+                "notes": {
+                  "type": "string",
+                  "nullable": true,
+                  "description": "Item notes."
+                },
+                "image_urls": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "default": [],
+                  "description": "Image URLs."
+                }
+              },
+              "required": [
+                "qty",
+                "length_cm",
+                "width_cm",
+                "height_cm",
+                "weight_kg"
+              ]
+            },
+            "minItems": 1,
+            "description": "Cargo lines, at least one. Totals are derived from these; they cannot be sent separately."
+          },
+          "addon_keys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The add-ons requested."
+          },
+          "addons": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "string"
+                },
+                "amount": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "key",
+                "amount"
+              ]
+            },
+            "description": "The price of each add-on; the same as the `addon` lines of `breakdown`."
+          },
+          "base_amount": {
+            "type": "number",
+            "description": "The fare before add-ons; the same as the `base` line of `breakdown`."
+          },
+          "is_composition": {
+            "type": "boolean",
+            "description": "True for a multi-vehicle composition."
+          },
+          "composition": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "vehicleType": {
+                  "type": "string"
+                },
+                "cost": {
+                  "type": "number",
+                  "description": "This vehicle's price."
+                },
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "qty": {
+                        "type": "integer"
+                      }
+                    },
+                    "required": [
+                      "name",
+                      "qty"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "vehicleType",
+                "cost",
+                "items"
+              ]
+            },
+            "description": "Compositions only: each vehicle, its price and the cargo lines it carries."
+          }
+        },
+        "required": [
+          "request_id",
+          "pickup",
+          "delivery",
+          "items"
+        ],
+        "description": "The request as priced: addresses, items, add-ons. Single-vehicle quotes carry `addon_keys`, `addons` and `base_amount`; compositions carry `is_composition` and `composition`."
+      },
+      "Quote": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "$ref": "#/components/schemas/QuoteStatus"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "estimated_total": {
+            "type": "number"
+          },
+          "currency": {
+            "type": "string",
+            "nullable": true
+          },
+          "breakdown": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuoteBreakdownLine"
+            }
+          },
+          "snapshot": {
+            "$ref": "#/components/schemas/QuoteSnapshot"
+          },
+          "delivery": {
+            "$ref": "#/components/schemas/QuoteOrderRef"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "status",
+          "expires_at",
+          "estimated_total",
+          "currency",
+          "breakdown",
+          "snapshot",
+          "delivery",
+          "created_at"
+        ]
+      },
+      "QuotePaymentMethodName": {
+        "type": "string",
+        "enum": [
+          "flashpay",
+          "bank_transfer",
+          "wallet"
+        ]
+      },
+      "QuotePaymentMethods": {
+        "type": "object",
+        "properties": {
+          "methods": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "$ref": "#/components/schemas/QuotePaymentMethodName"
+                },
+                "modes": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "qr",
+                      "deeplink",
+                      "wechat_applet",
+                      "manual_transfer",
+                      "settled"
+                    ]
+                  },
+                  "description": "How the payer completes this method."
+                },
+                "available": {
+                  "type": "boolean",
+                  "description": "Whether it would work right now, for this amount. Advisory: Pay has the final say."
+                },
+                "unavailable_reason": {
+                  "type": "string",
+                  "enum": [
+                    "not_configured",
+                    "no_bank_account_available",
+                    "insufficient_balance",
+                    "currency_unsupported",
+                    "no_sender_account",
+                    "unavailable"
+                  ],
+                  "description": "Present when `available` is false."
+                }
+              },
+              "required": [
+                "name",
+                "modes",
+                "available"
+              ]
+            },
+            "description": "Allowed methods in the organization's order. Unavailable ones are listed with a reason, not dropped."
+          },
+          "default": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/QuotePaymentMethodName"
+              },
+              {
+                "nullable": true,
+                "description": "The method to preselect; null only when nothing is enabled."
+              }
+            ]
+          }
+        },
+        "required": [
+          "methods",
+          "default"
+        ]
+      },
+      "QuotePaymentQr": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "qr"
+            ]
+          },
+          "paymentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "tradeNo": {
+            "type": "string",
+            "description": "FlashPay trade number."
+          },
+          "qrImage": {
+            "type": "string",
+            "description": "QR code image."
+          },
+          "qrRawData": {
+            "type": "string",
+            "description": "QR payload."
+          },
+          "qrExpireTime": {
+            "type": "string"
+          },
+          "deliveryId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The order (delivery) created from the quote; use it with Get order tracking."
+          }
+        },
+        "required": [
+          "type",
+          "paymentId",
+          "tradeNo",
+          "qrImage",
+          "qrRawData",
+          "qrExpireTime",
+          "deliveryId"
+        ]
+      },
+      "QuotePaymentApp": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "app"
+            ]
+          },
+          "paymentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "tradeNo": {
+            "type": "string"
+          },
+          "appUrl": {
+            "type": "string",
+            "nullable": true,
+            "description": "Deep link into the bank's app."
+          },
+          "deliveryId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The order (delivery) created from the quote; use it with Get order tracking."
+          }
+        },
+        "required": [
+          "type",
+          "paymentId",
+          "tradeNo",
+          "appUrl",
+          "deliveryId"
+        ]
+      },
+      "QuotePaymentBankTransfer": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "bank_transfer"
+            ]
+          },
+          "paymentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "referenceCode": {
+            "type": "string",
+            "description": "The payer must put this in the transfer note."
+          },
+          "account": {
+            "type": "object",
+            "properties": {
+              "bank_name": {
+                "type": "string"
+              },
+              "bank_code": {
+                "type": "string",
+                "nullable": true
+              },
+              "account_number": {
+                "type": "string"
+              },
+              "account_name": {
+                "type": "string"
+              },
+              "branch": {
+                "type": "string",
+                "nullable": true
+              },
+              "currency": {
+                "type": "string"
+              },
+              "qr_image_url": {
+                "type": "string",
+                "nullable": true
+              },
+              "instructions": {
+                "type": "string",
+                "nullable": true
+              }
+            },
+            "required": [
+              "bank_name",
+              "bank_code",
+              "account_number",
+              "account_name",
+              "branch",
+              "currency",
+              "qr_image_url",
+              "instructions"
+            ],
+            "description": "The receiving account to transfer to."
+          },
+          "amount": {
+            "type": "number",
+            "description": "In the quote's currency; not converted."
+          },
+          "currency": {
+            "type": "string"
+          },
+          "expiresAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "deliveryId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The order (delivery) created from the quote; use it with Get order tracking."
+          }
+        },
+        "required": [
+          "type",
+          "paymentId",
+          "referenceCode",
+          "account",
+          "amount",
+          "currency",
+          "expiresAt",
+          "deliveryId"
+        ]
+      },
+      "QuotePaymentWallet": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "wallet"
+            ]
+          },
+          "paymentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "balance": {
+            "type": "number",
+            "description": "Wallet balance after the payment."
+          },
+          "deliveryId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The order (delivery) created from the quote; use it with Get order tracking."
+          }
+        },
+        "required": [
+          "type",
+          "paymentId",
+          "balance",
+          "deliveryId"
+        ]
+      },
+      "QuotePayment": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/QuotePaymentQr"
+          },
+          {
+            "$ref": "#/components/schemas/QuotePaymentApp"
+          },
+          {
+            "$ref": "#/components/schemas/QuotePaymentBankTransfer"
+          },
+          {
+            "$ref": "#/components/schemas/QuotePaymentWallet"
+          }
+        ],
+        "description": "Payment details for the method used. Field names are camelCase."
+      },
+      "QuotePayConflict": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/QuoteError"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "allowed": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/QuotePaymentMethodName"
+                },
+                "description": "With `payment_method_not_allowed`: the methods that are allowed."
+              }
+            }
+          }
+        ]
+      },
+      "QuotePayRequest": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "qr",
+              "app",
+              "bank_transfer",
+              "wallet"
+            ],
+            "default": "qr",
+            "description": "`qr`: FlashPay QR code. `app`: FlashPay bank-app deep link. `bank_transfer`. `wallet`."
+          },
+          "bank_code": {
+            "type": "string",
+            "description": "Bank for `type: app`. Required for `app`; without it the call fails with 500 `pay_failed`."
+          }
+        }
+      },
+      "QuoteCancelResult": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "quote_canceled",
+              "order_canceled"
+            ],
+            "description": "`quote_canceled`: the quote was canceled. `order_canceled`: its unpaid order was canceled."
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "QuoteCancelConflict": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "enum": [
+              "already_terminal"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "nullable": true,
+            "description": "The quote's status, or, when an order exists, the order's payment status (e.g. `paid`)."
+          }
+        },
+        "required": [
+          "error",
+          "status"
+        ]
+      },
+      "OrderTrackingStatus": {
+        "type": "string",
+        "enum": [
+          "pending",
+          "assigning_driver",
+          "driver_assigned",
+          "picked_up",
+          "in_transit",
+          "delivered",
+          "canceled",
+          "failed"
+        ]
+      },
+      "OrderTracking": {
+        "type": "object",
+        "properties": {
+          "provider": {
+            "type": "string",
+            "enum": [
+              "lalamove",
+              "deliveree",
+              "internal"
+            ],
+            "description": "`internal`: own fleet, or a partner running the trip with its own vehicles."
+          },
+          "external_order_id": {
+            "type": "string",
+            "description": "The carrier's order ID; empty for `internal`."
+          },
+          "status": {
+            "$ref": "#/components/schemas/OrderTrackingStatus"
+          },
+          "driver": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "name": {
+                "type": "string",
+                "nullable": true
+              },
+              "phone": {
+                "type": "string",
+                "nullable": true
+              },
+              "photo_url": {
+                "type": "string",
+                "nullable": true
+              }
+            },
+            "required": [
+              "name",
+              "phone",
+              "photo_url"
+            ]
+          },
+          "vehicle": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "plate": {
+                "type": "string",
+                "nullable": true
+              },
+              "model": {
+                "type": "string",
+                "nullable": true
+              },
+              "photo_url": {
+                "type": "string",
+                "nullable": true
+              }
+            },
+            "required": [
+              "plate",
+              "model",
+              "photo_url"
+            ],
+            "description": "Null for `internal`."
+          },
+          "current_location": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "lat": {
+                "type": "number"
+              },
+              "lng": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "lat",
+              "lng"
+            ]
+          },
+          "stops": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "address": {
+                  "type": "string"
+                },
+                "lat": {
+                  "type": "number",
+                  "nullable": true
+                },
+                "lng": {
+                  "type": "number",
+                  "nullable": true
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "pending",
+                    "arrived",
+                    "completed",
+                    "failed"
+                  ]
+                },
+                "completed_at": {
+                  "type": "string",
+                  "nullable": true,
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "address",
+                "lat",
+                "lng",
+                "status",
+                "completed_at"
+              ]
+            },
+            "description": "Pickup, then drop-off(s), in route order. Empty for `internal`."
+          },
+          "eta_pickup_at": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time"
+          },
+          "eta_delivery_at": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time"
+          },
+          "pod": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "photo_urls": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "signature_url": {
+                "type": "string",
+                "nullable": true
+              },
+              "delivered_at": {
+                "type": "string",
+                "nullable": true,
+                "format": "date-time"
+              }
+            },
+            "required": [
+              "photo_urls",
+              "signature_url",
+              "delivered_at"
+            ],
+            "description": "Proof of delivery. Null for `internal`."
+          },
+          "fetched_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the carrier was asked."
+          }
+        },
+        "required": [
+          "provider",
+          "external_order_id",
+          "status",
+          "driver",
+          "vehicle",
+          "current_location",
+          "stops",
+          "eta_pickup_at",
+          "eta_delivery_at",
+          "pod",
+          "fetched_at"
+        ]
+      },
+      "OrderTrackingPending": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "enum": [
+              "awaiting_payment",
+              "awaiting_3pl"
+            ],
+            "description": "`awaiting_payment`: not paid yet. `awaiting_3pl`: paid, the carrier order is not placed yet."
+          }
+        },
+        "required": [
+          "state"
+        ]
       }
     },
     "parameters": {}
   },
   "paths": {
+    "/api/organizations": {
+      "get": {
+        "tags": [
+          "Organization"
+        ],
+        "operationId": "getOrganization",
+        "summary": "Get your organization",
+        "description": "Returns the organization the request authenticated as. Not gated by subscription plan, so it is the simplest credentials check.",
+        "security": [
+          {
+            "signature": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Your organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Organization"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid signature / session.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Organization not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "System error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/sender-accounts": {
+      "get": {
+        "tags": [
+          "Sender accounts"
+        ],
+        "operationId": "listSenderAccounts",
+        "summary": "List sender accounts",
+        "description": "Newest first. Requires the `sender_accounts` plan feature.",
+        "security": [
+          {
+            "signature": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "description": "Case-insensitive substring of name, company_name, sender_code or slug."
+            },
+            "required": false,
+            "description": "Case-insensitive substring of name, company_name, sender_code or slug.",
+            "name": "search",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ],
+              "description": "`true`: active only. Any other non-empty value: inactive only. Omit for both."
+            },
+            "required": false,
+            "description": "`true`: active only. Any other non-empty value: inactive only. Omit for both.",
+            "name": "is_active",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 50,
+              "description": "Records per page. Not capped."
+            },
+            "required": false,
+            "description": "Records per page. Not capped.",
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "description": "Records to skip. Rounded down to a multiple of `limit` (the page is floor(offset / limit) + 1)."
+            },
+            "required": false,
+            "description": "Records to skip. Rounded down to a multiple of `limit` (the page is floor(offset / limit) + 1).",
+            "name": "offset",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "One page of sender accounts.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SenderAccountPage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid signature / session.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The organization's plan does not include `sender_accounts`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "System error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/sender-accounts/{id}": {
+      "get": {
+        "tags": [
+          "Sender accounts"
+        ],
+        "operationId": "getSenderAccount",
+        "summary": "Get a sender account",
+        "description": "Requires the `sender_accounts` plan feature.",
+        "security": [
+          {
+            "signature": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "description": "Account UUID, `sender_code`, or `slug` (case-insensitive). Tried in that order; the first match wins.",
+              "example": "ACME001"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The sender account.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SenderAccount"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid signature / session.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The organization's plan does not include `sender_accounts`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Sender account not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "System error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/organization-units": {
+      "get": {
+        "tags": [
+          "Organization units"
+        ],
+        "operationId": "listOrganizationUnits",
+        "summary": "List organization units",
+        "description": "Newest first. Only units with an address are returned. Not gated by subscription plan.",
+        "security": [
+          {
+            "signature": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "description": "Case-insensitive substring of name or phone."
+            },
+            "required": false,
+            "description": "Case-insensitive substring of name or phone.",
+            "name": "search",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "description": "Exact unit type: branch, warehouse, office, hub, division or department."
+            },
+            "required": false,
+            "description": "Exact unit type: branch, warehouse, office, hub, division or department.",
+            "name": "type",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ],
+              "description": "`true`: active only. Any other non-empty value: inactive only. Omit for both."
+            },
+            "required": false,
+            "description": "`true`: active only. Any other non-empty value: inactive only. Omit for both.",
+            "name": "is_active",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 50,
+              "description": "Records per page. Not capped."
+            },
+            "required": false,
+            "description": "Records per page. Not capped.",
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "description": "Records to skip. Rounded down to a multiple of `limit` (the page is floor(offset / limit) + 1)."
+            },
+            "required": false,
+            "description": "Records to skip. Rounded down to a multiple of `limit` (the page is floor(offset / limit) + 1).",
+            "name": "offset",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "One page of organization units.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrganizationUnitPage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid signature / session.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "System error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/address/resolve": {
+      "post": {
+        "tags": [
+          "Address"
+        ],
+        "operationId": "resolveAddress",
+        "summary": "Resolve an address",
+        "description": "Turns one of three inputs into a structured address and coordinates: `lat`+`lng` (reverse geocode), `url` (Google Maps link), or `address` (free text). When several are sent, the first present in that order wins.\n\nFree text runs a cascade and returns the first step that matches: Google Geocoding (≥ 0.68), Google Places (0.75), Geocoding on the administrative parts only (≥ 0.68), postal-code centroid (0.55), province centroid (0.32). Always check `confidence` and `source` before using the coordinates — a centroid can be far from the real address.\n\nRequires authentication (signature or session) but no plan feature or user permission.\nError messages are fixed English strings, not localized.",
+        "security": [
+          {
+            "signature": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResolveAddressRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The resolved address.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResolvedAddress"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Body is not JSON; `lat`/`lng` out of range; `url` is not a Google Maps link (https google.<tld>/maps, maps.google.<tld>, maps.app.goo.gl or goo.gl/maps); or none of the inputs given (lat+lng as numbers, or a non-blank url or address).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid signature or session. Body is `{ \"error\": \"Unauthorized\" }`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not resolved: no coordinates in the link, Google has no result for the point, or every cascade step missed (low-confidence Google matches are discarded, not returned).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Geocoder misconfigured or Google unreachable. The error is not caught by the route, so the body is not the JSON error shape."
+          }
+        }
+      }
+    },
+    "/api/regions": {
+      "get": {
+        "tags": [
+          "Regions"
+        ],
+        "operationId": "getRegionHierarchy",
+        "summary": "Get the region hierarchy",
+        "description": "Province → district → subdistrict tree for a country, from global reference data (not organization-scoped).\n\nRequires authentication (signature or session) but no plan feature or user permission.\nThe response is the bare object, not wrapped in `data`.",
+        "security": [
+          {
+            "signature": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "description": "ISO-2 country code, upper case (matched exactly: `th` finds nothing). An unknown country returns `{ \"provinces\": [] }`."
+            },
+            "required": true,
+            "description": "ISO-2 country code, upper case (matched exactly: `th` finds nothing). An unknown country returns `{ \"provinces\": [] }`.",
+            "name": "country",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "description": "Only subdistricts with exactly this postal code."
+            },
+            "required": false,
+            "description": "Only subdistricts with exactly this postal code.",
+            "name": "postal_code",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The hierarchy; `provinces` is empty when nothing matches.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegionHierarchy"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`country` missing.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid signature or session. Body is `{ \"error\": \"Unauthorized\" }`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "System error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/regions/countries": {
+      "get": {
+        "tags": [
+          "Regions"
+        ],
+        "operationId": "listRegionCountries",
+        "summary": "List countries with region data",
+        "description": "Country codes that have province reference data, i.e. the values `GET /api/regions` can return a tree for.\n\nRequires authentication (signature or session) but no plan feature or user permission.",
+        "security": [
+          {
+            "signature": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Country codes, wrapped in `data`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CountryList"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid signature or session. Body is `{ \"error\": \"Unauthorized\" }`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "System error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/waybills": {
       "get": {
         "tags": [
@@ -818,6 +4217,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/WaybillPage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid signature or session.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -1240,6 +4649,16 @@
               }
             }
           },
+          "401": {
+            "description": "Missing or invalid signature or session.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
           "403": {
             "description": "The `outTradeNo` belongs to another organization, or the request carries no organization context.",
             "content": {
@@ -1317,6 +4736,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Waybill"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid signature or session.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -1435,6 +4864,16 @@
               }
             }
           },
+          "401": {
+            "description": "Missing or invalid signature or session.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Waybill not found.",
             "content": {
@@ -1512,6 +4951,16 @@
               }
             }
           },
+          "401": {
+            "description": "Missing or invalid signature or session.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Waybill not found.",
             "content": {
@@ -1569,6 +5018,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Tracking"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid signature or session.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -1641,6 +5100,16 @@
                 "schema": {
                   "type": "string",
                   "format": "binary"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid signature or session.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -1739,6 +5208,16 @@
               }
             }
           },
+          "401": {
+            "description": "Missing or invalid signature or session.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
           "500": {
             "description": "System error.",
             "content": {
@@ -1783,6 +5262,16 @@
                   "required": [
                     "number"
                   ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid signature or session.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -2059,6 +5548,1422 @@
                     }
                   ],
                   "description": "Legacy response envelope. Always HTTP 200; check `success` and `code`. Used by organizations configured for the legacy format, by requests sending `X-Legacy-Response: true`, and always by POST /api/waybills/{waybillNo}/packages."
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid signature or session.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/load-planning/fit-check": {
+      "post": {
+        "tags": [
+          "Load planning"
+        ],
+        "operationId": "checkLoadFit",
+        "summary": "Check whether waybills fit one vehicle",
+        "description": "Packs the waybills' packages (plus a delivery's current cargo, with `delivery_id`) into one vehicle of the given type and reports the result. Nothing is saved. Stop order is ignored. Packages need dimensions (cm) to be planned. Requires the `delivery.planning` plan feature; a signed-in user also needs the `deliveries` permission.",
+        "security": [
+          {
+            "signature": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoadPlanFitCheckRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The fit result. `status: no_cargo` is a 200, not an error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoadPlanFitCheck"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Body is not JSON (`invalid_json`) or fails validation (`validation_failed`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoadPlanRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid signature or session.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The plan lacks `delivery.planning`, or the signed-in user lacks the `deliveries` permission.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: `delivery_id` does not exist or is not visible to you.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoadPlanError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "`no_vehicle_type`: no vehicle type given, the delivery has none, or it does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoadPlanError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "System error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoadPlanInternalError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "`load_planning_unavailable`: the load-planning engine is temporarily unavailable. Retry after the `Retry-After` header (30 seconds).",
+            "headers": {
+              "Retry-After": {
+                "description": "Seconds to wait before retrying.",
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoadPlanError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/load-planning/split": {
+      "post": {
+        "tags": [
+          "Load planning"
+        ],
+        "operationId": "splitLoad",
+        "summary": "Propose or create a multi-vehicle split",
+        "description": "`action: propose` spreads the waybills over the given vehicle types, one group per vehicle, and creates nothing. `action: accept` creates one delivery per group and computes each delivery's load plan. Requires the `delivery.planning` plan feature; a signed-in user also needs the `deliveries` permission.",
+        "security": [
+          {
+            "signature": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/LoadPlanSplitProposeRequest"
+                  },
+                  {
+                    "$ref": "#/components/schemas/LoadPlanSplitAcceptRequest"
+                  }
+                ],
+                "discriminator": {
+                  "propertyName": "action",
+                  "mapping": {
+                    "propose": "#/components/schemas/LoadPlanSplitProposeRequest",
+                    "accept": "#/components/schemas/LoadPlanSplitAcceptRequest"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "`LoadPlanSplitProposal` for `propose`; `LoadPlanSplitAccepted` for `accept`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/LoadPlanSplitProposal"
+                    },
+                    {
+                      "$ref": "#/components/schemas/LoadPlanSplitAccepted"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Body is not JSON (`invalid_json`) or fails validation (`validation_failed`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoadPlanRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid signature or session.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The plan lacks `delivery.planning`, or the signed-in user lacks the `deliveries` permission.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`waybills_assigned` (accept): a waybill is already in a delivery; propose again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoadPlanError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "`no_vehicle_type`: none of the vehicle types exist (propose), or a group's does not (accept). `no_cargo` (propose): no package has usable dimensions; `problems` lists them. `invalid_groups` (accept): a waybill appears in more than one group.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoadPlanError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`create_failed` (accept): a delivery could not be created; the deliveries this request created were removed. Or `internal_error`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/LoadPlanError"
+                    },
+                    {
+                      "$ref": "#/components/schemas/LoadPlanInternalError"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "`load_planning_unavailable`: the load-planning engine is temporarily unavailable. Retry after the `Retry-After` header (30 seconds).",
+            "headers": {
+              "Retry-After": {
+                "description": "Seconds to wait before retrying.",
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoadPlanError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/load-planning/deliveries/{id}/plan": {
+      "get": {
+        "tags": [
+          "Load planning"
+        ],
+        "operationId": "getDeliveryLoadPlan",
+        "summary": "Get a delivery's load plan",
+        "description": "The current load plan of a delivery and whether it still matches the delivery's cargo and vehicle. Requires the `delivery.planning` plan feature; a signed-in user also needs the `deliveries` permission.",
+        "security": [
+          {
+            "signature": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "description": "Delivery ID."
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The plan and its freshness. `plan` is null when none was computed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoadPlanDeliveryPlan"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_delivery_id`: the ID is not a UUID.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoadPlanRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid signature or session.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The plan lacks `delivery.planning`, or the signed-in user lacks the `deliveries` permission.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: the delivery does not exist or is not visible to you.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoadPlanError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "System error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoadPlanInternalError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/delivery-events": {
+      "post": {
+        "tags": [
+          "Delivery events"
+        ],
+        "operationId": "createDeliveryEvent",
+        "summary": "Record a delivery event",
+        "description": "Records a tracking event and moves the package status to `event_type`. Requires the `delivery.tracking` plan feature; a signed-in user also needs the `deliveries` or `scan` permission.\n\nWith `waybill_id` the event is recorded on each package of the waybill and the response carries the event of the first package. Every package is checked first: a conflict on any of them fails the request with 409 and records nothing.\n\nAn event conflicts when the package already has an event of a later stage, or any event at or after `event_time`.\n\nIf photos fail to upload, the event is still created: the response is 201 with `_podUploadError` set.",
+        "security": [
+          {
+            "signature": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeliveryEventCreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The created event.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/DeliveryEvent"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "_podUploadError": {
+                          "type": "string",
+                          "description": "Present when the event was created but its photos failed to upload."
+                        }
+                      }
+                    }
+                  ],
+                  "description": "A recorded delivery event. Unlisted fields are internal and may change without notice."
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The body is not valid JSON, neither `waybill_id` nor `package_id` is given, an ID is not a UUID, `event_type` is missing or not accepted (e.g. `draft`), `secondary_event_type` is unknown or doesn't match `event_type`, `event_time` can't be parsed, or a photo is not an image data URL.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid signature or session.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The plan lacks `delivery.tracking`, or the signed-in user lacks the `deliveries` and `scan` permissions.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The waybill or package doesn't exist or isn't visible to you (`Waybill not found`, `Package not found`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "A later event already exists on the package (or on any package of the waybill); resend with `ignore_conflicts: true` to record it anyway.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeliveryEventConflict"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "The waybill has no packages to record the event on (`No packages found for this waybill`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The event could not be created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/quotes": {
+      "post": {
+        "tags": [
+          "Quotes"
+        ],
+        "operationId": "createQuote",
+        "summary": "Create a quote",
+        "description": "Prices a shipment and saves the quotation; every call saves a new one. Coordinates are required: resolve free text through `POST /api/address/resolve` first. The cheapest option wins; when no single vehicle fits, a multi-vehicle composition may be offered instead (`vehicle` null, `vehicles` set).\n\nSignature only; a user session is not accepted. `X-Sender-Account-Id` is optional here: without it the quote has no owner, and the first sender of your organization to open it with Get a quote becomes its owner. A sender named here must belong to your organization (403 `forbidden` otherwise).\n\nErrors answer `{ error, detail, request_id }` (`QuoteCreateError`), except the 401 and 403, which answer `{ error }`.",
+        "security": [
+          {
+            "signature": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "description": "The sender account (customer) this call acts for. Not part of the signature; must belong to your organization."
+            },
+            "required": false,
+            "description": "The sender account (customer) this call acts for. Not part of the signature; must belong to your organization.",
+            "name": "x-sender-account-id",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "request_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Your own correlation ID, echoed back and stored on the quotation. Generated when omitted."
+                  },
+                  "pickup": {
+                    "type": "object",
+                    "properties": {
+                      "address": {
+                        "type": "string",
+                        "minLength": 1,
+                        "description": "Free-text address line."
+                      },
+                      "lat": {
+                        "type": "number",
+                        "minimum": -90,
+                        "maximum": 90,
+                        "description": "Latitude. Required: resolve free text through POST /api/address/resolve first; quoting never geocodes."
+                      },
+                      "lng": {
+                        "type": "number",
+                        "minimum": -180,
+                        "maximum": 180,
+                        "description": "Longitude. Required, like `lat`."
+                      },
+                      "country": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Country."
+                      },
+                      "province": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Province."
+                      },
+                      "district": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "District."
+                      },
+                      "postal_code": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Postal code."
+                      },
+                      "phone": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Contact phone at this address."
+                      }
+                    },
+                    "required": [
+                      "address",
+                      "lat",
+                      "lng"
+                    ],
+                    "description": "Pickup address."
+                  },
+                  "delivery": {
+                    "type": "object",
+                    "properties": {
+                      "address": {
+                        "type": "string",
+                        "minLength": 1,
+                        "description": "Free-text address line."
+                      },
+                      "lat": {
+                        "type": "number",
+                        "minimum": -90,
+                        "maximum": 90,
+                        "description": "Latitude. Required: resolve free text through POST /api/address/resolve first; quoting never geocodes."
+                      },
+                      "lng": {
+                        "type": "number",
+                        "minimum": -180,
+                        "maximum": 180,
+                        "description": "Longitude. Required, like `lat`."
+                      },
+                      "country": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Country."
+                      },
+                      "province": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Province."
+                      },
+                      "district": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "District."
+                      },
+                      "postal_code": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Postal code."
+                      },
+                      "phone": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Contact phone at this address."
+                      }
+                    },
+                    "required": [
+                      "address",
+                      "lat",
+                      "lng"
+                    ],
+                    "description": "Delivery address."
+                  },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "qty": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "exclusiveMinimum": true,
+                          "description": "Number of identical pieces."
+                        },
+                        "length_cm": {
+                          "type": "number",
+                          "minimum": 0,
+                          "exclusiveMinimum": true,
+                          "description": "Length of one piece, cm."
+                        },
+                        "width_cm": {
+                          "type": "number",
+                          "minimum": 0,
+                          "exclusiveMinimum": true,
+                          "description": "Width of one piece, cm."
+                        },
+                        "height_cm": {
+                          "type": "number",
+                          "minimum": 0,
+                          "exclusiveMinimum": true,
+                          "description": "Height of one piece, cm."
+                        },
+                        "weight_kg": {
+                          "type": "number",
+                          "minimum": 0,
+                          "exclusiveMinimum": true,
+                          "description": "Weight of one piece, kg."
+                        },
+                        "volume_m3": {
+                          "type": "number",
+                          "nullable": true,
+                          "minimum": 0,
+                          "exclusiveMinimum": true,
+                          "description": "Volume of one piece, m³. Defaults to length × width × height."
+                        },
+                        "stackable": {
+                          "type": "boolean",
+                          "nullable": true,
+                          "description": "Whether other pieces may be stacked on this one."
+                        },
+                        "fragile": {
+                          "type": "boolean",
+                          "nullable": true,
+                          "description": "Whether the piece is fragile."
+                        },
+                        "flipable": {
+                          "type": "boolean",
+                          "nullable": true,
+                          "description": "Whether the piece may be tipped onto another face during loading. Unset: decided from its size and weight."
+                        },
+                        "name": {
+                          "type": "string",
+                          "nullable": true,
+                          "description": "Item name."
+                        },
+                        "notes": {
+                          "type": "string",
+                          "nullable": true,
+                          "description": "Item notes."
+                        },
+                        "image_urls": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "format": "uri"
+                          },
+                          "default": [],
+                          "description": "Image URLs."
+                        }
+                      },
+                      "required": [
+                        "qty",
+                        "length_cm",
+                        "width_cm",
+                        "height_cm",
+                        "weight_kg"
+                      ]
+                    },
+                    "minItems": 1,
+                    "description": "Cargo lines, at least one. Totals are derived from these; they cannot be sent separately."
+                  },
+                  "service_type": {
+                    "type": "string",
+                    "enum": [
+                      "ftl_transport",
+                      "ltl_transport"
+                    ],
+                    "default": "ftl_transport",
+                    "description": "Which kind of service to price."
+                  },
+                  "cargo_notes": {
+                    "type": "string",
+                    "nullable": true,
+                    "description": "Free-text cargo notes."
+                  },
+                  "addons": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "key": {
+                          "type": "string",
+                          "minLength": 1,
+                          "description": "Add-on key, e.g. `tail_lift`."
+                        }
+                      },
+                      "required": [
+                        "key"
+                      ]
+                    },
+                    "default": [],
+                    "description": "Requested add-on services. A candidate that cannot price every requested add-on is dropped."
+                  }
+                },
+                "required": [
+                  "pickup",
+                  "delivery",
+                  "items"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The saved quote.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteCreated"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed (`missing_required_field`; `detail` names the fields).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteCreateError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Signature missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`X-Sender-Account-Id` is malformed, unknown or belongs to another organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "`unsupported_route`: nothing can serve this route. `no_vehicle_fits`: no vehicle or composition can carry the cargo (`detail` gives the main reason, e.g. `weight_over`). `unsupported_addon`: no option supports every requested add-on (`detail` lists them).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteCreateError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error, including every pricing call failing. Reported with code `missing_required_field`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteCreateError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "`load_planning_unavailable`: the load planner is temporarily unavailable. Retry after `Retry-After` seconds.",
+            "headers": {
+              "Retry-After": {
+                "description": "Seconds to wait before retrying.",
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteCreateError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Quotes"
+        ],
+        "operationId": "listQuotes",
+        "summary": "List a sender's quotes",
+        "description": "All quotations owned by the sender account, newest first, each with its order if one exists. No filters or paging. Signature only; a user session is not accepted. The sender account is named in `X-Sender-Account-Id`, which is outside the signature: it must belong to the organization of the API key. Missing header: 401 `unauthenticated`. Malformed, unknown or another organization's account: 403 `forbidden` (the same answer for all three).",
+        "security": [
+          {
+            "signature": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "description": "The sender account (customer) this call acts for. Not part of the signature; must belong to your organization."
+            },
+            "required": true,
+            "description": "The sender account (customer) this call acts for. Not part of the signature; must belong to your organization.",
+            "name": "x-sender-account-id",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The sender's quotes.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteList"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Signature missing or invalid (`Unauthorized`), or `X-Sender-Account-Id` missing (`unauthenticated`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`X-Sender-Account-Id` is malformed, unknown or belongs to another organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`list_failed`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/quotes/{id}": {
+      "get": {
+        "tags": [
+          "Quotes"
+        ],
+        "operationId": "getQuote",
+        "summary": "Get a quote",
+        "description": "Opening a quote that has no owner claims it for the sender, provided it is still `active` and not expired; from then on only that sender can read, pay or cancel it. Signature only; a user session is not accepted. The sender account is named in `X-Sender-Account-Id`, which is outside the signature: it must belong to the organization of the API key. Missing header: 401 `unauthenticated`. Malformed, unknown or another organization's account: 403 `forbidden` (the same answer for all three).",
+        "security": [
+          {
+            "signature": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "description": "Quotation ID (`quotation_id` from Create quote)."
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "description": "The sender account (customer) this call acts for. Not part of the signature; must belong to your organization."
+            },
+            "required": true,
+            "description": "The sender account (customer) this call acts for. Not part of the signature; must belong to your organization.",
+            "name": "x-sender-account-id",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The quote.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Quote"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Signature missing or invalid (`Unauthorized`), or `X-Sender-Account-Id` missing (`unauthenticated`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`X-Sender-Account-Id` is malformed, unknown or belongs to another organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found_or_forbidden`: no such quote (including a malformed `id`), another sender's quote, or an ownerless quote that can no longer be claimed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`get_failed`: internal error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/quotes/{id}/payment-methods": {
+      "get": {
+        "tags": [
+          "Quotes"
+        ],
+        "operationId": "listQuotePaymentMethods",
+        "summary": "List payment methods for a quote",
+        "description": "The methods this quote can be paid with, and whether each works right now for the quote's amount. Call it before Pay rather than hard-coding a list. Like Get a quote, it claims an ownerless quote. Signature only; a user session is not accepted. The sender account is named in `X-Sender-Account-Id`, which is outside the signature: it must belong to the organization of the API key. Missing header: 401 `unauthenticated`. Malformed, unknown or another organization's account: 403 `forbidden` (the same answer for all three).",
+        "security": [
+          {
+            "signature": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "description": "Quotation ID (`quotation_id` from Create quote)."
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "description": "The sender account (customer) this call acts for. Not part of the signature; must belong to your organization."
+            },
+            "required": true,
+            "description": "The sender account (customer) this call acts for. Not part of the signature; must belong to your organization.",
+            "name": "x-sender-account-id",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Allowed methods and their availability.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuotePaymentMethods"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Signature missing or invalid (`Unauthorized`), or `X-Sender-Account-Id` missing (`unauthenticated`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`X-Sender-Account-Id` is malformed, unknown or belongs to another organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found_or_forbidden`: no such quote (including a malformed `id`), or not this sender's.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error; `error` carries the message, not a code.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/quotes/{id}/pay": {
+      "post": {
+        "tags": [
+          "Quotes"
+        ],
+        "operationId": "payQuote",
+        "summary": "Pay a quote",
+        "description": "Creates the order (waybill and delivery) from the quote, marks the quote `accepted`, then starts the payment. Creating the order is idempotent: calling Pay again reuses it, so a failed payment can be retried with another method. The order stays when the payment step fails.\n\n`qr` and `app` pay through FlashPay, which settles in THB: the gateway amount is converted, the payment itself stays in the quote's currency. `bank_transfer` returns a receiving account and a reference code. `wallet` pays from the sender's prepaid balance and dispatches the order at once.\n\nAn ownerless quote must be opened with Get a quote first; Pay does not claim it.\n\nSignature only; a user session is not accepted. The sender account is named in `X-Sender-Account-Id`, which is outside the signature: it must belong to the organization of the API key. Missing header: 401 `unauthenticated`. Malformed, unknown or another organization's account: 403 `forbidden` (the same answer for all three).",
+        "security": [
+          {
+            "signature": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "description": "Quotation ID (`quotation_id` from Create quote)."
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "description": "The sender account (customer) this call acts for. Not part of the signature; must belong to your organization."
+            },
+            "required": true,
+            "description": "The sender account (customer) this call acts for. Not part of the signature; must belong to your organization.",
+            "name": "x-sender-account-id",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QuotePayRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Payment started (or, for `wallet`, completed).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuotePayment"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`type` is not one of the allowed values. Here `error` is a sentence, not a code.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Signature missing or invalid (`Unauthorized`), or `X-Sender-Account-Id` missing (`unauthenticated`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`forbidden`: the quote is not this sender's (including an ownerless quote), or `X-Sender-Account-Id` is malformed, unknown or belongs to another organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: no such quote (including a malformed `id`) or order.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`payment_method_not_allowed`: the organization or the quote's service does not accept this method (`allowed` lists what it does). `not_payable`: the quote is not `active` or is past `expires_at` (it is then marked `expired`), or its order is no longer awaiting payment. An order already created from the quote stays payable after `expires_at`: its price was fixed when it was created. `no_bank_account_available`: no receiving account can take this payment. `insufficient_balance`: the wallet does not cover it.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuotePayConflict"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`pay_failed`: anything else, e.g. `bank_code` missing for `app`, or the order's invoice not payable (`detail` explains).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "`flashpay_not_configured`: the organization has no FlashPay setup. `exchange_rate_not_configured`: the quote's currency cannot be converted to THB.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/quotes/{id}/cancel": {
+      "post": {
+        "tags": [
+          "Quotes"
+        ],
+        "operationId": "cancelQuote",
+        "summary": "Cancel a quote",
+        "description": "Cancels the quote while it is `active` and has no order. Once Pay created an order, cancels that order instead, as long as it still awaits payment. The body carries only the signature fields. Signature only; a user session is not accepted. The sender account is named in `X-Sender-Account-Id`, which is outside the signature: it must belong to the organization of the API key. Missing header: 401 `unauthenticated`. Malformed, unknown or another organization's account: 403 `forbidden` (the same answer for all three).",
+        "security": [
+          {
+            "signature": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "description": "Quotation ID (`quotation_id` from Create quote)."
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "description": "The sender account (customer) this call acts for. Not part of the signature; must belong to your organization."
+            },
+            "required": true,
+            "description": "The sender account (customer) this call acts for. Not part of the signature; must belong to your organization.",
+            "name": "x-sender-account-id",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Canceled.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteCancelResult"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Signature missing or invalid (`Unauthorized`), or `X-Sender-Account-Id` missing (`unauthenticated`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`forbidden`: the quote or order is not this sender's (including an ownerless quote), or `X-Sender-Account-Id` is malformed, unknown or belongs to another organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: no such quote, including a malformed `id`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`already_terminal`: nothing left to cancel, including a quote past `expires_at` (reported, and marked, `expired`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteCancelConflict"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`cancel_failed`: internal error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/orders/{id}/tracking": {
+      "get": {
+        "tags": [
+          "Orders"
+        ],
+        "operationId": "trackOrder",
+        "summary": "Track an order",
+        "description": "Live tracking of an order created by Pay. `{id}` is the order (delivery) ID — `deliveryId` from Pay, or `delivery.id` from Get a quote — not the quotation ID.\n\nUntil the order can be tracked, the answer is still HTTP 200 but only `{ state }` (`OrderTrackingPending`): check for `state` before reading it as tracking. Results are cached for 5 seconds, so polling faster gains nothing.\n\nSignature only; a user session is not accepted. The sender account is named in `X-Sender-Account-Id`, which is outside the signature: it must belong to the organization of the API key. Missing header: 401 `unauthenticated`. Malformed, unknown or another organization's account: 403 `forbidden` (the same answer for all three).",
+        "security": [
+          {
+            "signature": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "description": "Order (delivery) ID."
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "description": "The sender account (customer) this call acts for. Not part of the signature; must belong to your organization."
+            },
+            "required": true,
+            "description": "The sender account (customer) this call acts for. Not part of the signature; must belong to your organization.",
+            "name": "x-sender-account-id",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tracking, or `{ state }` while the order cannot be tracked yet.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/OrderTracking"
+                    },
+                    {
+                      "$ref": "#/components/schemas/OrderTrackingPending"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Signature missing or invalid (`Unauthorized`), or `X-Sender-Account-Id` missing (`unauthenticated`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`forbidden`: the order is not this sender's, or was not created from a quote; or `X-Sender-Account-Id` is malformed, unknown or belongs to another organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: no such order, including a malformed `id`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`tracking_failed`: internal error, including a carrier error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteError"
                 }
               }
             }

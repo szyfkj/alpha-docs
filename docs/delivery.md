@@ -325,7 +325,6 @@ GET /api/quotes/{id}
     { "kind": "addon", "key": "tail_lift", "amount": 300.00 }
   ],
   "snapshot": {},
-  "provider": "lalamove",
   "delivery": null,
   "created_at": "2026-09-23T10:00:00Z"
 }
@@ -341,11 +340,7 @@ GET /api/quotes/{id}
 
 `breakdown` 与报价响应里的格式相同：每项 `{ kind, key?, amount }`，`kind` 为 `base`（运费，多车组合时每台车一条）或 `addon`（增值服务，带 `key`）。
 
-`provider` 可能是 `lalamove`、`deliveree`、`internal`（自有车队）、`subcontractor`（分包给下游）或 `null`。
-
-<Staging source="tms#221">
-
-`GET /api/quotes/{id}` 的响应**不再包含 `provider`**，与创建报价（`POST /api/quotes`）的响应一致：由谁承运不对客户公开。如果你的页面展示了承运方，请改为在没有这个字段时不显示。
+`GET /api/quotes/{id}` 的响应**不包含 `provider`**，与创建报价（`POST /api/quotes`）的响应一致：由谁承运不对客户公开。
 
 `snapshot` 是报价时的请求和价格，只包含下面这些字段（报价里没有的字段不会出现）：
 
@@ -361,8 +356,6 @@ GET /api/quotes/{id}
 | `composition` | 多车组合时每台车一条：`{ vehicleType, cost, items }`，`cost` 是这台车的运费 |
 
 不要依赖这张表之外的字段。
-
-</Staging>
 
 ### 第 3 步：查可用支付方式
 
@@ -515,6 +508,25 @@ GET /api/orders/{id}/tracking
 服务端对结果有 5 秒缓存，所以比 5 秒更密的轮询没有意义。建议**每 10 秒轮询一次**，直到状态变成 `delivered`、`canceled` 或 `failed`。
 :::
 
+### ID 格式不对、服务端出错时
+
+报价和订单接口路径里的 `{id}` 是 UUID。传入格式不对的 `{id}`（如 `/api/quotes/abc`）时，当作不存在处理，返回该接口原有的 404：
+
+| 接口 | 返回 |
+|---|---|
+| `GET /api/quotes/{id}`、`GET /api/quotes/{id}/payment-methods` | `404 {"error":"not_found_or_forbidden"}` |
+| `POST /api/quotes/{id}/pay`、`POST /api/quotes/{id}/cancel`、`GET /api/orders/{id}/tracking` | `404 {"error":"not_found"}` |
+
+身份校验仍然在前：签名不对、或 `X-Sender-Account-Id` 不属于你的组织时，先返回 401 / 403。
+
+下面三个接口出现服务端内部错误时，返回带错误码的 JSON，可稍后重试：
+
+| 接口 | 返回 |
+|---|---|
+| `GET /api/quotes/{id}` | `500 {"error":"get_failed"}` |
+| `POST /api/quotes/{id}/cancel` | `500 {"error":"cancel_failed"}` |
+| `GET /api/orders/{id}/tracking` | `500 {"error":"tracking_failed"}`（包括承运方接口出错） |
+
 ### 报价状态
 
 `active`、`accepted`（已支付下单）、`canceled`、`expired`
@@ -572,13 +584,54 @@ POST /api/delivery-events
 | 字段 | 说明 |
 |---|---|
 | `waybill_id` / `package_id` | 二选一，`package_id` 优先 |
-| `event_type` | 见[运单状态枚举](./waybills.md#运单状态) |
+| `event_type` | 见[运单状态枚举](./waybills.md#运单状态)；传了 `secondary_event_type` 时可不传 |
 | `event_time` | 可选，默认当前时间 |
 | `coordinates` | 可选，`"纬度,经度"` |
 | `notes` | 可选，事件描述 |
 | `photos` | 可选，`data:image/...;base64,` 格式的图片数组 |
+| `secondary_event_type` | 可选，跨境里程碑，见[跨境里程碑](#跨境里程碑) |
 
 事件冲突（比如已签收又回传取件）返回 `409 {"error":"...","conflict":true,"messages":[...]}`。
+
+请求会先整体校验，客户端的错误返回 4xx：
+
+| 状态码 | 什么时候 |
+|---|---|
+| `201` | 已记录，响应体是创建的事件 |
+| `400` | 请求体不是合法 JSON；`waybill_id`、`package_id` 都没传，或不是 UUID；`event_type` 缺失或不在允许的取值里（**`draft` 不能作为事件回传**）；`event_time` 无法解析；`photos` 不是数组，或其中有不是 `data:image/...;base64,` 格式的元素；`ignore_conflicts` 不是布尔值（字符串 `"true"` 也不行） |
+| `404` | 运单或包裹不存在，或不属于你的组织 |
+| `409` | 事件冲突，响应体同上 |
+| `422` | 运单存在，但下面没有包裹，没有可以记录事件的对象 |
+| `500` | 服务端意外错误 |
+
+除 `409` 外，错误响应都是 `{"error":"..."}`。
+
+- 传 `package_id` 时，事件只记录在这个包裹上（同时传了 `waybill_id` 也以 `package_id` 为准）。
+- 传 `waybill_id` 时，事件记录在运单的每个包裹上。系统先检查所有包裹：任何一个包裹冲突就返回 `409`，**一个事件也不记录**；传 `"ignore_conflicts": true` 则不做冲突检查，照常记录。`201` 的响应体是第一个包裹（按创建先后）的事件。
+
+### 跨境里程碑
+
+走跨境路段的运单可以回传跨境里程碑：请求里加 `secondary_event_type`。每个里程碑对应一个普通的 `event_type`，运单和包裹状态按这个 `event_type` 变化；`event_type` 可以不传，由系统补上，传了就必须是对应的那个，否则返回 `400`。
+
+| `secondary_event_type` | 里程碑 | 对应的 `event_type` |
+|---|---|---|
+| `transport_collecting` | 已接 | `picked_up` |
+| `transport_originalport` | 已装柜 | `in_transit_sorted` |
+| `customs_finished` | 出口清关完成 | `in_transit_hub_outbound` |
+| `transport_departed` | 已离港 | `in_transit_hub_outbound` |
+| `transport_arrived` | 已到港 | `in_transit_hub_inbound` |
+| `transport_finished` | 进口清关完成 | `in_transit_sorted` |
+| `transport_handover` | 已送达 | `delivered` |
+
+```json
+{
+  "waybill_id": "uuid",
+  "secondary_event_type": "customs_finished",
+  "event_time": "2026-10-15T08:00:00Z"
+}
+```
+
+返回的事件里带 `secondary_event_type`，普通事件为 `null`。
 
 ## 三套状态枚举别混用
 

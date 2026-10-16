@@ -61,8 +61,14 @@ dimensions** — the fastest way to judge whether a vehicle will take them.
 
 ## Exporting
 
-**Export** exports the current filtered result. There is a per-export row limit; exceed
+**Export** exports the current filtered result to an Excel file. There is a per-export row limit; exceed
 it and you're asked to narrow the filter first.
+
+Which sheets and columns the file has is set by the **export template** your platform
+administrator configures for your organization. With one template, **Export** starts
+right away; with several, the **Export waybills** dialog opens first: pick one under
+**Export template** and click **Export**. If none is set up yet you'll see "No export
+template is set up for this organization. Contact your platform administrator."
 
 Exports run in the background, so you don't have to wait on the page. Past exports are
 listed next to the button, ready to download once they finish.

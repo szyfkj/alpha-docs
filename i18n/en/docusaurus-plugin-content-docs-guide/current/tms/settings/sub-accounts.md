@@ -49,13 +49,9 @@ customer's prepaid balance with no payment behind it**. Think before granting it
 
 **The organization owner holds every permission** and can't be configured here.
 
-<Staging source="tms#228">
-
 **The owner can edit their own details.** When the organization owner chooses **Edit** on their own row, they can change their name, phone and organization unit and save with **Update User**. Every permission box is ticked and greyed out, with the note "The owner has all permissions; they can't be changed." Saving never changes the owner's permissions.
 
 **Other members can't change their own account.** When someone who isn't the owner edits their own row, the save is refused with "You cannot change your own account here. Ask an organization owner." Ask the organization owner to make the change.
-
-</Staging>
 
 ## Deactivating and suspending
 
