@@ -48,6 +48,20 @@ Check the spam folder first. Corporate mail servers often hold this kind of mess
 | An organization with this name already exists | Pick a different organization name |
 | Too many signup attempts | Too many tries too quickly; wait a few minutes |
 
+### When signing up didn't finish
+
+If **Create Account** reports an error, the attempt leaves no half-made account behind:
+sign up again with the same email.
+
+If an earlier sign-up created your login but not your organization, signing in takes you
+to **Finish setting up your organization**. The page is filled in with what you entered
+when you signed up (organization name, type and size, your name). Check it, add your
+**Phone Number** and click **Create organization**: you go straight into the system as the
+organization's owner. To leave it for later, click **Sign Out**.
+
+"This email already belongs to another account. Please contact support." means another account
+already uses this email; contact us to sort it out.
+
 ## Being invited into an existing organization
 
 Colleagues don't sign up for their own organization. Someone with the right permission

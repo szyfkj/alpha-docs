@@ -42,7 +42,24 @@ flowchart LR
 所以"同事有我没有"通常是权限问题，"谁都没有"通常是套餐问题。前者找机构管理员在
 **设置 → 团队成员** 里加；后者要联系我们开通。
 
-**账单** 菜单尤其明显：没有账单权限的人，整个菜单条上根本不会出现它。
+每个菜单项都会检查它的页面需要的权限。打不开的菜单项不显示；下拉菜单里一项都不剩时，整个下拉菜单也不出现。比如没有账单权限的人，菜单条上根本不会出现 **账单**。逐项来看：
+
+| 菜单项 | 需要的权限 |
+|---|---|
+| **运单** | Waybills |
+| **配送 → 规划**、**轨迹** | Deliveries |
+| **配送 → 地址预处理** | Deliveries → Address Preprocessing |
+| **合作伙伴 → 司机** | Partner Management → Drivers |
+| **合作伙伴 → 承运商** | Partner Management → Subcontractor Management |
+| **合作伙伴 → 客户** | Partner Management |
+| **账单** 下的所有项 | Billing |
+| **设置 → 服务区域** | System Settings → Service Area |
+| **设置 → 自动化** | System Settings → Automation |
+| **设置 → 团队成员** | System Settings → User |
+| **设置 → 标签模板** | System Settings → Label Template |
+| **设置 → 机构** | System Settings → Organization |
+
+**合作伙伴 → 寄件人账户**，以及 **设置 → 服务**、**货物类别**、**路线**、**集成** 不需要权限：只要套餐包含，所有人都能看到。权限名称在 **设置 → 团队成员** 的权限界面上是英文的，这里照原样写。
 
 ## 菜单里找不到、但确实存在的几个页面
 
