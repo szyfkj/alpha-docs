@@ -48,8 +48,6 @@ Check the spam folder first. Corporate mail servers often hold this kind of mess
 | An organization with this name already exists | Pick a different organization name |
 | Too many signup attempts | Too many tries too quickly; wait a few minutes |
 
-<Staging source="tms#241">
-
 ### When signing up didn't finish
 
 If **Create Account** reports an error, the attempt leaves no half-made account behind:
@@ -63,8 +61,6 @@ organization's owner. To leave it for later, click **Sign Out**.
 
 "This email already belongs to another account. Please contact support." means another account
 already uses this email; contact us to sort it out.
-
-</Staging>
 
 ## Being invited into an existing organization
 
