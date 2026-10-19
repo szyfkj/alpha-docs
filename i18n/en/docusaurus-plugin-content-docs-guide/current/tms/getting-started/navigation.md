@@ -50,6 +50,32 @@ the second needs us to enable it.
 **Billing** shows this most clearly: without the billing permission the menu doesn't
 appear in the bar at all.
 
+<Staging source="tms#242">
+
+Every menu item now checks the permission its page needs, not only Billing. An item you
+can't open isn't shown, and a dropdown with nothing left in it disappears from the bar:
+
+| Menu item | Permission it needs |
+|---|---|
+| **Waybills** | Waybills |
+| **Delivery → Planning**, **Tracking** | Deliveries |
+| **Delivery → Address Preprocessing** | Deliveries → Address Preprocessing |
+| **Partners → Drivers** | Partner Management → Drivers |
+| **Partners → Subcontractors** | Partner Management → Subcontractor Management |
+| **Partners → Contractors** | Partner Management |
+| Every **Billing** item | Billing |
+| **Settings → Service Areas** | System Settings → Service Area |
+| **Settings → Automation** | System Settings → Automation |
+| **Settings → Sub Accounts** | System Settings → User |
+| **Settings → Label Templates** | System Settings → Label Template |
+| **Settings → Organization** | System Settings → Organization |
+
+**Partners → Sender Accounts** and **Settings → Services**, **Product Categories**,
+**Routes** and **Integrations** need no permission: everyone sees them when the plan
+includes them. Permission names are as they appear under **Settings → Sub Accounts**.
+
+</Staging>
+
 ## Pages that exist but aren't in a menu
 
 A few pages are only reachable from a link on another page:
