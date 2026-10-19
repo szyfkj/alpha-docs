@@ -18,8 +18,6 @@ A pre-alerted parcel becomes a waybill in TMS — consolidation, billing and tra
 run through the same transport flow. The TMS side is covered in the
 [TMS User Guide](/guide/tms/).
 
-<Staging source="liteimport#71">
-
 ## Settling in Vietnamese dong (VND)
 
 A company's default currency can be Vietnamese dong: in the dashboard, go to **Settings → Company → Company Information → Default Currency** and pick **VND - Vietnamese Dong**.
@@ -31,8 +29,6 @@ A company's default currency can be Vietnamese dong: in the dashboard, go to **S
 ### Reconciliation: amounts in bank statements
 
 When you import a bank statement in **Reconciliation**, an amount that uses only one kind of separator (only dots, or only commas) is read like this: a separator that repeats (`1.500.000`, `1,500,000`), or appears once with exactly three digits after it (`500.000`, `1,500`), separates thousands; otherwise it is the decimal point (`1500.50`, `1500,5`). So `500.000` VND reads as 500,000, and `1,500` THB as 1,500. When an amount has both dots and commas (`1,234.56`, `1.234,56`), the last separator is still the decimal point.
-
-</Staging>
 
 ## What you can read today
 
