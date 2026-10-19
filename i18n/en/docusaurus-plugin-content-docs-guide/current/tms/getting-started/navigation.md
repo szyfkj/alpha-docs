@@ -8,6 +8,17 @@ sidebar_position: 2
 
 Signing in lands you on **Waybills** — the default starting point for daily work.
 
+<Staging source="tms#251">
+
+Signing in lands you on the first page you can open, in menu order: **Waybills** →
+**Delivery → Planning** → **Delivery → Tracking** → **Delivery → Address Preprocessing** →
+the **Package Scanner**. Most accounts still land on **Waybills**. An account without the
+waybills permission (a sub account that only scans or handles deliveries, say) lands on the
+first page your organization's plan includes and you have the permission for, instead of a
+page-not-found error. An account that can open none of them lands on **Profile**.
+
+</Staging>
+
 Across the top is a horizontal menu bar: one direct link, **Waybills**, then four
 dropdowns, with your avatar on the far right. On a phone it collapses into one menu with
 the same structure.
