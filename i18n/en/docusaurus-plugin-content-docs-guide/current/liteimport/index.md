@@ -21,5 +21,9 @@ run through the same transport flow. The TMS side is covered in the
 ## What you can read today
 
 - For API integration, see the [Developer Guide](/tms/).
-- For Liteimport operating instructions, please get in touch — this guide is still
-  being written.
+- [Custom domains](./custom-domains.md): put your storefronts, delivery app and
+  mini-apps on your own domains.
+- [Affiliate analytics](./affiliate-analytics.md): the referrals, orders and
+  commissions your affiliates bring in.
+- For other Liteimport operating instructions, please get in touch — this guide is
+  still being written.
