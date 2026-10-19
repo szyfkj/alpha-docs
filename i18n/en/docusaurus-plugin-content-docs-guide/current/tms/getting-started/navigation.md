@@ -8,6 +8,17 @@ sidebar_position: 2
 
 Signing in lands you on **Waybills** — the default starting point for daily work.
 
+<Staging source="tms#251">
+
+Signing in lands you on the first page you can open, in menu order: **Waybills** →
+**Delivery → Planning** → **Delivery → Tracking** → **Delivery → Address Preprocessing** →
+the **Package Scanner**. Most accounts still land on **Waybills**. An account without the
+waybills permission (a sub account that only scans or handles deliveries, say) lands on the
+first page your organization's plan includes and you have the permission for, instead of a
+page-not-found error. An account that can open none of them lands on **Profile**.
+
+</Staging>
+
 Across the top is a horizontal menu bar: one direct link, **Waybills**, then four
 dropdowns, with your avatar on the far right. On a phone it collapses into one menu with
 the same structure.
@@ -47,8 +58,54 @@ So "my colleague has it and I don't" is usually permissions, and "nobody has it"
 usually the plan. The first is fixed by your admin under **Settings → Sub Accounts**;
 the second needs us to enable it.
 
-**Billing** shows this most clearly: without the billing permission the menu doesn't
-appear in the bar at all.
+Every menu item checks the permission its page needs. An item you can't open isn't
+shown, and a dropdown with nothing left in it disappears from the bar: without the billing
+permission, for example, **Billing** doesn't appear at all. Item by item:
+
+| Menu item | Permission it needs |
+|---|---|
+| **Waybills** | Waybills |
+| **Delivery → Planning**, **Tracking** | Deliveries |
+| **Delivery → Address Preprocessing** | Deliveries → Address Preprocessing |
+| **Partners → Drivers** | Partner Management → Drivers |
+| **Partners → Subcontractors** | Partner Management → Subcontractor Management |
+| **Partners → Contractors** | Partner Management |
+| Every **Billing** item | Billing |
+| **Settings → Service Areas** | System Settings → Service Area |
+| **Settings → Automation** | System Settings → Automation |
+| **Settings → Sub Accounts** | System Settings → User |
+| **Settings → Label Templates** | System Settings → Label Template |
+| **Settings → Organization** | System Settings → Organization |
+
+**Partners → Sender Accounts** and **Settings → Services**, **Product Categories**,
+**Routes** and **Integrations** need no permission: everyone sees them when the plan
+includes them. Permission names are as they appear under **Settings → Sub Accounts**.
+
+<Staging source="tms#242">
+
+Every menu item now checks the permission its page needs, not only Billing. An item you
+can't open isn't shown, and a dropdown with nothing left in it disappears from the bar:
+
+| Menu item | Permission it needs |
+|---|---|
+| **Waybills** | Waybills |
+| **Delivery → Planning**, **Tracking** | Deliveries |
+| **Delivery → Address Preprocessing** | Deliveries → Address Preprocessing |
+| **Partners → Drivers** | Partner Management → Drivers |
+| **Partners → Subcontractors** | Partner Management → Subcontractor Management |
+| **Partners → Contractors** | Partner Management |
+| Every **Billing** item | Billing |
+| **Settings → Service Areas** | System Settings → Service Area |
+| **Settings → Automation** | System Settings → Automation |
+| **Settings → Sub Accounts** | System Settings → User |
+| **Settings → Label Templates** | System Settings → Label Template |
+| **Settings → Organization** | System Settings → Organization |
+
+**Partners → Sender Accounts** and **Settings → Services**, **Product Categories**,
+**Routes** and **Integrations** need no permission: everyone sees them when the plan
+includes them. Permission names are as they appear under **Settings → Sub Accounts**.
+
+</Staging>
 
 ## Pages that exist but aren't in a menu
 

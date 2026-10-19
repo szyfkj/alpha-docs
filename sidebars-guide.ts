@@ -106,7 +106,11 @@ const sidebars: SidebarsConfig = {
 
   guideVoiceSidebar: ['voice/index'],
 
-  guideLiteimportSidebar: ['liteimport/index'],
+  guideLiteimportSidebar: [
+    'liteimport/index',
+    'liteimport/custom-domains',
+    'liteimport/affiliate-analytics',
+  ],
 
   guideVideoSidebar: ['video/index'],
 };
