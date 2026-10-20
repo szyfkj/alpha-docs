@@ -18,6 +18,19 @@ A pre-alerted parcel becomes a waybill in TMS — consolidation, billing and tra
 run through the same transport flow. The TMS side is covered in the
 [TMS User Guide](/guide/tms/).
 
+## Language of 1688 product information
+
+When you browse in Thai, 1688 products found by keyword or image search, and the title,
+attributes and options on a product's detail page, are shown translated into Thai.
+
+<Staging source="liteimport#75">
+
+Thai product information now comes straight from 1688. A product 1688 hasn't translated
+into Thai yet is shown in the original Chinese; switch to English if you need to read it.
+A product detail you viewed before may keep its earlier translation for a while.
+
+</Staging>
+
 ## Settling in Vietnamese dong (VND)
 
 A company's default currency can be Vietnamese dong: in the dashboard, go to **Settings → Company → Company Information → Default Currency** and pick **VND - Vietnamese Dong**.

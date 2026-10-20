@@ -102,7 +102,7 @@ const sidebars: SidebarsConfig = {
     },
   ],
 
-  guideWmsSidebar: ['wms/index', 'wms/warehouses'],
+  guideWmsSidebar: ['wms/index', 'wms/receiving', 'wms/warehouses'],
 
   guideVoiceSidebar: ['voice/index'],
 
