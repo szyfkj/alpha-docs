@@ -27,6 +27,12 @@ Filter by sender account code and service first, then select all. Much quicker t
 ticking rows one at a time.
 :::
 
+<Staging source="tms#253">
+
+Once narrowed, tick **Select All Matching**: it selects every page of the search, not just the one shown, so the whole result is consolidated (up to 1,000 waybills at a time). **Select Current Page** selects only the page shown. See [The waybill list](./list#select-current-page-and-select-all-matching).
+
+</Staging>
+
 ## How
 
 1. Tick waybills that meet the conditions.
