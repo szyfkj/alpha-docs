@@ -39,6 +39,12 @@ The search box at the top matches waybill numbers, recipients and similar. **Fil
 | Date | A **From** / **To** range |
 | Show only unassigned | Goods not yet handed to anyone |
 
+<Staging source="tms#256">
+
+Filters has a new **Route** filter: it narrows by your own organization's routes, and defaults to **All routes**. Each entry in the **Route leg** list now starts with **Route leg:**, so it isn't confused with a route.
+
+</Staging>
+
 Click **Search** to apply, **Clear** to reset.
 
 ## Bulk actions
