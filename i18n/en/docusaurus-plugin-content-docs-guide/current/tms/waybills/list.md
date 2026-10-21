@@ -35,15 +35,10 @@ The search box at the top matches waybill numbers, recipients and similar. **Fil
 | Sender code | Exact sender account code |
 | Statuses | Multiple selection |
 | Service | The service sold |
-| Route leg | **Master waybills only** excludes the sub-waybills produced by legs |
+| Route | Your own organization's routes; defaults to **All routes** |
+| Route leg | Each entry starts with **Route leg:**, so it isn't confused with a route; **Master waybills only** excludes the sub-waybills produced by legs |
 | Date | A **From** / **To** range |
 | Show only unassigned | Goods not yet handed to anyone |
-
-<Staging source="tms#256">
-
-Filters has a new **Route** filter: it narrows by your own organization's routes, and defaults to **All routes**. Each entry in the **Route leg** list now starts with **Route leg:**, so it isn't confused with a route.
-
-</Staging>
 
 Click **Search** to apply, **Clear** to reset.
 
@@ -65,8 +60,6 @@ dimensions** — the fastest way to judge whether a vehicle will take them.
 
 **Clear selection** unticks everything.
 
-<Staging source="tms#253">
-
 ### Select Current Page and Select All Matching
 
 Above the list are two checkboxes:
@@ -77,8 +70,6 @@ Above the list are two checkboxes:
 Only one of the two can be ticked: ticking one unticks the other and replaces its selection. Unticking either clears the selection. Changing the search clears it too.
 
 **Select All Matching** selects at most 1,000 waybills. When the search found more, you'll see "You can select up to 1000 waybills at a time. Narrow the search first." and nothing is selected; narrow it with the filters and tick it again.
-
-</Staging>
 
 ## Exporting
 
