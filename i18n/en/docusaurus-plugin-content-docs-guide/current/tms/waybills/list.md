@@ -82,6 +82,11 @@ right away; with several, the **Export waybills** dialog opens first: pick one u
 **Export template** and click **Export**. If none is set up yet you'll see "No export
 template is set up for this organization. Contact your platform administrator."
 
+Exporting needs your account to have an **Organization Unit**. Without one the export
+doesn't start, and you see "Your account has no organization unit. Set one in Settings >
+Sub-accounts, then export again." Ask your organization's admin to edit your account under
+**Settings → Sub Accounts**, choose an **Organization Unit**, and export again.
+
 Exports run in the background, so you don't have to wait on the page. Past exports are
 listed next to the button, ready to download once they finish.
 
