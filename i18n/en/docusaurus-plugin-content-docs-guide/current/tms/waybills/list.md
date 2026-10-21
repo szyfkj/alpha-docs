@@ -59,6 +59,21 @@ dimensions** — the fastest way to judge whether a vehicle will take them.
 
 **Clear selection** unticks everything.
 
+<Staging source="tms#253">
+
+### Select Current Page and Select All Matching
+
+Above the list are two checkboxes:
+
+- **Select Current Page** ticks only the waybills shown on this page. Changing page clears them.
+- **Select All Matching (N)** ticks every waybill the current search found, where N is the search's total, not just this page. The selection stays when you change page, the action bar shows the full count and totals, and the actions in the **Assign** dropdown apply to all of them.
+
+Only one of the two can be ticked: ticking one unticks the other and replaces its selection. Unticking either clears the selection. Changing the search clears it too.
+
+**Select All Matching** selects at most 1,000 waybills. When the search found more, you'll see "You can select up to 1000 waybills at a time. Narrow the search first." and nothing is selected; narrow it with the filters and tick it again.
+
+</Staging>
+
 ## Exporting
 
 **Export** exports the current filtered result to an Excel file. There is a per-export row limit; exceed
