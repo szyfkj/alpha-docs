@@ -69,6 +69,19 @@ its legs are renamed to it.
   pane;
 - to see masters without leg sub-waybills, use the **Master waybills only** filter.
 
+<Staging source="tms#262">
+
+**The master's route:** if a delivery route for consolidations is configured at the
+station the waybills are currently at, the master takes that route, as before. If none
+is, the master keeps the route its waybills share (it used to get no route at all): its
+detail pane shows the **Route**, it's split into that route's legs, and
+[Add Tracking Event](./events) offers that route's events, which for a cross-border
+route are the cross-border ones (container loading, customs and so on; see
+[Cross-border waybills](./events#cross-border-waybills)). Masters consolidated
+before this change are unchanged.
+
+</Staging>
+
 :::warning
 Consolidation can't be undone. Check the list and the recipient details first.
 :::
