@@ -54,7 +54,8 @@ code.
 To tell the TMS a package has arrived without measuring or storing it, use **Warehouse
 Worker** home → **Quick Actions** → **Scan Inbound** (Quick scan — notify TMS of package
 arrival). Scan or type the package number and tap **Confirm Inbound**. On success it says
-"C0MC14661154 scanned in", and the package gets an arrived-at-hub event in the TMS.
+"C0MC14661154 scanned in", and the package gets an arrived-at-hub event in the TMS. The package must already have been received in this warehouse
+with **Inbound**.
 
 <Staging source="wms#19">
 
