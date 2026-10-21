@@ -561,9 +561,7 @@ GET /api/waybills/{waybillNo}/events
 `routes[].createdAt` 是 **Unix 秒**（不是毫秒，也不是 ISO 字符串）。
 :::
 
-<Staging source="tms#263">
-
-带[跨境里程碑](#跨境里程碑)的事件，在 `routes` 里报告的是里程碑本身：`state` 是它的 `secondary_event_type`，`stateText` 是里程碑的英文名称。这样共用同一个 `event_type` 的里程碑也能区分开，比如出口清关完成和已离港都是 `in_transit_hub_outbound`。普通事件不变。
+带[跨境里程碑](#跨境里程碑)的事件，在 `routes` 里报告的是里程碑本身：`state` 是它的 `secondary_event_type`，`stateText` 是里程碑的英文名称。这样共用同一个 `event_type` 的里程碑也能区分开，比如出口清关完成和已离港都是 `in_transit_hub_outbound`。普通事件的 `state` 是事件类型。
 
 | `routes[].state` | `routes[].stateText` |
 |---|---|
@@ -582,9 +580,7 @@ GET /api/waybills/{waybillNo}/events
 ]
 ```
 
-顶层的 `state` / `stateText`（最新状态）仍然是运单状态（如 `in_transit_hub_outbound`），按 `state == "delivered"` 判断签收的逻辑不受影响。响应没有新增字段。
-
-</Staging>
+顶层的 `state` / `stateText`（最新状态）是运单状态（如 `in_transit_hub_outbound`），判断签收用 `state == "delivered"`。
 
 ## 回传轨迹事件
 
@@ -658,11 +654,7 @@ POST /api/delivery-events
 
 返回的事件里带 `secondary_event_type`，普通事件为 `null`。
 
-<Staging source="tms#263">
-
 查询轨迹时，这些事件在 `routes[].state` 里显示为里程碑，见[查询运单轨迹](#查询运单轨迹)。
-
-</Staging>
 
 ## 三套状态枚举别混用
 
