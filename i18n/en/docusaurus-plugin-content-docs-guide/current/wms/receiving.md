@@ -11,6 +11,16 @@ Warehouse staff receive packages on their phone: **Warehouse Worker** home → *
 tracking number, fill in dimensions, weight and photos, then scan or type the code of the
 storage location under **Location** and tap **Receive Package**.
 
+<Staging source="wms#16">
+
+For roles other than **Warehouse Worker** (such as **Manager** or **Administrator**),
+**Inbound** opens with the warehouse already selected when there's only one to choose:
+the one warehouse assigned to the account or, failing that, the only warehouse the account
+can see. The location this device last used in that warehouse is filled in too. You can
+still switch to another warehouse; with several to choose from, you pick one as before.
+
+</Staging>
+
 ## Which locations accept packages
 
 A package can only be received into a location that is both:

@@ -27,6 +27,12 @@ Filter by sender account code and service first, then select all. Much quicker t
 ticking rows one at a time.
 :::
 
+<Staging source="tms#253">
+
+Once narrowed, tick **Select All Matching**: it selects every page of the search, not just the one shown, so the whole result is consolidated (up to 1,000 waybills at a time). **Select Current Page** selects only the page shown. See [The waybill list](./list#select-current-page-and-select-all-matching).
+
+</Staging>
+
 ## How
 
 1. Tick waybills that meet the conditions.
@@ -35,6 +41,25 @@ ticking rows one at a time.
    required. This is where the combined consignment is actually going, usually the other
    side's hub or transfer point, not the recipient of any one original.
 4. Click **Consolidate**.
+
+<Staging source="tms#254">
+
+The dialog has an extra field, **External Waybill No (optional)**, for giving the master
+your own number, such as one from the customer or the warehouse:
+
+- **Filled in:** the master's external number is `CONS-` followed by what you entered
+  (surrounding spaces are trimmed; a value that already starts with `CONS-` isn't prefixed
+  twice). Leg sub-waybills still add `-LEG1`, `-LEG2` and so on.
+- **Left empty:** as before, a `CONS-` number is generated for you.
+- **Already used by another waybill:** you get "This external waybill number is already in
+  use." and nothing is created.
+- Searching the waybill list for the number you entered (without `CONS-`) finds the master.
+
+Consolidating the same set of waybills again still updates the existing draft master
+rather than creating a second one. If you enter a new number that time, the master and
+its legs are renamed to it.
+
+</Staging>
 
 ## Afterwards
 
