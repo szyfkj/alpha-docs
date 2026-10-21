@@ -20,6 +20,12 @@ permissions. Long lists collapse into "**+N more**". Someone with none shows
 Create the account with their email and details; the system sends an invitation and they
 set their own password. See [Signing up and signing in](../getting-started/signup).
 
+<Staging source="tms#246">
+
+**An email address can have only one account.** If the address you enter already has one (in your organization, from the person's own signup, or in another organization), creating fails with "Failed to create user / A user with this email already exists", and nobody is added to the list. Use a different address.
+
+</Staging>
+
 ## Ticking permissions
 
 Permissions come in groups, and groups have finer sub-permissions. **Ticking the group
