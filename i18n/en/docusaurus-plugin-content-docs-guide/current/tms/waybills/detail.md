@@ -65,6 +65,15 @@ travels on to invoices and payments is covered in the billing chapter.
 The far column lists every status event for this consignment, newest first: when, where,
 what. It is exactly what the customer sees on the public tracking page.
 
+<Staging source="tms#269">
+
+Once a waybill is [consolidated](./consolidate) into a master, the master's events also
+appear in the original waybill's timeline, merged with its own events, newest first. This
+holds even when the original had no events of its own before it was consolidated. If the
+master is itself consolidated into another waybill, that outer waybill's events show too.
+
+</Staging>
+
 Events come from three places: driver scans, manual entry (see
 [Adding tracking events](./events)), and connected systems pushing them in.
 

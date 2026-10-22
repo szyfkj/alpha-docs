@@ -69,6 +69,14 @@ its legs are renamed to it.
   pane;
 - to see masters without leg sub-waybills, use the **Master waybills only** filter.
 
+<Staging source="tms#269">
+
+The master's tracking events also show on each original waybill: in its
+[tracking timeline](./detail#the-tracking-timeline), on the public tracking page and in the
+tracking API, merged with the original's own events by time.
+
+</Staging>
+
 :::warning
 Consolidation can't be undone. Check the list and the recipient details first.
 :::

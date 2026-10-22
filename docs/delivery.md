@@ -561,6 +561,12 @@ GET /api/waybills/{waybillNo}/events
 `routes[].createdAt` 是 **Unix 秒**（不是毫秒，也不是 ISO 字符串）。
 :::
 
+<Staging source="tms#269">
+
+运单被合并进主运单后，`routes` 里也包含主运单（以及主运单再被合并进的外层运单）的事件，和运单自己的事件合在一起；运单在合并前没有任何事件时也一样。
+
+</Staging>
+
 ## 回传轨迹事件
 
 如果履约环节在你那边，可以把轨迹回传给 TMS：
