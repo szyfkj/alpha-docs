@@ -69,6 +69,16 @@ its legs are renamed to it.
   pane;
 - to see masters without leg sub-waybills, use the **Master waybills only** filter.
 
+<Staging source="tms#266">
+
+When the master waybill's status moves on, the originals take the same status, so filtering and counting by status in the waybill list use the new status instead of the one they had when they were consolidated.
+
+- When the master is **Canceled**, the originals aren't canceled with it, and an original that was already canceled stays as it is.
+- The originals don't get tracking events of their own for this, so no [automation rule](../settings/automation) callbacks are sent for them. The master's tracking events still show in the originals' detail pane.
+- Waybills consolidated earlier are brought up to date too: each original takes the master's current status, unless the original has a tracking event newer than the master's, in which case it keeps its own status.
+
+</Staging>
+
 :::warning
 Consolidation can't be undone. Check the list and the recipient details first.
 :::
