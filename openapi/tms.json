@@ -790,7 +790,8 @@
           "route_id": {
             "type": "string",
             "nullable": true,
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Your organization's route for the waybill."
           },
           "weight": {
             "type": "number"
@@ -1073,7 +1074,8 @@
           "route_id": {
             "type": "string",
             "nullable": true,
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Your organization's route for the waybill; null when you have none. Each organization on the delegation chain has its own."
           },
           "sender_account_id": {
             "type": "string",
@@ -1253,10 +1255,36 @@
               "type": "object",
               "properties": {
                 "state": {
-                  "$ref": "#/components/schemas/WaybillStatus"
+                  "type": "string",
+                  "enum": [
+                    "draft",
+                    "created",
+                    "picked_up",
+                    "accepted",
+                    "delivering",
+                    "delivered",
+                    "failed",
+                    "exception",
+                    "canceled",
+                    "rescheduled",
+                    "returning",
+                    "returned",
+                    "in_transit_sorted",
+                    "in_transit_hub_inbound",
+                    "in_transit_hub_outbound",
+                    "transport_collecting",
+                    "transport_originalport",
+                    "customs_finished",
+                    "transport_departed",
+                    "transport_arrived",
+                    "transport_finished",
+                    "transport_handover"
+                  ],
+                  "description": "The event's cross-border milestone (a `SecondaryEventType`, e.g. `customs_finished`) when it has one, otherwise its status."
                 },
                 "stateText": {
-                  "type": "string"
+                  "type": "string",
+                  "description": "The milestone's or status's English title, e.g. `Export Customs Cleared`."
                 },
                 "message": {
                   "type": "string"
@@ -4141,9 +4169,11 @@
           {
             "schema": {
               "type": "string",
-              "format": "uuid"
+              "format": "uuid",
+              "description": "Waybills on this route of yours."
             },
             "required": false,
+            "description": "Waybills on this route of yours.",
             "name": "route_id",
             "in": "query"
           },
@@ -4546,7 +4576,7 @@
                   "route_id": {
                     "type": "string",
                     "format": "uuid",
-                    "description": "Derive sender and receiver from the route's first and last stop; the sender and receiver fields become optional."
+                    "description": "One of your organization's routes (anything else is refused with 400). Derives sender and receiver from the route's first and last stop; the sender and receiver fields become optional."
                   },
                   "sender_account": {
                     "type": "object",
@@ -4640,7 +4670,7 @@
             }
           },
           "400": {
-            "description": "Sender location not found for `senderPhone`, or `senderPhone` missing.",
+            "description": "Sender location not found for `senderPhone`, `senderPhone` missing, or `route_id` is not one of your routes.",
             "content": {
               "application/json": {
                 "schema": {
