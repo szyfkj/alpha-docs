@@ -106,11 +106,7 @@ POST /api/waybills
 | `reference_no` | string | 内部参考号 |
 | `remark` | string | 备注 |
 
-<Staging source="tms#256">
-
 `route_id` 必须是你自己组织的线路。传了别的组织的线路或不存在的线路，返回 `400`（错误码 `1000`，"Route not found"），运单不会创建。查询运单时返回的线路，也是你自己组织在这票运单上的线路：别的组织分配给你的运单，返回你的线路，没有就为空。
-
-</Staging>
 
 ### 重复推送的处理
 
@@ -177,11 +173,7 @@ POST /api/waybills?overwrite=return_existing
 | `403` | `1000` | 该单号属于别的组织 |
 | `400` | `1000` | 寄件人地址匹配不到，或缺少寄件人电话 |
 
-<Staging source="tms#256">
-
 `route_id` 不是你自己组织的线路时，也返回 `400`、错误码 `1000`，见[常用可选字段](#常用可选字段)。
-
-</Staging>
 
 ## 查询运单
 

@@ -30,8 +30,6 @@ leg is cross-border, or if any leg of its route is.
 [Importing waybills](../waybills/import) lets you pick a route; when only one is
 available it's selected automatically.
 
-<Staging source="tms#256">
-
 ### Each organization uses its own route
 
 A route on a waybill belongs to an organization. On a waybill a contractor handed you, you see your own route, not the contractor's:
@@ -39,8 +37,6 @@ A route on a waybill belongs to an organization. On a waybill a contractor hande
 - When a waybill is assigned to you, the system picks one of your routes, by rules the Alpha Cargo platform sets up for your organization. When no rule matches, the waybill has no route on your side. To have rules set up, contact Alpha Cargo.
 - The waybill's **Route:** line, the **Route** filter in the waybill list, route conditions in automation rules, and billing all use your own route. So when you bill a contractor, prices you set for your route match.
 - Whether a waybill counts as cross-border when you add a tracking event also follows your own route; when you have none, the contractor's route is used.
-
-</Staging>
 
 ### Deleting
 

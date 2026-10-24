@@ -49,6 +49,39 @@ code.
 
 </Staging>
 
+## Scan Inbound
+
+To tell the TMS a package has arrived without measuring or storing it, use **Warehouse
+Worker** home → **Quick Actions** → **Scan Inbound** (Quick scan — notify TMS of package
+arrival). Scan or type the package number and tap **Confirm Inbound**. On success it says
+"C0MC14661154 scanned in", and the package gets an arrived-at-hub event in the TMS. The package must already have been received in this warehouse
+with **Inbound**.
+
+<Staging source="wms#19">
+
+**Scan Inbound** no longer needs the package to have been received in this warehouse first.
+A package this warehouse hasn't received is looked up in the TMS organizations mapped to
+your warehouse (for accounts with no assigned warehouse, such as the owner or an
+administrator, the organizations mapped to any of the company's warehouses):
+
+- The number is a TMS package number, external number or sub-package number: that package
+  is marked as arrived.
+- The number is a waybill number and the waybill has one package: that package is marked as
+  arrived.
+- The number is a waybill number and the waybill has several packages: nothing is scanned
+  in, and it says "C0MC14661154 is a waybill with 3 packages — scan a package label
+  instead". Scan the package label.
+- The number isn't found anywhere: "C0MC14661154 was not found in this warehouse or in the
+  TMS — check the number".
+- Your warehouse isn't mapped to a TMS organization yet: "Your warehouse is not mapped to
+  any TMS organization — ask an admin to map it under Settings → API Keys".
+
+A quick scan doesn't create a receiving record in this warehouse; to measure, photograph and
+store a package, use **Inbound** as before. Error messages appear in the app's language.
+**Scan Outbound** still only works for packages received in this warehouse.
+
+</Staging>
+
 <Staging source="wms#21">
 
 ## TMS tracking
