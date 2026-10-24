@@ -83,6 +83,14 @@ that route's legs, and [Add Tracking Event](./events) offers that route's events
 a cross-border route are the cross-border ones (container loading, customs and so on; see
 [Cross-border waybills](./events#cross-border-waybills)).
 
+<Staging source="tms#269">
+
+The master's tracking events also show on each original waybill: in its
+[tracking timeline](./detail#the-tracking-timeline), on the public tracking page and in the
+tracking API, merged with the original's own events by time.
+
+</Staging>
+
 :::warning
 Consolidation can't be undone. Check the list and the recipient details first.
 :::
