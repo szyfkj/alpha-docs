@@ -35,15 +35,10 @@ The search box at the top matches waybill numbers, recipients and similar. **Fil
 | Sender code | Exact sender account code |
 | Statuses | Multiple selection |
 | Service | The service sold |
-| Route leg | **Master waybills only** excludes the sub-waybills produced by legs |
+| Route | Your own organization's routes; defaults to **All routes** |
+| Route leg | Each entry starts with **Route leg:**, so it isn't confused with a route; **Master waybills only** excludes the sub-waybills produced by legs |
 | Date | A **From** / **To** range |
 | Show only unassigned | Goods not yet handed to anyone |
-
-<Staging source="tms#256">
-
-Filters has a new **Route** filter: it narrows by your own organization's routes, and defaults to **All routes**. Each entry in the **Route leg** list now starts with **Route leg:**, so it isn't confused with a route.
-
-</Staging>
 
 Click **Search** to apply, **Clear** to reset.
 
@@ -65,8 +60,6 @@ dimensions** — the fastest way to judge whether a vehicle will take them.
 
 **Clear selection** unticks everything.
 
-<Staging source="tms#253">
-
 ### Select Current Page and Select All Matching
 
 Above the list are two checkboxes:
@@ -78,8 +71,6 @@ Only one of the two can be ticked: ticking one unticks the other and replaces it
 
 **Select All Matching** selects at most 1,000 waybills. When the search found more, you'll see "You can select up to 1000 waybills at a time. Narrow the search first." and nothing is selected; narrow it with the filters and tick it again.
 
-</Staging>
-
 ## Exporting
 
 **Export** exports the current filtered result to an Excel file. There is a per-export row limit; exceed
@@ -90,6 +81,11 @@ administrator configures for your organization. With one template, **Export** st
 right away; with several, the **Export waybills** dialog opens first: pick one under
 **Export template** and click **Export**. If none is set up yet you'll see "No export
 template is set up for this organization. Contact your platform administrator."
+
+Exporting needs your account to have an **Organization Unit**. Without one the export
+doesn't start, and you see "Your account has no organization unit. Set one in Settings >
+Sub-accounts, then export again." Ask your organization's admin to edit your account under
+**Settings → Sub Accounts**, choose an **Organization Unit**, and export again.
 
 Exports run in the background, so you don't have to wait on the page. Past exports are
 listed next to the button, ready to download once they finish.

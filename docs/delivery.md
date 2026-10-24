@@ -561,6 +561,27 @@ GET /api/waybills/{waybillNo}/events
 `routes[].createdAt` 是 **Unix 秒**（不是毫秒，也不是 ISO 字符串）。
 :::
 
+带[跨境里程碑](#跨境里程碑)的事件，在 `routes` 里报告的是里程碑本身：`state` 是它的 `secondary_event_type`，`stateText` 是里程碑的英文名称。这样共用同一个 `event_type` 的里程碑也能区分开，比如出口清关完成和已离港都是 `in_transit_hub_outbound`。普通事件的 `state` 是事件类型。
+
+| `routes[].state` | `routes[].stateText` |
+|---|---|
+| `transport_collecting` | `Picked Up` |
+| `transport_originalport` | `Container Loaded` |
+| `customs_finished` | `Export Customs Cleared` |
+| `transport_departed` | `Departed` |
+| `transport_arrived` | `Arrived` |
+| `transport_finished` | `Import Customs Cleared` |
+| `transport_handover` | `Delivered` |
+
+```json
+"routes": [
+  { "state": "transport_collecting", "stateText": "Picked Up", "message": "", "createdAt": 1760500000 },
+  { "state": "customs_finished", "stateText": "Export Customs Cleared", "message": "", "createdAt": 1760515200 }
+]
+```
+
+顶层的 `state` / `stateText`（最新状态）是运单状态（如 `in_transit_hub_outbound`），判断签收用 `state == "delivered"`。
+
 <Staging source="tms#269">
 
 运单被合并进主运单后，`routes` 里也包含主运单（以及主运单再被合并进的外层运单）的事件，和运单自己的事件合在一起；运单在合并前没有任何事件时也一样。
@@ -638,6 +659,8 @@ POST /api/delivery-events
 ```
 
 返回的事件里带 `secondary_event_type`，普通事件为 `null`。
+
+查询轨迹时，这些事件在 `routes[].state` 里显示为里程碑，见[查询运单轨迹](#查询运单轨迹)。
 
 ## 三套状态枚举别混用
 
