@@ -51,8 +51,6 @@ Rules can be switched on and off at any time, confirmed with "Automation rule
 enabled/disabled". Disable rules you aren't using rather than deleting them — you won't
 have to rebuild them later.
 
-<Staging source="tms#284">
-
 ## Ship from the warehouse once a waybill is paid (Alpha WMS)
 
 If you've connected **Alpha WMS** under **Settings → Integrations**, a rule can ask the
@@ -80,8 +78,6 @@ warehouse's reply:
 | 200 | The warehouse accepted the outbound request |
 | 502 | The warehouse refused it; `wms_status` and `wms_response` hold its status code and reply |
 | 500 | Nothing was sent: the waybill doesn't exist, the Alpha WMS integration isn't set up, the waybill has no packages, or there's no warehouse in the template and no **Default Warehouse ID** |
-
-</Staging>
 
 ## Technical detail
 

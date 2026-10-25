@@ -31,14 +31,10 @@ the **Country Code**, type codes in the **Postal Codes** box (several separated 
 commas), then press **+** or Enter to add them to the list. A code that's typed but not
 added doesn't count, and every area needs at least one postal code.
 
-<Staging source="tms#282">
-
 Clicking **Create Service Area** or **Update Service Area** with no postal code or no
 country shows **Cannot Save** with what's missing ("Add at least one postal code with
 the + button before saving." or "Select a country before saving.") and doesn't submit
 the form.
-
-</Staging>
 
 Service areas are used for:
 

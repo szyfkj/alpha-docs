@@ -211,8 +211,6 @@ PATCH /api/waybills/{waybillNo}
 
 需要改地址、包裹或重量？用 `overwrite=overwrite` 重新推送整张单。
 
-<Staging source="tms#281">
-
 只改某个包裹的实测重量、尺寸、描述、图片或装载属性，用下面的[更新包裹](#更新包裹)接口，不用重推整张单。
 
 ## 更新包裹
@@ -274,8 +272,6 @@ PATCH /api/waybills/{waybillNo}/packages/{packageNo}
 ```
 
 Node SDK：`client.waybills.updatePackage(waybillNo, packageNo, { weight, length, width, height, itemDesc, photos, load_properties })`。
-
-</Staging>
 
 ## 取消运单
 
@@ -343,14 +339,8 @@ POST /api/waybills/allocate-number
 ```
 
 :::caution
-包裹相关接口（新增包裹、拆分包裹）**强制**使用兼容信封，永远返回 HTTP 200。接入这两个接口时务必检查 `code` 而不是 HTTP 状态码。
+包裹相关接口（新增包裹、拆分包裹、[更新包裹](#更新包裹)）**强制**使用兼容信封，永远返回 HTTP 200。接入这三个接口时务必检查 `code` 而不是 HTTP 状态码。
 :::
-
-<Staging source="tms#281">
-
-[更新包裹](#更新包裹)接口同样强制使用兼容信封。
-
-</Staging>
 
 ### 错误码
 
