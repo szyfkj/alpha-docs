@@ -26,7 +26,7 @@ still switch to another warehouse; with several to choose from, you pick one as 
 ## Receiving notes
 
 What you type under **Notes** in **Inbound** is saved on the package: in **Inventory**, tap
-the package's view icon (👁) and the **Package Details** show it under **Notes**, where you
+the package's eye icon and the **Package Details** show it under **Notes**, where you
 can also edit it. When the same package is received again, the new note is added to the
 existing notes on a new line; a note that is already there isn't added twice.
 
