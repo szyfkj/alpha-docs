@@ -644,6 +644,12 @@ POST /api/delivery-events
 | `transport_finished` | 进口清关完成 | `in_transit_sorted` |
 | `transport_handover` | 已送达 | `delivered` |
 
+<Staging source="tms#303">
+
+`customs_finished`（出口清关完成）现在排在 `transport_originalport` 之前，`transport_originalport` 的中文名称改为 完成吊柜。`secondary_event_type` 的取值、对应的 `event_type` 和 `stateText` 都不变，已有的集成不用改。
+
+</Staging>
+
 ```json
 {
   "waybill_id": "uuid",

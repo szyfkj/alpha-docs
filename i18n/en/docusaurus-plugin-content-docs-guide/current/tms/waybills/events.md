@@ -52,6 +52,12 @@ so the waybill and package statuses move on as usual:
 | **Import Customs Cleared** | The package has cleared import customs | Waybill Sorted |
 | **Delivered** | The package has been delivered | Delivered |
 
+<Staging source="tms#303">
+
+**Export Customs Cleared** now comes before **Container Loaded**. The dropdown lists **Picked Up**, **Export Customs Cleared**, **Container Loaded**, **Departed**, **Arrived**, **Import Customs Cleared**, **Delivered**. The descriptions and waybill statuses don't change. In the Chinese interface, Container Loaded is now called 完成吊柜.
+
+</Staging>
+
 **Failed Delivery**, **Exception**, **Rescheduled**, **Returning** and **Returned** are there
 too, as for domestic waybills. **Delivered** still takes proof of delivery photos.
 
