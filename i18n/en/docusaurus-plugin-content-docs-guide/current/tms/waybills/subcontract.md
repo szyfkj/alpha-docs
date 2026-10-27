@@ -48,9 +48,10 @@ Every organization sees its own route on a waybill. Once a waybill is handed ove
 
 ## Whose label format?
 
-Carriers want different label layouts. A subcontractor can have its own label template,
-so what you print after assigning is the format they asked for. See
-[Printing labels](./labels).
+Carriers want different label layouts. [Template selection rules](../settings/labels-integrations#template-selection-rules)
+pick a template by subcontractor (and optionally route and service), so what you print after
+assigning is the format they asked for; a rule can also make the subcontractor print with
+your template. See [Printing labels](./labels).
 
 :::note Don't mix them up with contractors
 A **subcontractor** is downstream — goods go out to them. A **contractor** is upstream —

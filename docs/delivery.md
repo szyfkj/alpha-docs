@@ -637,8 +637,8 @@ POST /api/delivery-events
 | `secondary_event_type` | 里程碑 | 对应的 `event_type` |
 |---|---|---|
 | `transport_collecting` | 已接 | `picked_up` |
-| `transport_originalport` | 已装柜 | `in_transit_sorted` |
 | `customs_finished` | 出口清关完成 | `in_transit_hub_outbound` |
+| `transport_originalport` | 完成吊柜 | `in_transit_sorted` |
 | `transport_departed` | 已离港 | `in_transit_hub_outbound` |
 | `transport_arrived` | 已到港 | `in_transit_hub_inbound` |
 | `transport_finished` | 进口清关完成 | `in_transit_sorted` |

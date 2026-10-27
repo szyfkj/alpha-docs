@@ -75,6 +75,8 @@ The whole sheet is validated first. Problems are listed **per row**, for example
 - Row N: Unsupported country
 - Row N: Unknown add-on service
 
+**Row N** is the row's line number in the file, the number a spreadsheet or text editor shows. The header and any `#` guidance lines count, so with a header and two data rows, the second data row is **row 3**. Rows whose cells are all empty (such as the `,,,` rows a spreadsheet leaves behind) are skipped without an error. An empty **Country** is taken as Thailand.
+
 **Nothing is imported while validation fails.** Fix the sheet and upload again.
 
 Once it passes, the import runs and produces **Import Results**: how many waybills (and
