@@ -23,8 +23,10 @@ bulk action. Two different things.
 
 ## Searching and filtering
 
-The search box at the top matches waybill numbers, recipients and similar. **Filters**
-(shown as **More** on narrow screens) opens the full set:
+The search box at the top finds waybills by exact waybill number. You can enter several
+numbers at once, separated by spaces or commas. It doesn't search recipient names,
+reference numbers or other fields. **Filters** (shown as **More** on narrow screens) opens
+the full set:
 
 | Filter | What it narrows by |
 |---|---|
