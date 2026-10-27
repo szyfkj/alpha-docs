@@ -30,10 +30,18 @@ No match gives **Organization Not Found**, with three things to check:
 - the organization is registered in the system;
 - the organization is eligible to be a subcontractor.
 
-### Step 2: configure a label template
+### Step 2: confirm
 
-Once you've confirmed it's the right party, set their **label template** — goods handed
-to them print in the format they want. Then click **Add Subcontractor**.
+Once you've confirmed it's the right party, click **Add Subcontractor**.
+
+## Label templates
+
+A subcontractor's details have a **Label Templates** section listing the
+[template selection rules](../settings/labels-integrations#template-selection-rules) that
+name it: each rule's template, route and service, and how the subcontractor prints. With no
+rules it says "No rules for this subcontractor: it prints with its own template."
+Rules are changed under **Settings → Label Templates**; **Manage template selection rules**
+takes you there.
 
 ## Status
 
