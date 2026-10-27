@@ -15,14 +15,9 @@ One box: **Enter waybill number**. Submitting shows that consignment's **trackin
 timeline** — the same chain of events you see beside the
 [waybill details](../waybills/detail).
 
-<Staging source="tms#299">
-
 If the number doesn't exist at all (a typo, or not a waybill number), the page says so:
-"**No waybill found for …. Check the waybill number and try again.**" It no longer shows
-"No tracking events available yet", which told the customer to wait. A real waybill that
-hasn't been scanned yet still shows "No tracking events available yet".
-
-</Staging>
+"**No waybill found for …. Check the waybill number and try again.**" A real waybill that
+hasn't been scanned yet shows "No tracking events available yet".
 
 The page is titled "**&lt;Your company&gt; Delivery Tracking — Powered by Alpha Cargo**",
 carrying your organization's name and logo.
