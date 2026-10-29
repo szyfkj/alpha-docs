@@ -48,7 +48,7 @@ them by hand:
 1. Under **Settings → Automation**, add a rule with the **Waybill Received** trigger and an
    **HTTP Webhook** action.
 2. Set **Webhook URL** to your TMS address followed by `/api/waybills/auto-consolidate`, and
-   **Method** to `POST`.
+   **HTTP Method** to `POST`.
 3. Put the consolidation parameters in **Request Body Template (Optional)**, for example:
 
 ```json

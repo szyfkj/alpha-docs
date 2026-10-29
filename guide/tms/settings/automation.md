@@ -42,7 +42,7 @@ flowchart LR
 收到的运单符合你定的条件时，规则可以把它自动放进一票草稿状态的[合并主运单](../waybills/consolidate)，不用每次手动勾选合并：
 
 1. 在 **设置 → 自动化** 新建规则，触发选 **Waybill Received**，动作选 **HTTP Webhook**。
-2. **Webhook 地址** 填你的 TMS 地址加 `/api/waybills/auto-consolidate`，**方式** 选 `POST`。
+2. **Webhook 地址** 填你的 TMS 地址加 `/api/waybills/auto-consolidate`，**HTTP 方法** 选 `POST`。
 3. 在 **请求正文模板（可选）** 里写合并的参数，例如：
 
 ```json
