@@ -44,6 +44,12 @@ When you create a waybill yourself (by import or through the API) without choosi
 
 </Staging>
 
+<Staging source="tms#317">
+
+A route picked by these rules also stays when you edit the waybill. While the waybill is **Draft**, **Waybill Created** or **Waybill is confirmed**, adding a package, changing dimensions or weight, or changing the recipient or product category (on the page or through the API, such as the weight a warehouse sends back at inbound) picks the route again by the same rules: if the rules still pick the same route, it stays; if after the edit they pick another one, the waybill moves to it. Only when no rule matches is the route picked from the recipient's address.
+
+</Staging>
+
 ### Deleting
 
 Deleting a route or a leg asks for confirmation. Deleting a leg warns that **every route

@@ -114,6 +114,12 @@ POST /api/waybills
 
 </Staging>
 
+<Staging source="tms#317">
+
+运单还是 `draft`、`created` 或 `accepted` 状态时，通过包裹接口新增、更新或拆分包裹（比如入库时回传尺寸和重量），系统会按同样的线路规则重新选线路：规则选的线路不变就保留；改完后规则选中另一条，运单换到那条线路。只有没有规则匹配时，才按收件地址选线路。
+
+</Staging>
+
 ### 重复推送的处理
 
 用 query 参数 `overwrite` 控制同一个 `outTradeNo` 再次推送时的行为：
