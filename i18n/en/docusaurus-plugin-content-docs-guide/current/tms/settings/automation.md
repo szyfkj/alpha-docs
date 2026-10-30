@@ -106,6 +106,25 @@ unknown waybill returns 404.
 
 </Staging>
 
+<Staging source="tms#313">
+
+### Consolidating once paid: multi-leg waybills and masters
+
+The trigger can also be **Waybill Paid**, so a waybill is consolidated only once it's paid.
+Two things to know:
+
+- **Multi-leg waybills**: a waybill on a multi-leg route is billed for transport on its leg
+  sub-waybills (`-0`, `-1`, …), so the payment events come from the legs, not from the
+  waybill. Once every billing of the waybill and all its legs (canceled ones aside) is
+  paid, a leg's event consolidates the waybill it belongs to, and the `waybill` in the
+  response is that waybill. Until then the leg is still skipped with `leg_sub_waybill`.
+- **Consolidated masters**: a master can itself go into a new master, whole: the new master
+  gets one package holding all of the old master's packages. Only a master made by the
+  **same rule** is skipped, with `consolidated_master`. Otherwise a rule that consolidates
+  into the same service and route would wrap each new master again once it's paid.
+
+</Staging>
+
 ## Testing your webhook
 
 While editing a rule you can **fire it once** to see whether the other end receives it.
