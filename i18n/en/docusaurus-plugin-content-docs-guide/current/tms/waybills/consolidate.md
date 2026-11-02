@@ -29,6 +29,12 @@ ticking rows one at a time.
 
 Once narrowed, tick **Select All Matching**: it selects every page of the search, not just the one shown, so the whole result is consolidated (up to 1,000 waybills at a time). **Select Current Page** selects only the page shown. See [The waybill list](./list#select-current-page-and-select-all-matching).
 
+<Staging source="tms#311">
+
+To have received waybills consolidated automatically by rule, without ticking them, see [Consolidate waybills automatically by rule](../settings/automation#consolidate-waybills-automatically-by-rule).
+
+</Staging>
+
 ## How
 
 1. Tick waybills that meet the conditions.
