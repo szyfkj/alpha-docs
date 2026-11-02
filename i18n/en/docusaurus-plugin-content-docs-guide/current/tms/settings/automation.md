@@ -125,6 +125,32 @@ Two things to know:
 
 </Staging>
 
+<Staging source="tms#319">
+
+### With Alpha WMS: the warehouse consolidates the packages
+
+If you've connected **Alpha WMS** under **Settings → Integrations**, auto-consolidation has
+the warehouse consolidate the packages, and the master no longer gets a package holding all
+of the waybill's packages:
+
+- **A new master**: before answering, the system asks Alpha WMS to consolidate the waybill's
+  packages, even when there's only one. The master starts with no packages; the warehouse
+  adds the consolidated package to it once it's done. If the warehouse refuses or can't be
+  reached, the new master is canceled and the call fails.
+- **Joining an existing master**: the waybill's packages are first added to that master's
+  consolidation in the warehouse, then the waybill joins the master. If the warehouse's
+  consolidation is already closed (completed, canceled or being sealed), the waybill doesn't
+  join; it starts a new master instead (`action` is `created`), which later matching waybills
+  join. Any other refusal from the warehouse (packages not in the warehouse, already
+  consolidated or shipped), or no answer, fails the call and the waybill isn't added.
+- **Masters made before this** (they already have a package holding all of a waybill's
+  packages): unchanged, each joining waybill adds a package, and the warehouse isn't told.
+
+A warehouse failure returns 500, with the warehouse's reply in `error`. Organizations without
+Alpha WMS aren't affected and consolidate as described above.
+
+</Staging>
+
 ## Testing your webhook
 
 While editing a rule you can **fire it once** to see whether the other end receives it.
