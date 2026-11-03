@@ -54,11 +54,7 @@ POST /api/waybills
 
 `receiverDistrictName`（区/县）可选但强烈建议传。其余可选：`senderName`、`senderAddress`、`senderCityName`、`senderDistrictName`、`senderPostCode`、`receiverPhone2`。
 
-<Staging source="tms#326">
-
 `receiverPostCode` 最多 20 个字符。超过 20 个字符时返回 `422` 参数校验失败（错误码 `1000`），`error` 为 `Validation failed: receiverPostCode: receiverPostCode must be at most 20 characters`，运单不会创建。
-
-</Staging>
 
 传了 `route_id` 时，收发双方从线路的首尾节点推导，上述字段全部变为可选。
 
@@ -114,17 +110,9 @@ POST /api/waybills
 
 `route_id` 必须是你自己组织的线路。传了别的组织的线路或不存在的线路，返回 `400`（错误码 `1000`，"Route not found"），运单不会创建。查询运单时返回的线路，也是你自己组织在这票运单上的线路：别的组织分配给你的运单，返回你的线路，没有就为空。
 
-<Staging source="tms#312">
-
 不传 `route_id` 时，如果 Alpha Cargo 平台为你的组织配置了线路规则，系统按规则从你的线路里选一条记到运单上，路段也一并生成，查询运单时返回这条线路。规则可以看寄件人账户（`sender_account`）的类型、重量等条件。没有规则匹配时，运单没有线路。这时上面列出的必填字段仍然必填。传了 `route_id` 时，以你传的为准。
 
-</Staging>
-
-<Staging source="tms#317">
-
 运单还是 `draft`、`created` 或 `accepted` 状态时，通过包裹接口新增、更新或拆分包裹（比如入库时回传尺寸和重量），系统会按同样的线路规则重新选线路：规则选的线路不变就保留；改完后规则选中另一条，运单换到那条线路。只有没有规则匹配时，才按收件地址选线路。
-
-</Staging>
 
 ### 重复推送的处理
 
@@ -141,11 +129,7 @@ POST /api/waybills
 不传 `overwrite` 时，重复推送会**直接覆盖**已有运单。如果你需要防止重复建单，请显式传 `overwrite=reject`。
 :::
 
-<Staging source="tms#324">
-
 同一个 `outTradeNo` **同时**推送两次（比如并发重试）时，先到的请求建单，后到的请求无论 `overwrite` 取什么值，都可能返回 `409`（错误码 `1003`，"Waybill already exists"）。稍后重试一次即可：重试时会找到已建的运单，按 `overwrite` 的规则处理。
-
-</Staging>
 
 ```http
 POST /api/waybills?overwrite=return_existing
@@ -197,11 +181,7 @@ POST /api/waybills?overwrite=return_existing
 | `403` | `1000` | 该单号属于别的组织 |
 | `400` | `1000` | 寄件人地址匹配不到，或缺少寄件人电话 |
 
-<Staging source="tms#324">
-
 同一个 `outTradeNo` 同时推送两次时，后到的请求也可能返回 `409`、错误码 `1003`，见[重复推送的处理](#重复推送的处理)。
-
-</Staging>
 
 `route_id` 不是你自己组织的线路时，也返回 `400`、错误码 `1000`，见[常用可选字段](#常用可选字段)。
 
@@ -310,8 +290,6 @@ POST /api/waybills/allocate-number
 包裹相关接口（新增包裹、拆分包裹）**强制**使用兼容信封，永远返回 HTTP 200。接入这两个接口时务必检查 `code` 而不是 HTTP 状态码。
 :::
 
-<Staging source="tms#322">
-
 新增包裹接口（`POST /api/waybills/{waybillNo}/packages`）成功时，`data` 除了原有字段，还会返回 `package_no`、`external_package_no` 和 `waybill_id`。`package_no` 与 `trackingNo` 是同一个系统包裹号，`external_package_no` 与 `outParcelNo` 是同一个外部包裹号。Node SDK 的 `addPackage` 返回的就是这个 `data`。
 
 ```json
@@ -333,8 +311,6 @@ POST /api/waybills/allocate-number
 ```
 
 如果这张运单上已经有相同 `outParcelNo` 的包裹，返回 `code` `1008`（包裹重复），`extra` 里带上已有包裹的 `package_no`、`external_package_no` 和 `waybill_id`，所以重试同一个包裹时也能拿到系统包裹号（SDK 里在 `TMSApiError.details`）。只有草稿状态的运单能新增包裹。
-
-</Staging>
 
 ### 错误码
 

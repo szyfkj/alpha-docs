@@ -4391,6 +4391,7 @@
                   },
                   "receiverPostCode": {
                     "type": "string",
+                    "maxLength": 20,
                     "description": "Required without route_id."
                   },
                   "receiverAddress": {
@@ -5564,6 +5565,19 @@
                             },
                             "sortDesc": {
                               "type": "string"
+                            },
+                            "package_no": {
+                              "type": "string",
+                              "description": "System package number, same as `trackingNo`."
+                            },
+                            "external_package_no": {
+                              "type": "string",
+                              "description": "Same as `outParcelNo`."
+                            },
+                            "waybill_id": {
+                              "type": "string",
+                              "format": "uuid",
+                              "description": "The waybill's id."
                             }
                           },
                           "required": [
@@ -5571,8 +5585,33 @@
                             "waybillNo",
                             "trackingNo",
                             "outParcelNo",
-                            "displayParcelNo"
+                            "displayParcelNo",
+                            "package_no",
+                            "external_package_no",
+                            "waybill_id"
                           ]
+                        },
+                        "extra": {
+                          "type": "object",
+                          "nullable": true,
+                          "properties": {
+                            "package_no": {
+                              "type": "string"
+                            },
+                            "external_package_no": {
+                              "type": "string"
+                            },
+                            "waybill_id": {
+                              "type": "string",
+                              "format": "uuid"
+                            }
+                          },
+                          "required": [
+                            "package_no",
+                            "external_package_no",
+                            "waybill_id"
+                          ],
+                          "description": "On `1008`, the package already on the waybill with this `outParcelNo`; otherwise null."
                         }
                       }
                     }

@@ -37,8 +37,6 @@ Pick an **Action Type**. A rule can carry several actions, numbered in order.
 The common one is an **HTTP webhook**: when the event fires, the system POSTs the data to
 an address you supply.
 
-<Staging source="tms#311">
-
 ## Consolidate waybills automatically by rule
 
 A rule can put each received waybill that meets your conditions into a draft
@@ -104,9 +102,9 @@ A missing or malformed parameter, a service or route that isn't your organizatio
 route whose first leg has no start station or last leg no end station returns 400; an
 unknown waybill returns 404.
 
-</Staging>
-
-<Staging source="tms#313">
+The trigger can also be **Delivery Event Created**: when a delivery event (such as picked up or
+delivered) occurs, the waybill the event belongs to is consolidated, with the same parameters and
+results as above.
 
 ### Consolidating once paid: multi-leg waybills and masters
 
@@ -122,10 +120,6 @@ Two things to know:
   gets one package holding all of the old master's packages. Only a master made by the
   **same rule** is skipped, with `consolidated_master`. Otherwise a rule that consolidates
   into the same service and route would wrap each new master again once it's paid.
-
-</Staging>
-
-<Staging source="tms#319">
 
 ### With Alpha WMS: the warehouse consolidates the packages
 
@@ -148,8 +142,6 @@ of the waybill's packages:
 
 A warehouse failure returns 500, with the warehouse's reply in `error`. Organizations without
 Alpha WMS aren't affected and consolidate as described above.
-
-</Staging>
 
 ## Testing your webhook
 

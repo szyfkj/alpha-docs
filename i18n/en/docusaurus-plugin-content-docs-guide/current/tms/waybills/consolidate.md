@@ -12,18 +12,6 @@ hanging off it.
 
 ## When you can consolidate
 
-If **Consolidate Waybills** doesn't appear in the **Assign** dropdown, the conditions
-aren't met. All of these must hold:
-
-- **two or more** waybills ticked;
-- all from the **same sender account**;
-- all on the **same service**;
-- all on the **same route**;
-- **none of them already a consolidation master** — you can't consolidate a
-  consolidation.
-
-<Staging source="tms#307">
-
 With two or more waybills ticked, **Consolidate Waybills** is always in the **Assign** dropdown. When the conditions aren't met it's greyed out, with the reason underneath:
 
 - **Every selected waybill needs a service**: at least one has no service;
@@ -31,11 +19,9 @@ With two or more waybills ticked, **Consolidate Waybills** is always in the **As
 - **Selected waybills must have the same sender account**;
 - **Selected waybills must have the same route**.
 
-A consolidation master can now be consolidated again: tick several masters (or masters and ordinary waybills) together and they become one new master, whose **Consolidated Waybills** section lists the earlier masters. The new master is billed on its own route and the earlier masters keep their charges, so where the two routes overlap, the overlap is charged twice.
+A consolidation master can be consolidated again: tick several masters (or masters and ordinary waybills) together and they become one new master, whose **Consolidated Waybills** section lists the earlier masters. The new master is billed on its own route and the earlier masters keep their charges, so where the two routes overlap, the overlap is charged twice.
 
 Keep **Auto-generate Virtual Package** on when consolidating masters: with it off, the warehouse has to pack the earlier masters' goods into a new box.
-
-</Staging>
 
 :::tip
 Filter by sender account code and service first, then select all. Much quicker than
@@ -44,11 +30,7 @@ ticking rows one at a time.
 
 Once narrowed, tick **Select All Matching**: it selects every page of the search, not just the one shown, so the whole result is consolidated (up to 1,000 waybills at a time). **Select Current Page** selects only the page shown. See [The waybill list](./list#select-current-page-and-select-all-matching).
 
-<Staging source="tms#311">
-
 To have received waybills consolidated automatically by rule, without ticking them, see [Consolidate waybills automatically by rule](../settings/automation#consolidate-waybills-automatically-by-rule).
-
-</Staging>
 
 ## How
 
@@ -78,13 +60,9 @@ Consolidating the same set of waybills again updates the existing draft master r
 creating a second one. If you enter a new number that time, the master and its legs are
 renamed to it.
 
-<Staging source="tms#318">
-
 If that master has been **Canceled**, you can consolidate the same set again and get a new
 master. The canceled master keeps its number, so when you leave the external number empty
 the new master's number ends in `-2` (`-3` after another cancel, and so on).
-
-</Staging>
 
 ### Auto-generate Virtual Package
 
