@@ -135,6 +135,12 @@ POST /api/waybills
 不传 `overwrite` 时，重复推送会**直接覆盖**已有运单。如果你需要防止重复建单，请显式传 `overwrite=reject`。
 :::
 
+<Staging source="tms#324">
+
+同一个 `outTradeNo` **同时**推送两次（比如并发重试）时，先到的请求建单，后到的请求无论 `overwrite` 取什么值，都可能返回 `409`（错误码 `1003`，"Waybill already exists"）。稍后重试一次即可：重试时会找到已建的运单，按 `overwrite` 的规则处理。
+
+</Staging>
+
 ```http
 POST /api/waybills?overwrite=return_existing
 ```
@@ -184,6 +190,12 @@ POST /api/waybills?overwrite=return_existing
 | `409` | `1003` | 运单已存在（`overwrite=reject` 时） |
 | `403` | `1000` | 该单号属于别的组织 |
 | `400` | `1000` | 寄件人地址匹配不到，或缺少寄件人电话 |
+
+<Staging source="tms#324">
+
+同一个 `outTradeNo` 同时推送两次时，后到的请求也可能返回 `409`、错误码 `1003`，见[重复推送的处理](#重复推送的处理)。
+
+</Staging>
 
 `route_id` 不是你自己组织的线路时，也返回 `400`、错误码 `1000`，见[常用可选字段](#常用可选字段)。
 
