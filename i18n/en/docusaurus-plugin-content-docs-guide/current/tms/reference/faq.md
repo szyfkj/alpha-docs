@@ -34,10 +34,8 @@ number are grouped. See [Importing waybills](../waybills/import).
 Anything in "Waybill Created" status can't be printed; the dialog lists them. See
 [Printing labels](../waybills/labels).
 
-**"Consolidate Waybills" doesn't appear.**
-Five conditions must hold at once: two or more waybills, same sender account, same
-service, same route, and none already a master. See
-[Consolidating waybills](../waybills/consolidate).
+**"Consolidate Waybills" is greyed out.**
+The reason is shown under it: different services, sender accounts or routes, or a waybill with no service. A consolidation master can be consolidated again. See [Consolidating waybills](../waybills/consolidate).
 
 **Assigning a subcontractor says the status isn't assignable.**
 Some selected waybills can't be handed over in their current status; the dialog lists
