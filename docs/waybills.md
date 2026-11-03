@@ -280,6 +280,32 @@ POST /api/waybills/allocate-number
 包裹相关接口（新增包裹、拆分包裹）**强制**使用兼容信封，永远返回 HTTP 200。接入这两个接口时务必检查 `code` 而不是 HTTP 状态码。
 :::
 
+<Staging source="tms#322">
+
+新增包裹接口（`POST /api/waybills/{waybillNo}/packages`）成功时，`data` 除了原有字段，还会返回 `package_no`、`external_package_no` 和 `waybill_id`。`package_no` 与 `trackingNo` 是同一个系统包裹号，`external_package_no` 与 `outParcelNo` 是同一个外部包裹号。Node SDK 的 `addPackage` 返回的就是这个 `data`。
+
+```json
+{
+  "code": 0,
+  "success": true,
+  "message": "success",
+  "extra": null,
+  "data": {
+    "waybillNo": "TH24020001",
+    "trackingNo": "TH24020001-002",
+    "outParcelNo": "PKG-002",
+    "displayParcelNo": "TH24020001-002",
+    "package_no": "TH24020001-002",
+    "external_package_no": "PKG-002",
+    "waybill_id": "00000000-0000-0000-0000-000000000000"
+  }
+}
+```
+
+如果这张运单上已经有相同 `outParcelNo` 的包裹，返回 `code` `1008`（包裹重复），`extra` 里带上已有包裹的 `package_no`、`external_package_no` 和 `waybill_id`，所以重试同一个包裹时也能拿到系统包裹号（SDK 里在 `TMSApiError.details`）。只有草稿状态的运单能新增包裹。
+
+</Staging>
+
 ### 错误码
 
 | `code` | 含义 |
