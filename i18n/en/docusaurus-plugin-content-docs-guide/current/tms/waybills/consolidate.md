@@ -22,6 +22,21 @@ aren't met. All of these must hold:
 - **none of them already a consolidation master** — you can't consolidate a
   consolidation.
 
+<Staging source="tms#307">
+
+With two or more waybills ticked, **Consolidate Waybills** is always in the **Assign** dropdown. When the conditions aren't met it's greyed out, with the reason underneath:
+
+- **Every selected waybill needs a service**: at least one has no service;
+- **Selected waybills must have the same service**;
+- **Selected waybills must have the same sender account**;
+- **Selected waybills must have the same route**.
+
+A consolidation master can now be consolidated again: tick several masters (or masters and ordinary waybills) together and they become one new master, whose **Consolidated Waybills** section lists the earlier masters. The new master is billed on its own route and the earlier masters keep their charges, so where the two routes overlap, the overlap is charged twice.
+
+Keep **Auto-generate Virtual Package** on when consolidating masters: with it off, the warehouse has to pack the earlier masters' goods into a new box.
+
+</Staging>
+
 :::tip
 Filter by sender account code and service first, then select all. Much quicker than
 ticking rows one at a time.

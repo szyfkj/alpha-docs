@@ -39,6 +39,13 @@ Five conditions must hold at once: two or more waybills, same sender account, sa
 service, same route, and none already a master. See
 [Consolidating waybills](../waybills/consolidate).
 
+<Staging source="tms#307">
+
+**"Consolidate Waybills" is greyed out.**
+The reason is shown under it: different services, sender accounts or routes, or a waybill with no service. A consolidation master can be consolidated again. See [Consolidating waybills](../waybills/consolidate).
+
+</Staging>
+
 **Assigning a subcontractor says the status isn't assignable.**
 Some selected waybills can't be handed over in their current status; the dialog lists
 them. Untick them or move them on first.
