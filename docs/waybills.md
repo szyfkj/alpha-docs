@@ -231,6 +231,16 @@ GET /api/waybills/{waybillNo}/label
 
 直接返回 `application/pdf` 二进制流，不是 JSON。可选 query 参数 `packageId` 用于只打某一个包裹的面单。
 
+<Staging source="tms#329">
+
+- `packageId` 可以填包裹 ID、包裹号或你传的 `outParcelNo`，三者任选其一。包裹不在这张运单上返回 `404`。
+- 面单来自承运商（如 J&T）时，不传 `packageId` 会把所有包裹的承运商面单合并成一个 PDF 返回。
+- 承运商还没给包裹下单时返回 `409`（`{"error":"Label not ready: …"}`，兼容信封下 `code` 为 `1009`），几秒后重试即可。典型场景：草稿合并主运单的最后一个路段已交给承运商，之后通过新增包裹接口（`POST /api/waybills/{waybillNo}/packages`）补上打好的包裹。新增包裹会让承运商重新下单，下单完成后就能取到这个包裹的面单。草稿运单在承运商下单前没有面单。
+- 每个包裹单独下单的承运商（如 J&T）给新包裹下单；整票只下一单的承运商不会下第二单，已下的单里不包含新包裹。
+- Node SDK 的 `getLabel` 遇到这种情况抛出 `TMSApiError`，`statusCode` 为 `409`。
+
+</Staging>
+
 批量打印：
 
 ```http
@@ -295,6 +305,14 @@ POST /api/waybills/allocate-number
 | `1006` | 运单不存在 |
 | `1007` | 未分配承运方 |
 | `1008` | 包裹重复 |
+
+<Staging source="tms#329">
+
+| `code` | 含义 |
+|---|---|
+| `1009` | 面单未就绪：承运商还没给包裹下单，稍后重试（见[面单 PDF](#面单-pdf)） |
+
+</Staging>
 
 ## 运单状态
 
