@@ -43,6 +43,12 @@ A company's default currency can be Vietnamese dong: in the dashboard, go to **S
 
 When you import a bank statement in **Reconciliation**, an amount that uses only one kind of separator (only dots, or only commas) is read like this: a separator that repeats (`1.500.000`, `1,500,000`), or appears once with exactly three digits after it (`500.000`, `1,500`), separates thousands; otherwise it is the decimal point (`1500.50`, `1500,5`). So `500.000` VND reads as 500,000, and `1,500` THB as 1,500. When an amount has both dots and commas (`1,234.56`, `1.234,56`), the last separator is still the decimal point.
 
+## Syncing an order from 1688
+
+In the dashboard, open an order under **Orders** that has a 1688 order ID, and click the refresh icon (**Sync from 1688**) next to **1688 Order ID** in **Shipping & Tracking** to fetch the order's latest status from 1688.
+
+If 1688 refuses to return the order (for example, the purchasing account isn't allowed to view it), the reason 1688 gives is shown under the 1688 order ID, instead of only a generic failure message. It reads `1688 refused order <1688 order ID>: <error code> - <error message>`. Sort out the cause on the 1688 side (for example, check the purchasing account's authorization), then click refresh again.
+
 ## What you can read today
 
 - For API integration, see the [Developer Guide](/tms/).
