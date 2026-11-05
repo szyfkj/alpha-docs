@@ -19,9 +19,10 @@ missed scan, or a subcontractor who just phones in an update. Then you add one b
 |---|---|---|
 | **Event Type** | Yes | The status, from the [status reference](./statuses) |
 | **Date & Time** | Yes | When it **actually happened**, not when you're typing |
-| **Location** | No | Free text |
 | **Notes** | No | Context, e.g. "customer confirmed receipt by phone" |
 | **Proof of Delivery Photos** | No | Up to 5 |
+
+Location coordinates are recorded when drivers scan, not typed by hand.
 
 4. Click **Add Event**.
 
@@ -45,8 +46,8 @@ so the waybill and package statuses move on as usual:
 | Cross-border event | Description | Waybill status |
 |---|---|---|
 | **Picked Up** | The package has been picked up for cross-border transport | Picked Up |
-| **Container Loaded** | The package has been loaded into a container | Waybill Sorted |
 | **Export Customs Cleared** | The package has cleared export customs | In Transit, Hub Outbound |
+| **Container Loaded** | The package has been loaded into a container | Waybill Sorted |
 | **Departed** | The package has departed for the destination country | In Transit, Hub Outbound |
 | **Arrived** | The package has arrived in the destination country | In Transit, Hub Inbound |
 | **Import Customs Cleared** | The package has cleared import customs | Waybill Sorted |

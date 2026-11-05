@@ -29,7 +29,8 @@ The fix is to move them on to a confirmed status and print again.
 ## What the label looks like
 
 Layout comes from a **label template**, configured under **Settings → Label Templates**.
-You can set a default, and configure different templates per subcontractor — so goods
-handed to a carrier print in the format that carrier wants.
+You can set a default, and use [template selection rules](../settings/labels-integrations#template-selection-rules)
+to pick other templates by route, service and subcontractor — so goods handed to a carrier
+print in the format that carrier wants.
 
 The template editor is visual; see the settings chapter.

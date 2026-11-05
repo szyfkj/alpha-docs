@@ -54,6 +54,8 @@ POST /api/waybills
 
 `receiverDistrictName`（区/县）可选但强烈建议传。其余可选：`senderName`、`senderAddress`、`senderCityName`、`senderDistrictName`、`senderPostCode`、`receiverPhone2`。
 
+`receiverPostCode` 最多 20 个字符。超过 20 个字符时返回 `422` 参数校验失败（错误码 `1000`），`error` 为 `Validation failed: receiverPostCode: receiverPostCode must be at most 20 characters`，运单不会创建。
+
 传了 `route_id` 时，收发双方从线路的首尾节点推导，上述字段全部变为可选。
 
 :::tip
@@ -108,6 +110,10 @@ POST /api/waybills
 
 `route_id` 必须是你自己组织的线路。传了别的组织的线路或不存在的线路，返回 `400`（错误码 `1000`，"Route not found"），运单不会创建。查询运单时返回的线路，也是你自己组织在这票运单上的线路：别的组织分配给你的运单，返回你的线路，没有就为空。
 
+不传 `route_id` 时，如果 Alpha Cargo 平台为你的组织配置了线路规则，系统按规则从你的线路里选一条记到运单上，路段也一并生成，查询运单时返回这条线路。规则可以看寄件人账户（`sender_account`）的类型、重量等条件。没有规则匹配时，运单没有线路。这时上面列出的必填字段仍然必填。传了 `route_id` 时，以你传的为准。
+
+运单还是 `draft`、`created` 或 `accepted` 状态时，通过包裹接口新增、更新或拆分包裹（比如入库时回传尺寸和重量），系统会按同样的线路规则重新选线路：规则选的线路不变就保留；改完后规则选中另一条，运单换到那条线路。只有没有规则匹配时，才按收件地址选线路。
+
 ### 重复推送的处理
 
 用 query 参数 `overwrite` 控制同一个 `outTradeNo` 再次推送时的行为：
@@ -122,6 +128,8 @@ POST /api/waybills
 :::caution
 不传 `overwrite` 时，重复推送会**直接覆盖**已有运单。如果你需要防止重复建单，请显式传 `overwrite=reject`。
 :::
+
+同一个 `outTradeNo` **同时**推送两次（比如并发重试）时，先到的请求建单，后到的请求无论 `overwrite` 取什么值，都可能返回 `409`（错误码 `1003`，"Waybill already exists"）。稍后重试一次即可：重试时会找到已建的运单，按 `overwrite` 的规则处理。
 
 ```http
 POST /api/waybills?overwrite=return_existing
@@ -172,6 +180,8 @@ POST /api/waybills?overwrite=return_existing
 | `409` | `1003` | 运单已存在（`overwrite=reject` 时） |
 | `403` | `1000` | 该单号属于别的组织 |
 | `400` | `1000` | 寄件人地址匹配不到，或缺少寄件人电话 |
+
+同一个 `outTradeNo` 同时推送两次时，后到的请求也可能返回 `409`、错误码 `1003`，见[重复推送的处理](#重复推送的处理)。
 
 `route_id` 不是你自己组织的线路时，也返回 `400`、错误码 `1000`，见[常用可选字段](#常用可选字段)。
 
@@ -231,6 +241,12 @@ GET /api/waybills/{waybillNo}/label
 
 直接返回 `application/pdf` 二进制流，不是 JSON。可选 query 参数 `packageId` 用于只打某一个包裹的面单。
 
+- `packageId` 可以填包裹 ID、包裹号或你传的 `outParcelNo`，三者任选其一。包裹不在这张运单上返回 `404`。
+- 面单来自承运商（如 J&T）时，不传 `packageId` 会把所有包裹的承运商面单合并成一个 PDF 返回。
+- 承运商还没给包裹下单时返回 `409`（`{"error":"Label not ready: …"}`，兼容信封下 `code` 为 `1009`），几秒后重试即可。典型场景：草稿合并主运单的最后一个路段已交给承运商，之后通过新增包裹接口（`POST /api/waybills/{waybillNo}/packages`）补上打好的包裹。新增包裹会让承运商重新下单，下单完成后就能取到这个包裹的面单。草稿运单在承运商下单前没有面单。
+- 每个包裹单独下单的承运商（如 J&T）给新包裹下单；整票只下一单的承运商不会下第二单，已下的单里不包含新包裹。
+- Node SDK 的 `getLabel` 遇到这种情况抛出 `TMSApiError`，`statusCode` 为 `409`。
+
 批量打印：
 
 ```http
@@ -280,6 +296,28 @@ POST /api/waybills/allocate-number
 包裹相关接口（新增包裹、拆分包裹）**强制**使用兼容信封，永远返回 HTTP 200。接入这两个接口时务必检查 `code` 而不是 HTTP 状态码。
 :::
 
+新增包裹接口（`POST /api/waybills/{waybillNo}/packages`）成功时，`data` 除了原有字段，还会返回 `package_no`、`external_package_no` 和 `waybill_id`。`package_no` 与 `trackingNo` 是同一个系统包裹号，`external_package_no` 与 `outParcelNo` 是同一个外部包裹号。Node SDK 的 `addPackage` 返回的就是这个 `data`。
+
+```json
+{
+  "code": 0,
+  "success": true,
+  "message": "success",
+  "extra": null,
+  "data": {
+    "waybillNo": "TH24020001",
+    "trackingNo": "TH24020001-002",
+    "outParcelNo": "PKG-002",
+    "displayParcelNo": "TH24020001-002",
+    "package_no": "TH24020001-002",
+    "external_package_no": "PKG-002",
+    "waybill_id": "00000000-0000-0000-0000-000000000000"
+  }
+}
+```
+
+如果这张运单上已经有相同 `outParcelNo` 的包裹，返回 `code` `1008`（包裹重复），`extra` 里带上已有包裹的 `package_no`、`external_package_no` 和 `waybill_id`，所以重试同一个包裹时也能拿到系统包裹号（SDK 里在 `TMSApiError.details`）。只有草稿状态的运单能新增包裹。
+
 ### 错误码
 
 | `code` | 含义 |
@@ -295,6 +333,7 @@ POST /api/waybills/allocate-number
 | `1006` | 运单不存在 |
 | `1007` | 未分配承运方 |
 | `1008` | 包裹重复 |
+| `1009` | 面单未就绪：承运商还没给包裹下单，稍后重试（见[面单 PDF](#面单-pdf)） |
 
 ## 运单状态
 
