@@ -3,7 +3,7 @@
   "info": {
     "title": "Alpha Cargo TMS API",
     "version": "1.0.0",
-    "description": "The Alpha Cargo TMS API for integrators.\n\nEvery server-side request is signed with your organization's API key; see\n[Authentication](https://docs.alphacargo.io/tms/authentication).\n\n## Errors\n\nA failed request answers with a non-2xx status and `{ \"error\": \"<message>\" }`.\nThe message is localized per `Accept-Language` (`en`, `th`, `zh`).\n\nOrganizations set up for the legacy format, and requests sending\n`X-Legacy-Response: true`, get every response in the legacy\nenvelope instead: HTTP 200 with `{ code, message, data, extra, success }`.\nIts `code` is one of:\n\n| code | Meaning |\n|---|---|\n| `0` | Success |\n| `1000` | Invalid parameters |\n| `1001` | Unknown merchant / missing organization context |\n| `1002` | Invalid signature |\n| `1003` | Waybill already exists |\n| `1004` | Origin could not be matched |\n| `1005` | Destination could not be matched |\n| `1006` | Waybill not found |\n| `1007` | No carrier assigned |\n| `1008` | Package already exists |\n| `-1` | System error |\n"
+    "description": "The Alpha Cargo TMS API for integrators.\n\nEvery server-side request is signed with your organization's API key; see\n[Authentication](https://docs.alphacargo.io/tms/authentication).\n\n## Errors\n\nA failed request answers with a non-2xx status and `{ \"error\": \"<message>\" }`.\nThe message is localized per `Accept-Language` (`en`, `th`, `zh`).\n\nOrganizations set up for the legacy format, and requests sending\n`X-Legacy-Response: true`, get every response in the legacy\nenvelope instead: HTTP 200 with `{ code, message, data, extra, success }`.\nIts `code` is one of:\n\n| code | Meaning |\n|---|---|\n| `0` | Success |\n| `1000` | Invalid parameters |\n| `1001` | Unknown merchant / missing organization context |\n| `1002` | Invalid signature |\n| `1003` | Waybill already exists |\n| `1004` | Origin could not be matched |\n| `1005` | Destination could not be matched |\n| `1006` | Waybill not found |\n| `1007` | No carrier assigned |\n| `1008` | Package already exists |\n| `1009` | Label not ready: the carrier hasn't booked the package yet |\n| `-1` | System error |\n"
   },
   "servers": [
     {
@@ -1355,7 +1355,8 @@
               1005,
               1006,
               1007,
-              1008
+              1008,
+              1009
             ],
             "description": "0 on success; see the error code table."
           },
@@ -5125,7 +5126,7 @@
         ],
         "responses": {
           "200": {
-            "description": "The label PDF.",
+            "description": "The label PDF. Without packageId, the carrier labels of all packages come merged into one PDF.",
             "content": {
               "application/pdf": {
                 "schema": {
@@ -5157,6 +5158,16 @@
           },
           "404": {
             "description": "Waybill or package not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Label not ready: the carrier hasn't booked this package yet (e.g. a package just added to a draft consolidated waybill). Retry in a few seconds.",
             "content": {
               "application/json": {
                 "schema": {

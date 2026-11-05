@@ -37,13 +37,9 @@ When a waybill's route (your own route) has more than one leg, the master waybil
 
 Sub-waybills of different legs can be assigned together. Waybills with no route, or on a one-leg route, are assigned whole.
 
-<Staging source="tms#329">
-
 **Packages added to the master waybill later:** when a leg of a draft master waybill has already been handed to a subcontractor (say the last leg went to J&T) and a package is then added to the master (for example by the warehouse once it has packed the goods), the system has that subcontractor process the waybill again. Subcontractors that book one order per package (such as J&T) book only the packages that don't have an order yet, and the new package's carrier label is available once that's done. Subcontractors that book one order per waybill don't book a second order: the order already placed doesn't include the new package.
 
 **When a sub-waybill counts as delivered:** when the master waybill has several packages, a leg's sub-waybill becomes **Delivered** only once every package of the master that isn't canceled has been delivered on that leg, rather than on the first package's delivery. The master waybill itself has always been delivered only when all its packages are.
-
-</Staging>
 
 ## The route your subcontractor sees
 
