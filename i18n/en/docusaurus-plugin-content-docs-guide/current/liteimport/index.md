@@ -47,11 +47,7 @@ When you import a bank statement in **Reconciliation**, an amount that uses only
 
 In the dashboard, open an order under **Orders** that has a 1688 order ID, and click the refresh icon (**Sync from 1688**) next to **1688 Order ID** in **Shipping & Tracking** to fetch the order's latest status from 1688.
 
-<Staging source="liteimport#84">
-
 If 1688 refuses to return the order (for example, the purchasing account isn't allowed to view it), the reason 1688 gives is shown under the 1688 order ID, instead of only a generic failure message. It reads `1688 refused order <1688 order ID>: <error code> - <error message>`. Sort out the cause on the 1688 side (for example, check the purchasing account's authorization), then click refresh again.
-
-</Staging>
 
 ## What you can read today
 
