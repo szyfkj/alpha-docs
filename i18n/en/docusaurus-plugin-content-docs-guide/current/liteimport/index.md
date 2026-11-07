@@ -50,5 +50,7 @@ When you import a bank statement in **Reconciliation**, an amount that uses only
   mini-apps on your own domains.
 - [Affiliate analytics](./affiliate-analytics.md): the referrals, orders and
   commissions your affiliates bring in.
+- [Referral codes and commissions](./referral-codes.md): add referral codes to an
+  affiliate and set their commission.
 - For other Liteimport operating instructions, please get in touch — this guide is
   still being written.
