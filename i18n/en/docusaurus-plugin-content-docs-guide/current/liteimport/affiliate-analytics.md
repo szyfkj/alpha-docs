@@ -42,8 +42,6 @@ Each figure is compared with the previous period of the same length.
 - **GMV from paid orders**: GMV per day.
 - **Commissions**: commissions created per day, stacked by pending, approved and paid.
 
-<Staging source="liteimport#91">
-
 ## Export as CSV
 
 The **Export** button next to the filters downloads what the page shows as a CSV
@@ -62,5 +60,3 @@ while the data loads or if loading fails.
 - There's no totals row: a customer who orders on several days is counted on each
   of them, so adding up Ordering customers day by day would overcount. The figures
   at the top of the page give the totals.
-
-</Staging>

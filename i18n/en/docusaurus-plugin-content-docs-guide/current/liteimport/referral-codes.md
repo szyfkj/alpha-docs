@@ -2,7 +2,6 @@
 id: referral-codes
 title: Referral codes and commissions
 sidebar_position: 4
-staging: liteimport#88
 ---
 
 # Referral codes and commissions
@@ -30,8 +29,6 @@ The company's default currency is set in **Settings → Company → Company Info
 Default Currency**. Changing it affects only codes created afterwards; existing codes
 and their commissions keep the currency they were created with.
 
-<Staging source="liteimport#90">
-
 ### Generating codes in bulk
 
 To give an affiliate a batch of codes at once, click **Add Code** and switch from
@@ -51,8 +48,6 @@ e.g. `BAM` or `V6L`. They appear in the referral code list.
   quantity or an amount.
 - If not enough unused codes of that length are left, none are created and the form
   asks you to use a longer length or fewer codes.
-
-</Staging>
 
 ## Viewing commissions
 
