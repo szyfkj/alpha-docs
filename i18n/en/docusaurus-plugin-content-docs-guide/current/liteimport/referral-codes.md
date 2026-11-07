@@ -26,6 +26,10 @@ In **Affiliates**, open an affiliate and click **Add Code** under **Referral Cod
 
 Click **Create** to save.
 
+The company's default currency is set in **Settings → Company → Company Information →
+Default Currency**. Changing it affects only codes created afterwards; existing codes
+and their commissions keep the currency they were created with.
+
 <Staging source="liteimport#90">
 
 ### Generating codes in bulk
@@ -49,10 +53,6 @@ e.g. `BAM` or `V6L`. They appear in the referral code list.
   asks you to use a longer length or fewer codes.
 
 </Staging>
-
-The company's default currency is set in **Settings → Company → Company Information →
-Default Currency**. Changing it affects only codes created afterwards; existing codes
-and their commissions keep the currency they were created with.
 
 ## Viewing commissions
 
