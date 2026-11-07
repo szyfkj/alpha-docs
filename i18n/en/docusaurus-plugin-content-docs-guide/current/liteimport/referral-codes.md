@@ -26,6 +26,30 @@ In **Affiliates**, open an affiliate and click **Add Code** under **Referral Cod
 
 Click **Create** to save.
 
+<Staging source="liteimport#90">
+
+### Generating codes in bulk
+
+To give an affiliate a batch of codes at once, click **Add Code** and switch from
+**Single code** to **Generate codes**:
+
+- **Code length**: 3–20, 3 by default.
+- **Number of codes**: 1–100, 10 by default.
+- **Commission type**, **Commission** and **Linked Coupon** work as for a single code;
+  every code in the batch gets the same settings.
+
+Click **Generate** to create that many random codes of letters A–Z and digits 0–9,
+e.g. `BAM` or `V6L`. They appear in the referral code list.
+
+- Codes your company already uses as a referral code or a coupon code are skipped, so
+  a code a customer sends in chat can't be mistaken for another.
+- All-digit codes (e.g. `100`) are skipped too: in chat, a number reads more like a
+  quantity or an amount.
+- If not enough unused codes of that length are left, none are created and the form
+  asks you to use a longer length or fewer codes.
+
+</Staging>
+
 The company's default currency is set in **Settings → Company → Company Information →
 Default Currency**. Changing it affects only codes created afterwards; existing codes
 and their commissions keep the currency they were created with.
