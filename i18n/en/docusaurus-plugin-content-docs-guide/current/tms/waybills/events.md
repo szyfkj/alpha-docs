@@ -27,13 +27,9 @@ missed scan, or a subcontractor who just phones in an update. Then you add one b
 
 Every ticked waybill gets the same event.
 
-<Staging source="tms#334">
-
 **The time can't be in the future.** The date picker stops at the current minute. If you
 enter a later time, a red message under **Date & Time** says "The event time can't be in the
 future." and **Add Event** is greyed out until you change it to a past time or the current minute.
-
-</Staging>
 
 **Photos upload after the event is saved.** When you click **Add Event**, the event is saved
 first and the photos go up after it. Each photo is shrunk to 1600 px on its longest side
