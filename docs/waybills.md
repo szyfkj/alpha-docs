@@ -211,6 +211,72 @@ PATCH /api/waybills/{waybillNo}
 
 需要改地址、包裹或重量？用 `overwrite=overwrite` 重新推送整张单。
 
+<Staging source="tms#281">
+
+只改某个包裹的实测重量、尺寸、描述、图片或装载属性，用下面的[更新包裹](#更新包裹)接口，不用重推整张单。
+
+## 更新包裹
+
+```http
+PATCH /api/waybills/{waybillNo}/packages/{packageNo}
+```
+
+建单后更新单个包裹，典型场景是仓库入库时回传实测的重量和尺寸。**任何运单状态都可以调用**，只改你传的字段。
+
+- `{waybillNo}`：系统运单号或你的 `outTradeNo`。
+- `{packageNo}`：系统包裹号或你的 `outParcelNo`，只在这张运单的包裹里查找。
+
+请求体至少带一个字段：
+
+| 字段 | 类型 | 说明 |
+|---|---|---|
+| `weight` | number | 重量（kg），大于 0。`piece_count` 大于 1 时是**单件**重量 |
+| `length` / `width` / `height` | number | 尺寸（cm），大于 0 |
+| `itemDesc` | string | 品名描述 |
+| `photos` | string[] | 图片 URL，**追加**到包裹已有的图片后面，已有的 URL 会跳过，所以重试不会产生重复；传 `[]` 不做任何修改 |
+| `load_properties` | object | 装载属性（如 `fragile` 易碎），**整体替换**包裹原有的设置，没传的属性沿用货物分类的设置 |
+
+```json
+{
+  "weight": 3.2,
+  "length": 30,
+  "width": 25,
+  "height": 12,
+  "photos": ["https://example.com/inbound/PKG-001-1.jpg"]
+}
+```
+
+改了重量或尺寸后，系统会按所有包裹重新计算运单的总重量和体积，运费随之重新计价，服务也可能按新重量重新选择。已经开票的费用会作废原发票，按新重量重新生成费用。只改描述、图片或装载属性不影响总量和费用。
+
+`outParcelNo`、`productList` 和 `piece_count` 不能通过这个接口修改。
+
+这个接口**强制**使用[兼容信封](#兼容信封)，永远返回 HTTP 200。参数错误、运单或包裹不存在、包裹已取消都返回 `code` `1000`，系统错误返回 `-1`。成功时 `data` 返回包裹更新后的字段，`photos` 是全部图片：
+
+```json
+{
+  "code": 0,
+  "success": true,
+  "message": "Package updated successfully",
+  "extra": null,
+  "data": {
+    "waybillNo": "TH24020001",
+    "packageNo": "TH24020001A1",
+    "outParcelNo": "PKG-001",
+    "weight": 3.2,
+    "length": 30,
+    "width": 25,
+    "height": 12,
+    "itemDesc": "Clothes",
+    "photos": ["https://example.com/inbound/PKG-001-1.jpg"],
+    "load_properties": {}
+  }
+}
+```
+
+Node SDK：`client.waybills.updatePackage(waybillNo, packageNo, { weight, length, width, height, itemDesc, photos, load_properties })`。
+
+</Staging>
+
 ## 取消运单
 
 ```http
@@ -279,6 +345,12 @@ POST /api/waybills/allocate-number
 :::caution
 包裹相关接口（新增包裹、拆分包裹）**强制**使用兼容信封，永远返回 HTTP 200。接入这两个接口时务必检查 `code` 而不是 HTTP 状态码。
 :::
+
+<Staging source="tms#281">
+
+[更新包裹](#更新包裹)接口同样强制使用兼容信封。
+
+</Staging>
 
 ### 错误码
 
