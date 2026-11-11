@@ -21,6 +21,23 @@ still switch to another warehouse; with several to choose from, you pick one as 
 
 </Staging>
 
+<Staging source="wms#23">
+
+## Measurements sent to the TMS
+
+When the warehouse is connected to a TMS, tapping **Receive Package** also writes the weight
+and dimensions entered while receiving to the package in the TMS. They replace the values
+already there, including ones the customer entered when ordering. The TMS recalculates the
+waybill's totals and charges from them. In the TMS waybill details, the
+[Packages](../tms/waybills/detail.md#packages) section shows the warehouse's measurements.
+
+Only the values entered while receiving are replaced; the others stay as they were, and
+nothing changes when none were entered. For a waybill with several packages, each package
+gets its own values. If the update fails (for example, the TMS can't be reached), the
+receive still completes without an error.
+
+</Staging>
+
 ## Which locations accept packages
 
 A package can only be received into a location that is both:
