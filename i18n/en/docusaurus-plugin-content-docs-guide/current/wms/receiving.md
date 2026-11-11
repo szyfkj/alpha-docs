@@ -21,6 +21,24 @@ still switch to another warehouse; with several to choose from, you pick one as 
 
 </Staging>
 
+<Staging source="wms-android#12">
+
+## Scanning with the camera in the mobile app
+
+In the mobile app, the scan buttons on the **Inbound** page open the camera right in the
+page. The app needs the camera permission for this:
+
+- The first time you open the app after installing it, it asks for the camera permission,
+  once per install. Choose **Allow**, and the scan buttons open the camera directly.
+- If you declined, the app asks again the first time you tap a scan button. If you decline
+  again, the page says the camera is unavailable; type the number instead, or turn on the
+  camera permission for the app in your phone's settings.
+
+The app gives camera access only to the pages of the WMS server it's connected to, and
+never gives microphone access.
+
+</Staging>
+
 ## Which locations accept packages
 
 A package can only be received into a location that is both:
