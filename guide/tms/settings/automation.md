@@ -47,6 +47,25 @@ flowchart LR
 规则可以随时**启用/停用**，切换后提示"自动化规则已启用/已停用"。不用的规则建议停用
 而不是删除，改天还要用时不必重配。
 
+## 运单付款后让仓库出库（Alpha WMS）
+
+如果你在 **设置 → 集成** 里接了 **Alpha WMS**，可以让运单付清后由仓库自动安排出库，不用另写对接程序：
+
+1. 在 **设置 → 集成 → Alpha WMS** 填好 **Base URL**、**API Key** 和 **API Secret**。**Default Warehouse ID** 可选，填了就作为默认出库仓库。
+2. 在 **设置 → 自动化** 新建规则，触发选 **Waybill Paid**，动作选 **HTTP Webhook**。
+3. **Webhook 地址** 填你的 TMS 地址加 `/api/integrations/alpha-wms/outbound`，**方式** 选 `POST`。
+4. 要指定出库仓库，在 **请求正文模板（可选）** 里写 `{"warehouse_id": "<WMS 仓库 ID>"}`；留空就用 **Default Warehouse ID**。
+
+规则触发时，系统把这张运单的全部包裹号发给 Alpha WMS，请它从指定仓库出库，并在请求里附上运单号，方便在仓库那边对应。
+
+用 **立即触发** 测试时，响应里的 `wms_status` 和 `wms_response` 就是仓库的回复：
+
+| 结果 | 含义 |
+|---|---|
+| 200 | 仓库已接受出库请求 |
+| 502 | 仓库拒绝了请求，`wms_status` 和 `wms_response` 里是仓库返回的状态码和内容 |
+| 500 | 没发出去：运单不存在、没配置 Alpha WMS 集成、运单没有包裹，或者既没在模板里写仓库也没填 **Default Warehouse ID** |
+
 ## 技术细节
 
 回调的数据格式、重试行为、以及从代码那边怎么接，见

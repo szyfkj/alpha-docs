@@ -5595,6 +5595,271 @@
         }
       }
     },
+    "/api/waybills/{waybillNo}/packages/{packageNo}": {
+      "patch": {
+        "tags": [
+          "Waybills"
+        ],
+        "operationId": "updateWaybillPackage",
+        "summary": "Update a package",
+        "description": "Updates a package after creation, e.g. at warehouse inbound: weight (kg), length, width, height (cm), description (`itemDesc`), `photos` and `load_properties`. Only the fields sent change; send at least one. Works in any waybill status. A weight or dimension change recomputes the waybill's weight and volume, may re-select the service, and re-prices the waybill's charges; the other fields don't affect totals or charges. Always answers in the legacy envelope with HTTP 200: check `success` and `code` (`1000` invalid parameters, waybill or package not found, `-1` system error).",
+        "security": [
+          {
+            "signature": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "description": "Waybill number, or your own outTradeNo — both are accepted.",
+              "example": "WB2610120001"
+            },
+            "required": true,
+            "name": "waybillNo",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "description": "The package number (`trackingNo`) or its external number (`outParcelNo`)."
+            },
+            "required": true,
+            "description": "The package number (`trackingNo`) or its external number (`outParcelNo`).",
+            "name": "packageNo",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "mchId": {
+                    "type": "string"
+                  },
+                  "api_key": {
+                    "type": "string"
+                  },
+                  "nonceStr": {
+                    "type": "string"
+                  },
+                  "sign": {
+                    "type": "string"
+                  },
+                  "weight": {
+                    "type": "number",
+                    "minimum": 0,
+                    "exclusiveMinimum": true,
+                    "description": "kg"
+                  },
+                  "length": {
+                    "type": "number",
+                    "minimum": 0,
+                    "exclusiveMinimum": true,
+                    "description": "cm"
+                  },
+                  "width": {
+                    "type": "number",
+                    "minimum": 0,
+                    "exclusiveMinimum": true,
+                    "description": "cm"
+                  },
+                  "height": {
+                    "type": "number",
+                    "minimum": 0,
+                    "exclusiveMinimum": true,
+                    "description": "cm"
+                  },
+                  "itemDesc": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "photos": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "description": "Photo URLs to add. Appended to the package's photos; URLs it already has are skipped."
+                  },
+                  "load_properties": {
+                    "type": "object",
+                    "properties": {
+                      "orientation": {
+                        "type": "string",
+                        "enum": [
+                          "longship",
+                          "rotatable",
+                          "tiltable"
+                        ]
+                      },
+                      "stackable": {
+                        "type": "boolean"
+                      },
+                      "fragile": {
+                        "type": "boolean"
+                      },
+                      "bottom_only": {
+                        "type": "boolean"
+                      },
+                      "max_layers": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 100
+                      },
+                      "max_load_kg": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 100000
+                      },
+                      "geometry": {
+                        "type": "string",
+                        "enum": [
+                          "box",
+                          "cylinder"
+                        ]
+                      }
+                    },
+                    "additionalProperties": false,
+                    "description": "Cargo handling for load planning. Replaces the package's; unset fields inherit from the category."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Result envelope.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/LegacyEnvelope"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "waybillNo": {
+                              "type": "string"
+                            },
+                            "packageNo": {
+                              "type": "string"
+                            },
+                            "outParcelNo": {
+                              "type": "string",
+                              "nullable": true
+                            },
+                            "weight": {
+                              "type": "number",
+                              "nullable": true
+                            },
+                            "length": {
+                              "type": "number",
+                              "nullable": true
+                            },
+                            "width": {
+                              "type": "number",
+                              "nullable": true
+                            },
+                            "height": {
+                              "type": "number",
+                              "nullable": true
+                            },
+                            "itemDesc": {
+                              "type": "string",
+                              "nullable": true
+                            },
+                            "photos": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "load_properties": {
+                              "type": "object",
+                              "properties": {
+                                "orientation": {
+                                  "type": "string",
+                                  "enum": [
+                                    "longship",
+                                    "rotatable",
+                                    "tiltable"
+                                  ]
+                                },
+                                "stackable": {
+                                  "type": "boolean"
+                                },
+                                "fragile": {
+                                  "type": "boolean"
+                                },
+                                "bottom_only": {
+                                  "type": "boolean"
+                                },
+                                "max_layers": {
+                                  "type": "integer",
+                                  "minimum": 1,
+                                  "maximum": 100
+                                },
+                                "max_load_kg": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 100000
+                                },
+                                "geometry": {
+                                  "type": "string",
+                                  "enum": [
+                                    "box",
+                                    "cylinder"
+                                  ]
+                                }
+                              },
+                              "additionalProperties": false
+                            }
+                          },
+                          "required": [
+                            "waybillNo",
+                            "packageNo",
+                            "outParcelNo",
+                            "weight",
+                            "length",
+                            "width",
+                            "height",
+                            "itemDesc",
+                            "photos",
+                            "load_properties"
+                          ]
+                        }
+                      }
+                    }
+                  ],
+                  "description": "Legacy response envelope. Always HTTP 200; check `success` and `code`. Used by organizations configured for the legacy format, by requests sending `X-Legacy-Response: true`, and always by POST /api/waybills/{waybillNo}/packages."
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid signature or session.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/load-planning/fit-check": {
       "post": {
         "tags": [
