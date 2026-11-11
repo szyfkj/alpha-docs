@@ -21,6 +21,25 @@ still switch to another warehouse; with several to choose from, you pick one as 
 
 </Staging>
 
+<Staging source="wms#30">
+
+## Receiving notes
+
+What you type under **Notes** in **Inbound** is saved on the package: in **Inventory**, tap
+the package's eye icon and the **Package Details** show it under **Notes**, where you
+can also edit it. When the same package is received again, the new note is added to the
+existing notes on a new line; a note that is already there isn't added twice.
+
+The note also goes into the waybill's remark in the TMS. A new waybill is created with it.
+For a waybill the customer has already ordered, the note is added to the existing remark on
+a new line; the customer's own text and the item description stay as they were.
+
+A note entered in **Scan Inbound** is also added to the package's notes when the package has
+already been received in this warehouse. In the TMS it is still recorded on the
+arrived-at-hub event only.
+
+</Staging>
+
 ## Which locations accept packages
 
 A package can only be received into a location that is both:
