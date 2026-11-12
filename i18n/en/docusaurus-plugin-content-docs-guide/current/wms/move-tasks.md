@@ -32,6 +32,28 @@ Only locations of type **Bin**, **Shelf** or **Rack** in status **Available** or
 (0) counts as unlimited for that measure. When nothing has enough room, it says "No location
 with enough room".
 
+<Staging source="wms#38">
+
+**Recommended location** is now a field you can edit instead of read-only text. The
+recommendation fills it in, and you can change it to another location by typing or scanning
+a location code. Once you've changed it, editing the dimensions or weight no longer
+overwrites your choice, and the field says "Changed by hand: the move task goes here". Tap
+**Use recommended C-01-02** to put the recommendation back. Switching warehouse or scanning
+a new package fills in the recommendation again.
+
+**Recommended location** is required:
+
+- While the recommendation is being worked out, the **Receive Package** button reads
+  "Calculating the recommended location…" and can't be tapped.
+- When no location has enough room, type or scan one yourself.
+
+The field accepts the same locations that can be recommended: type **Bin**, **Shelf** or
+**Rack**, status **Available** or **Occupied**, in the selected warehouse. Any other location
+shows "C-01-03 can't be used here: only available bins, shelves and racks in this warehouse"
+and is rejected when you tap **Receive Package**.
+
+</Staging>
+
 **Temporary location** works as **Location** did before: scan or type it, only **Bin**
 locations are accepted, and it defaults to the location this device used last. See
 [Receiving packages](./receiving.md).
@@ -46,6 +68,14 @@ locations' current contents, then places the package in the temporary location:
   says "Move task created: to C-01-02."
 - If they're the same, or there's no recommended location, no task is created.
 - If the recommendation can't be worked out, the package is still received.
+
+<Staging source="wms#38">
+
+The move task now goes to the location in the **Recommended location** field, and tapping
+**Receive Package** no longer works the recommendation out again: a task is created when that
+location differs from the temporary location, and none when they're the same.
+
+</Staging>
 
 The tasks also show on the console's **Workflows** page.
 
