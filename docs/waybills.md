@@ -123,6 +123,15 @@ POST /api/waybills
 不传 `overwrite` 时，重复推送会**直接覆盖**已有运单。如果你需要防止重复建单，请显式传 `overwrite=reject`。
 :::
 
+<Staging source="tms#347">
+
+`outTradeNo` 只需要在你的组织内唯一，"同一个 `outTradeNo`"指的是你组织自己建的运单：
+
+- 别的组织用了同一个 `outTradeNo`，不影响你建单，也不会读到或覆盖它的运单。
+- 别的组织分配给你的运单带着同一个单号时，你推送这个 `outTradeNo` 会建一票你自己的运单，不会覆盖分配来的那票，也不再被拒绝。
+
+</Staging>
+
 ```http
 POST /api/waybills?overwrite=return_existing
 ```
@@ -196,6 +205,12 @@ GET /api/waybills/{waybillNo}
 ```
 
 `{waybillNo}` 既可以传系统运单号，也可以传你自己的 `outTradeNo`，系统会自动识别。
+
+<Staging source="tms#347">
+
+传外部单号时，先找你组织自己的运单；没有的话，再找别的组织分配给你的运单。分配给你的运单里有多票用同一个单号时，无法确定是哪一票，返回 `404`（运单不存在），这时请改传系统运单号。
+
+</Staging>
 
 ## 修改运单
 
