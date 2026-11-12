@@ -49,6 +49,15 @@ code.
 
 </Staging>
 
+<Staging source="wms#26">
+
+**Location** is renamed **Temporary location** and works as before. Once the dimensions
+and weight are filled in, a **Recommended location** shows next to it, and if it differs
+from the temporary location, receiving the package creates a move task. See
+[Recommended locations and move tasks](./move-tasks.md).
+
+</Staging>
+
 ## Scan Inbound
 
 To tell the TMS a package has arrived without measuring or storing it, use **Warehouse
