@@ -531,6 +531,51 @@ GET /api/orders/{id}/tracking
 
 `active`、`accepted`（已支付下单）、`canceled`、`expired`
 
+<Staging source="tms#358">
+
+## 读取价格表（只读）
+
+想在自己的系统里展示或核对报价依据，可以读取组织的价格表：**服务**加上它们的**价格表**（`GET /api/rate-cards`）。服务在 TMS 的 **设置 → 服务** 里配置，接口只读。
+
+```http
+GET /api/services
+GET /api/services/{id}
+```
+
+列表按名称排序，唯一的筛选参数是 `type`（如 `ltl_transport`、`ftl_transport`）。每个服务带一个 `selector`：系统按它的 `conditions` 决定一张运单用不用这个服务，所有条件都满足才算选中。
+
+```json
+[
+  {
+    "id": "uuid",
+    "name": "泰国陆运 ≤30kg",
+    "type": "ltl_transport",
+    "pricing_method": "rate_card",
+    "minimum_spend": 0,
+    "selector": {
+      "id": "uuid",
+      "name": "泰国陆运 ≤30kg",
+      "priority": 0,
+      "conditions": [
+        { "field": "route_id", "operator": "equals", "value": "route-uuid" },
+        { "field": "chargeable_weight", "operator": "less_than_or_equal", "value": 30 }
+      ]
+    }
+  }
+]
+```
+
+例如按重量分档的线路：每一档是一个服务，条件是线路（`route_id`，即 `GET /api/waybill-routes` 列出的运单路线）加一个计费重量区间，各档的价格在对应的价格表里。
+
+| 情况 | 返回 |
+|---|---|
+| 服务没有选择条件（只能指定使用，或作为默认服务） | `selector` 为 `null` |
+| `{id}` 不是你组织的服务（包括其他组织的服务、格式不对的 id） | `404 {"error":"Service not found"}` |
+
+用 Node SDK 的话，2.15.0 起可以调 `client.services.list()` 和 `client.services.get(id)`。
+
+</Staging>
+
 ---
 
 ## 查询运单轨迹
