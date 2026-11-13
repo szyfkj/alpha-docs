@@ -209,6 +209,17 @@ PATCH /api/waybills/{waybillNo}
 
 传空对象会返回 `400 "No valid fields to update"`。
 
+<Staging source="tms#357">
+
+新增第 8 个字段 `recipient_id`（uuid）：把运单的收件地址换成该运单寄件客户已保存的某个收件人。可以单独传，也可以和其他字段一起传。
+
+| 情况 | 返回 |
+|---|---|
+| 运单没有寄件客户，或该收件人不属于这个寄件客户 | `400` |
+| 这张运单已经下单配送 | `409` |
+
+</Staging>
+
 需要改地址、包裹或重量？用 `overwrite=overwrite` 重新推送整张单。
 
 ## 取消运单
