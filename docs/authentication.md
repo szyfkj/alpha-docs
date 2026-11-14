@@ -239,6 +239,12 @@ Accept-Language: zh
 
 `/api/organizations`、`/api/address/resolve`、`/api/regions`，以及全部报价与订单跟踪接口**不受套餐限制**。
 
+<Staging source="tms#366">
+
+`/api/delivery-events` 改为开通 `delivery.tracking` **或** `agent_workbench` 任一套餐功能即可调用。两者都没有时仍返回 `403`，错误里写的是 `delivery.tracking`。
+
+</Staging>
+
 ## 排查
 
 | 现象 | 可能原因 |
