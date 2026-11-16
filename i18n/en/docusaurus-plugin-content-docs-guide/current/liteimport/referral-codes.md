@@ -69,6 +69,18 @@ all codes. Once codes are selected, a bar above the list shows how many and offe
 
 Click **Apply** to save an edit or a coupon link, and **Clear selection** to deselect.
 
+<Staging source="liteimport#98">
+
+**Edit** opens a window titled "Edit N referral codes" with the fields above, starting
+from **Keep current** each time it opens. Click **Apply** in the window to save, or
+**Cancel** to close it; it can't be closed while the change is being saved. The bar no
+longer has a separate **Link coupon** button: in the Edit window, pick a coupon under
+**Linked Coupon** to link it, **None** to unlink it, or **Keep current** to leave it as
+it is. **Activate**, **Deactivate** and **Delete** stay on the bar, and Delete still asks
+you to confirm.
+
+</Staging>
+
 ## Viewing commissions
 
 The referral code list and the **Commissions** list below it show each amount in its
