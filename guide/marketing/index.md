@@ -26,7 +26,7 @@ sidebar_position: 1
 
 | 部分 | 章节 | 内容 |
 |---|---|---|
-| 入门 | [快速上手](./getting-started.md)、[整体流程](./overview.md)、[页面与日常入口](./workspace.md) | 一条内容的全过程，九个环节，人与智能体的分工，每天从哪里开始 |
+| 入门 | [快速上手](./getting-started.md)、[整体流程](./overview.md)、[页面与日常入口](./workspace.md) | 项目及其之下管理的全部内容，一条内容的全过程，九个环节，人与智能体的分工，每天从哪里开始 |
 | 准备 | [项目设定](./settings.md) | 智能体工作所依据的全部信息 |
 | 内容制作 | [调研与素材库](./research.md)、[选题与简报](./ideas.md)、[脚本与审核](./review.md)、[制作方式与原始素材](./production.md)、[集中拍摄](./shoots.md)、[剪辑与成品](./editing.md)、[发布与追踪](./publishing.md) | 一条内容从素材到发布的每一步 |
 | 效果与投入 | [效果与爆款判定](./results.md)、[推广与费用](./boosts.md) | 如何判断内容是否有效，如何花钱 |
