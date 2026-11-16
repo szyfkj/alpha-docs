@@ -30,6 +30,7 @@ src/pages/index.tsx   Landing page
 src/components/       <Staging> (staging flags, see below)
 src/theme/            swizzles: MDXComponents, DocItem/Content (page banner)
 static/               CNAME, Postman collection + environment
+  tools/                downloadable scripts, served as-is (no page links to them)
 .github/workflows/    Pages deployment
 ```
 
