@@ -54,32 +54,21 @@ e.g. `BAM` or `V6L`. They appear in the referral code list.
 Each row of the referral code list has a checkbox, and the one in the header selects
 all codes. Once codes are selected, a bar above the list shows how many and offers:
 
-- **Edit**: change the **Commission Type** and **Commission**, **Max Uses**, **Valid
-  Until** or **Linked Coupon** of every selected code. Every field starts as **Keep
-  current** (or blank); only the fields you fill in change, and the others keep each
-  code's own value. Commission type and commission change together: set both, or the
-  form asks you to. A fixed amount is in each code's own currency.
-- **Link coupon**: link one coupon to every selected code, or pick **None (unlink the
-  coupon)** to remove it.
+- **Edit**: opens a window titled "Edit N referral codes" to change the **Commission
+  Type** and **Commission**, **Max Uses**, **Valid Until** or **Linked Coupon** of every
+  selected code. Every field starts as **Keep current** (or blank) each time the window
+  opens; only the fields you fill in change, and the others keep each code's own value.
+  Commission type and commission change together: set both, or the form asks you to. A
+  fixed amount is in each code's own currency. Under **Linked Coupon**, pick a coupon to
+  link it or **None** to unlink it. Click **Apply** to save, or **Cancel** to close the
+  window; it can't be closed while the change is being saved.
 - **Activate** / **Deactivate**: switch every selected code on or off.
 - **Delete**: after you confirm, deletes the selected codes that have never been used.
   Codes that have already referred a customer or earned a commission are the
   affiliate's history: they are kept, and the page names them. Deactivate those
   instead.
 
-Click **Apply** to save an edit or a coupon link, and **Clear selection** to deselect.
-
-<Staging source="liteimport#98">
-
-**Edit** opens a window titled "Edit N referral codes" with the fields above, starting
-from **Keep current** each time it opens. Click **Apply** in the window to save, or
-**Cancel** to close it; it can't be closed while the change is being saved. The bar no
-longer has a separate **Link coupon** button: in the Edit window, pick a coupon under
-**Linked Coupon** to link it, **None** to unlink it, or **Keep current** to leave it as
-it is. **Activate**, **Deactivate** and **Delete** stay on the bar, and Delete still asks
-you to confirm.
-
-</Staging>
+Click **Clear selection** to deselect.
 
 ## Viewing commissions
 
