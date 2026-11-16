@@ -167,6 +167,12 @@ const config: Config = {
               sidebarId: 'guideVideoSidebar',
               label: 'Video 短视频',
             },
+            {
+              type: 'docSidebar',
+              docsPluginId: 'guide',
+              sidebarId: 'guideMarketingSidebar',
+              label: '营销培训手册',
+            },
           ],
         },
         {
