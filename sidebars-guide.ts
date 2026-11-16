@@ -119,6 +119,55 @@ const sidebars: SidebarsConfig = {
   ],
 
   guideVideoSidebar: ['video/index'],
+  guideMarketingSidebar: [
+    'marketing/index',
+    {
+      type: 'category',
+      label: '入门',
+      collapsed: false,
+      items: ['marketing/overview', 'marketing/workspace'],
+    },
+    {
+      type: 'category',
+      label: '准备',
+      collapsed: false,
+      items: ['marketing/settings'],
+    },
+    {
+      type: 'category',
+      label: '内容制作',
+      collapsed: false,
+      items: [
+        'marketing/research',
+        'marketing/ideas',
+        'marketing/review',
+        'marketing/production',
+        'marketing/shoots',
+        'marketing/editing',
+        'marketing/publishing',
+      ],
+    },
+    {
+      type: 'category',
+      label: '效果与投入',
+      items: ['marketing/results', 'marketing/boosts'],
+    },
+    {
+      type: 'category',
+      label: '达人与活动',
+      items: ['marketing/creators', 'marketing/campaigns'],
+    },
+    {
+      type: 'category',
+      label: '附录',
+      items: [
+        'marketing/weekly',
+        'marketing/exercises',
+        'marketing/glossary',
+        'marketing/faq',
+      ],
+    },
+  ],
 };
 
 export default sidebars;
