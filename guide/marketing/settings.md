@@ -1,7 +1,7 @@
 ---
 id: settings
 title: 项目设定
-sidebar_position: 4
+sidebar_position: 5
 ---
 
 # 项目设定

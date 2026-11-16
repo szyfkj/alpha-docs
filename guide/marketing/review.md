@@ -1,7 +1,7 @@
 ---
 id: review
 title: 脚本与审核
-sidebar_position: 7
+sidebar_position: 8
 ---
 
 # 脚本与审核

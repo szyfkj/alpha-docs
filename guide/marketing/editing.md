@@ -1,7 +1,7 @@
 ---
 id: editing
 title: 剪辑与成品
-sidebar_position: 10
+sidebar_position: 11
 ---
 
 # 剪辑与成品

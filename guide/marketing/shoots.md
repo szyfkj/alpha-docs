@@ -1,7 +1,7 @@
 ---
 id: shoots
 title: 集中拍摄
-sidebar_position: 9
+sidebar_position: 10
 ---
 
 # 集中拍摄

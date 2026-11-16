@@ -1,7 +1,7 @@
 ---
 id: exercises
 title: 培训练习与自测
-sidebar_position: 17
+sidebar_position: 18
 ---
 
 # 培训练习与自测

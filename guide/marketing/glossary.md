@@ -1,7 +1,7 @@
 ---
 id: glossary
 title: 术语表
-sidebar_position: 18
+sidebar_position: 19
 ---
 
 # 术语表
