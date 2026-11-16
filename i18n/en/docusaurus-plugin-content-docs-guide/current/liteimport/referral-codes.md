@@ -49,8 +49,6 @@ e.g. `BAM` or `V6L`. They appear in the referral code list.
 - If not enough unused codes of that length are left, none are created and the form
   asks you to use a longer length or fewer codes.
 
-<Staging source="liteimport#96">
-
 ## Changing several codes at once
 
 Each row of the referral code list has a checkbox, and the one in the header selects
@@ -70,8 +68,6 @@ all codes. Once codes are selected, a bar above the list shows how many and offe
   instead.
 
 Click **Apply** to save an edit or a coupon link, and **Clear selection** to deselect.
-
-</Staging>
 
 ## Viewing commissions
 
