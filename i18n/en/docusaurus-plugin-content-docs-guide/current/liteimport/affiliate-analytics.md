@@ -41,3 +41,22 @@ Each figure is compared with the previous period of the same length.
 - **Referrals and conversions**: new and converted referrals per day.
 - **GMV from paid orders**: GMV per day.
 - **Commissions**: commissions created per day, stacked by pending, approved and paid.
+
+## Export as CSV
+
+The **Export** button next to the filters downloads what the page shows as a CSV
+file, for the affiliate, referral code and period you've selected. It's disabled
+while the data loads or if loading fails.
+
+- One row per day, the same days the charts use.
+- The columns are Date, New referrals, Converted referrals, Paid orders, GMV,
+  Ordering customers, and Pending, Approved and Paid commissions. Money columns
+  name the currency, e.g. `GMV (THB)`.
+- Headers use the dashboard's language. The file is UTF-8 with a BOM, so Excel
+  shows Chinese, Thai and Vietnamese names correctly.
+- The file is named `affiliate-analytics_<from>_<to>.csv`; with a referral code
+  selected, the code goes in the middle, e.g.
+  `affiliate-analytics_AGA10_2026-10-08_2026-11-07.csv`.
+- There's no totals row: a customer who orders on several days is counted on each
+  of them, so adding up Ordering customers day by day would overcount. The figures
+  at the top of the page give the totals.
