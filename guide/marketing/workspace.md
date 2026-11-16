@@ -1,7 +1,7 @@
 ---
 id: workspace
 title: 页面与日常入口
-sidebar_position: 3
+sidebar_position: 4
 ---
 
 # 页面与日常入口

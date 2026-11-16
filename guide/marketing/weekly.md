@@ -1,7 +1,7 @@
 ---
 id: weekly
 title: 每周工作安排
-sidebar_position: 16
+sidebar_position: 17
 ---
 
 # 每周工作安排
@@ -74,7 +74,7 @@ sidebar_position: 16
 
 | 角色 | 必读章节 |
 |---|---|
-| 所有人 | [整体流程](./overview.md)、[页面与日常入口](./workspace.md) |
+| 所有人 | [快速上手](./getting-started.md)、[整体流程](./overview.md)、[页面与日常入口](./workspace.md) |
 | 老板 | [项目设定](./settings.md)、[推广与费用](./boosts.md) |
 | 负责人 | [项目设定](./settings.md)、[调研与素材库](./research.md)、[选题与简报](./ideas.md)、[集中拍摄](./shoots.md)、[效果与爆款判定](./results.md)、[推广与费用](./boosts.md)、[达人合作](./creators.md)、[营销活动](./campaigns.md) |
 | 审核人 | [项目设定](./settings.md)、[脚本与审核](./review.md)、[剪辑与成品](./editing.md)、[达人合作](./creators.md)中的发布前审核 |

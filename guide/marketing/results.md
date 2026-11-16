@@ -1,7 +1,7 @@
 ---
 id: results
 title: 效果与爆款判定
-sidebar_position: 12
+sidebar_position: 13
 ---
 
 # 效果与爆款判定

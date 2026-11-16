@@ -1,7 +1,7 @@
 ---
 id: overview
 title: 营销工作的整体流程
-sidebar_position: 2
+sidebar_position: 3
 ---
 
 # 营销工作的整体流程

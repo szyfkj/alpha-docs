@@ -125,7 +125,7 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: '入门',
       collapsed: false,
-      items: ['marketing/overview', 'marketing/workspace'],
+      items: ['marketing/getting-started', 'marketing/overview', 'marketing/workspace'],
     },
     {
       type: 'category',

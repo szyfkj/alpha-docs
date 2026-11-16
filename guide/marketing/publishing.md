@@ -1,7 +1,7 @@
 ---
 id: publishing
 title: 发布与追踪
-sidebar_position: 11
+sidebar_position: 12
 ---
 
 # 发布与追踪
