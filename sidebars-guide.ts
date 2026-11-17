@@ -116,6 +116,7 @@ const sidebars: SidebarsConfig = {
     'liteimport/index',
     'liteimport/custom-domains',
     'liteimport/affiliate-analytics',
+    'liteimport/taobao',
   ],
 
   guideVideoSidebar: ['video/index'],
