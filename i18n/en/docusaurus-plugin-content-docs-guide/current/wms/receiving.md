@@ -49,6 +49,35 @@ code.
 
 </Staging>
 
+<Staging source="wms#26">
+
+**Location** is renamed **Temporary location** and works as before. Once the dimensions
+and weight are filled in, a **Recommended location** shows next to it, and if it differs
+from the temporary location, receiving the package creates a move task. See
+[Recommended locations and move tasks](./move-tasks.md).
+
+</Staging>
+
+<Staging source="wms#48">
+
+## Printing the storage label
+
+A **Print label** checkbox sits above **Receive Package**. It starts unticked:
+
+- Unticked: receiving a package prints nothing.
+- Ticked: receiving a package prints its storage label, in the WMS mobile app with a label
+  printer set up. The label shows the
+  **Recommended location** (the code in that field, including one you changed by hand),
+  not the temporary location.
+
+The choice stays for the next packages while the page is open, and goes back to unticked
+when you open **Inbound** again.
+
+The barcode label printed by **No barcode — generate label** shows only the generated
+number, with no location. It prints whether or not **Print label** is ticked.
+
+</Staging>
+
 ## Scan Inbound
 
 To tell the TMS a package has arrived without measuring or storing it, use **Warehouse
