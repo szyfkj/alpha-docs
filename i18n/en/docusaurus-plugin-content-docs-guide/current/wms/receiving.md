@@ -81,3 +81,18 @@ store a package, use **Inbound** as before. Error messages appear in the app's l
 **Scan Outbound** still only works for packages received in this warehouse.
 
 </Staging>
+
+<Staging source="wms#21">
+
+## TMS tracking
+
+When the warehouse is connected to a TMS, tapping **Receive Package** also adds an
+**In Transit, Hub Inbound** event to the package's
+[tracking timeline](../tms/waybills/detail.md#the-tracking-timeline) in the TMS. Its time
+is when the package was received, and it carries the photos and notes entered while
+receiving. Receiving the same package again adds another one.
+
+If the event can't be added (for example, the TMS can't be reached), the receive still
+completes without an error.
+
+</Staging>
