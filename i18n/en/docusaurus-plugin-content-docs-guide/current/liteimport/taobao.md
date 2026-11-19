@@ -76,7 +76,7 @@ Staff who can edit orders can, on the card:
 - **Refresh from Taobao:** read the latest status and tracking from Taobao now, without waiting for the next sync.
 - **Confirm receipt:** confirm on Taobao that a sub-order arrived at the warehouse. This releases the money to the seller, so do it only once the goods are really there.
 
-A purchase **Awaiting payment** shows **A platform admin pays Taobao purchases.**: company staff can't pay it. When the Taobao account's authorisation has lapsed or its calls are failing, the card shows **Taobao ordering paused**; purchases can't be created or updated until it recovers, so contact us.
+A purchase **Awaiting payment** shows **A platform admin pays Taobao purchases.** Company staff can't pay it. When the Taobao account's authorisation has lapsed or its calls are failing, the card shows **Taobao ordering paused**; purchases can't be created or updated until it recovers, so contact us.
 
 </Staging>
 
