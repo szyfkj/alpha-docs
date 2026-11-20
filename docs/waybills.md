@@ -240,6 +240,19 @@ POST /api/waybills/batch-label
 
 单次最多 100 张，返回合并后的 PDF。
 
+<Staging source="tms#373">
+
+单张面单接口（`GET /api/waybills/{waybillNo}/label`）会在响应头 `X-Sub-Package-No` 里带上面单上的承运商单号，不用再调一次接口去查：
+
+- 传了 `packageId`：只有这个包裹的承运商单号。
+- 没传 `packageId`：所有包裹的承运商单号，按包裹顺序用英文逗号分隔，例如 `JT0001234567,JT0001234568`。
+- 承运商还没给单号的包裹不列出。没有任何包裹有承运商单号时（例如没有交给承运商、由 TMS 按模板生成的面单），不返回这个响应头。
+- 返回的面单文件和以前一样。批量打印接口不返回这个响应头。
+
+Node SDK 的 `waybills.getLabelWithInfo(waybillNo, params)` 返回 `{ file, subPackageNos }`，`subPackageNos` 是承运商单号数组，没有时为空数组。`getLabel` 不变。
+
+</Staging>
+
 ## 预分配单号
 
 需要先拿到单号再建单（比如要先印面单）时：
