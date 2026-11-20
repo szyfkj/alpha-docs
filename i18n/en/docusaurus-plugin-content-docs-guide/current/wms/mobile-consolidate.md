@@ -46,3 +46,28 @@ For a finished box, the printer button prints the TMS label instead of the WMS b
 Before a box is finished, **Add box** still prints the WMS box label, as before.
 
 </Staging>
+
+<Staging source="wms#62">
+
+## Scanning carrier numbers to verify and pack
+
+In **Collect & verify** (**SCAN ORIGINALS TO VERIFY**) and **Pack boxes** (**Scan an original
+package into this box**), you can scan an original package's WMS package number or its
+carrier number: the number on the subcontractor's label (the sub-package number in the TMS).
+For example, when an original package is itself a box from an earlier consolidation with a
+subcontractor's label on it, scan that label. Case doesn't matter. The page still shows the
+WMS package number, for example "Verified DEMO-CONS-0001".
+
+- Where the WMS gets the carrier number: when it fetches a finished box's TMS label, it
+  saves that box's sub-package number.
+- Original packages labelled before this, whose number the WMS hasn't saved: when a scanned
+  number matches nothing in this warehouse, the phone asks the TMS once whether it's the
+  sub-package number of one of this task's original packages. If it is, the scan counts as
+  verified (or packed), and the number is saved so the next scan matches straight away.
+- A carrier number that matches more than one package: "DEMO-0001 matches more than one
+  package — scan the WMS package number". The page doesn't pick one; scan the WMS package
+  number instead.
+- A number that matches nothing: as before, "DEMO-0001 is not part of this task — do not mix
+  it in".
+
+</Staging>
