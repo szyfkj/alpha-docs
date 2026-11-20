@@ -65,3 +65,28 @@ web console) no longer have the move step at the start:
 - **Consolidate & Ship**: Consolidate → Outbound.
 
 Tasks created earlier keep their steps.
+
+<Staging source="wms#56">
+
+## Consolidations from the TMS start with a pick, by route
+
+When the TMS hands a master waybill's consolidation to the WMS, the WMS picks the
+consolidation workflow by the master waybill's TMS route. You choose each route's workflow
+on the web console under **Settings → API Keys**, in **Consolidation by route**; routes not
+listed use the default, **Pick → Consolidate**.
+
+- **Pick → Consolidate** and **Pick → Consolidate → Relocate** (including routes not listed):
+  a pick task is created first. It appears under **Pick** on the phone, and you pick it in the
+  three steps above. When the pick finishes, the consolidation task is created. It starts at
+  **Consolidate**, with no move step first:
+  - Pick → Consolidate: consolidate → move to storage;
+  - Pick → Consolidate → Relocate: consolidate → move to storage → relocate in the same
+    warehouse.
+- **Consolidate** and **Consolidate → Relocate**: the consolidation task is created directly,
+  without a pick.
+
+Packages the TMS adds while the pick is open go into that pick task. The WMS notifies the TMS
+as soon as the consolidate step is done; later moves don't hold up its outbound. Tasks
+created earlier keep their steps.
+
+</Staging>
