@@ -77,6 +77,13 @@ For an order with only Taobao products, the order status follows the Taobao purc
 
 </Staging>
 
+<Staging source="liteimport#107">
+
+Customers can now ask for the return themselves on the order page, without contacting you; see
+[Return and refund](./returns.md).
+
+</Staging>
+
 ## Handling Taobao purchases in the dashboard
 
 In your company's dashboard, open an order under **Orders**. Its Taobao products carry a **Taobao** badge and link to their product page on Taobao. Below them, the **Taobao purchase** card shows:

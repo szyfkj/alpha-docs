@@ -50,5 +50,12 @@ When you import a bank statement in **Reconciliation**, an amount that uses only
   mini-apps on your own domains.
 - [Affiliate analytics](./affiliate-analytics.md): the referrals, orders and
   commissions your affiliates bring in.
+<Staging source="liteimport#107">
+
+- [Return and refund](./returns.md): send a bought order back to the seller and refund the
+  customer before its parcels leave the China warehouse.
+
+</Staging>
+
 - For other Liteimport operating instructions, please get in touch — this guide is
   still being written.
