@@ -53,7 +53,7 @@ An order bought from several 1688 sellers has several 1688 order numbers.
 
 <Staging source="liteimport#129">
 
-**Searching by Taobao purchase number too:** the search boxes of the **Orders** list and of All orders also find an order by the start of its Taobao purchase number. Type the beginning of the number: digits from the middle of a number find nothing. When only a few digits are typed and many numbers start with them, the search finds at most the newest 100 orders by purchase number; type more digits to narrow it down.
+**Searching by Taobao purchase ID too:** the search boxes of the **Orders** list and of All orders also find an order by the start of its **Taobao purchase ID**. Type the beginning of the ID: digits from the middle of an ID find nothing. When only a few digits are typed and many IDs start with them, the search finds at most the newest 100 orders by Taobao purchase ID; type more digits to narrow it down.
 
 </Staging>
 
