@@ -57,6 +57,12 @@ In the storefront, the customer's order page also lists all of the order's 1688 
 
 </Staging>
 
+<Staging source="liteimport#118">
+
+**Each 1688 order number's status:** when an order has several 1688 order numbers, the order page shows, in brackets after each number, the status 1688 reports for that purchase, such as `waitsellersend` (waiting for the seller to ship), exactly as 1688 sends it. Each purchase's status updates on its own: when one seller ships, only that number's status changes and the others keep theirs. An order with a single 1688 order number shows no brackets, as before.
+
+</Staging>
+
 ## What you can read today
 
 - For API integration, see the [Developer Guide](/tms/).
