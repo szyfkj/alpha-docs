@@ -55,7 +55,7 @@ Customers order Taobao products in the storefront (web, Telegram mini-app, Zalo 
 
 <Staging source="liteimport#113">
 
-In the **My Orders** list, each order card shows a **1688** or **Taobao** badge next to the order number, telling the customer which channel the order was bought from. It is the same badge as on product cards and the order page. An order with both 1688 and Taobao items shows both badges. This is the same on the web, Telegram mini app and Zalo mini app.
+In the **My Orders** list, each order card shows a **1688** or **Taobao** badge next to the order number, telling the customer which channel the order was bought from. It is the same badge as on product cards and the order page. An order with both 1688 and Taobao items shows both badges. This is the same in the storefront on the web, the Telegram mini-app and the Zalo mini-app.
 
 </Staging>
 
