@@ -1,0 +1,25 @@
+# Paths only a person may approve.
+#
+# The review agent (alpha-review-bot) may approve and auto-merge a PR only when it touches none
+# of these paths: the agent-merge ruleset (szyfkj/alpha-deploy rulesets/) requires a code
+# owner's review, and a file matched by no line below has no owner. There is deliberately no
+# `*` line. GitHub reads this file from the base branch. See alpha-deploy docs/AGENT_MERGE.md.
+#
+# Keep this list to what a wrong merge would make expensive: data, money, access, secrets,
+# deploys, and the instructions agents follow. Add the app's new sensitive paths as they appear.
+
+# The site's build, theme and configuration (pages under docs/, guide/ and i18n/ have no owner)
+/docusaurus.config.ts               @phoenixluo
+/src/                               @phoenixluo
+/package.json                       @phoenixluo
+/pnpm-lock.yaml                     @phoenixluo
+/tsconfig.json                      @phoenixluo
+
+# CI and deploy
+/.github/                           @phoenixluo
+
+# What agents read as instructions
+CLAUDE.md                           @phoenixluo
+AGENTS.md                           @phoenixluo
+/.claude/                           @phoenixluo
+/docs/knowledge/                    @phoenixluo
