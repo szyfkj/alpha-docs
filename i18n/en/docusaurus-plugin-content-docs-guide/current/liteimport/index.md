@@ -43,8 +43,6 @@ A company's default currency can be Vietnamese dong: in the dashboard, go to **S
 
 When you import a bank statement in **Reconciliation**, an amount that uses only one kind of separator (only dots, or only commas) is read like this: a separator that repeats (`1.500.000`, `1,500,000`), or appears once with exactly three digits after it (`500.000`, `1,500`), separates thousands; otherwise it is the decimal point (`1500.50`, `1500,5`). So `500.000` VND reads as 500,000, and `1,500` THB as 1,500. When an amount has both dots and commas (`1,234.56`, `1.234,56`), the last separator is still the decimal point.
 
-<Staging source="liteimport#117">
-
 ## 1688 order numbers in the dashboard
 
 An order bought from several 1688 sellers has several 1688 order numbers.
@@ -55,13 +53,7 @@ An order bought from several 1688 sellers has several 1688 order numbers.
 
 In the storefront, the customer's order page also lists all of the order's 1688 order numbers, separated by commas.
 
-</Staging>
-
-<Staging source="liteimport#118">
-
-**Each 1688 order number's status:** when an order has several 1688 order numbers, the order page shows, in brackets after each number, the status 1688 reports for that purchase, such as `waitsellersend` (waiting for the seller to ship), exactly as 1688 sends it. Each purchase's status updates on its own: when one seller ships, only that number's status changes and the others keep theirs. An order with a single 1688 order number shows no brackets, as before.
-
-</Staging>
+**Each 1688 order number's status:** when an order has several 1688 order numbers, the order page shows, in brackets after each number, the status 1688 reports for that purchase, such as `waitsellersend` (waiting for the seller to ship), exactly as 1688 sends it. Each purchase's status updates on its own: when one seller ships, only that number's status changes and the others keep theirs. An order with a single 1688 order number shows no brackets: its status is under **1688 Status**. An order with several 1688 order numbers has no **1688 Status** field.
 
 ## What you can read today
 
@@ -70,12 +62,9 @@ In the storefront, the customer's order page also lists all of the order's 1688 
   mini-apps on your own domains.
 - [Affiliate analytics](./affiliate-analytics.md): the referrals, orders and
   commissions your affiliates bring in.
-<Staging source="liteimport#107">
-
+- [Taobao products](./taobao.md): search and buy Taobao products in the storefront,
+  and handle Taobao purchases in the dashboard.
 - [Return and refund](./returns.md): send a bought order back to the seller and refund the
   customer before its parcels leave the China warehouse.
-
-</Staging>
-
 - For other Liteimport operating instructions, please get in touch — this guide is
   still being written.
