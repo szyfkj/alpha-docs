@@ -2,7 +2,6 @@
 id: returns
 title: Return and refund
 sidebar_position: 5
-staging: liteimport#107
 ---
 
 # Return and refund
