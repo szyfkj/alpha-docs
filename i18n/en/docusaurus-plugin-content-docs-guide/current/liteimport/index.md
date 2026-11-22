@@ -51,6 +51,12 @@ An order bought from several 1688 sellers has several 1688 order numbers.
 - **Searching by 1688 order number:** type the start of a 1688 order number in the **Orders** list's search box to find every order with a number that starts that way.
 - **All orders (platform admin):** the search box finds orders by our order number or by a 1688 order number (again matching its start).
 
+<Staging source="liteimport#129">
+
+**Searching by Taobao purchase ID too:** the search boxes of the **Orders** list and of All orders also find an order by the start of its **Taobao purchase ID**. Type the beginning of the ID: digits from the middle of an ID find nothing. When only a few digits are typed and many IDs start with them, the search finds at most the newest 100 orders by Taobao purchase ID; type more digits to narrow it down.
+
+</Staging>
+
 In the storefront, the customer's order page also lists all of the order's 1688 order numbers, separated by commas.
 
 **Each 1688 order number's status:** when an order has several 1688 order numbers, the order page shows, in brackets after each number, the status 1688 reports for that purchase, such as `waitsellersend` (waiting for the seller to ship), exactly as 1688 sends it. Each purchase's status updates on its own: when one seller ships, only that number's status changes and the others keep theirs. An order with a single 1688 order number shows no brackets: its status is under **1688 Status**. An order with several 1688 order numbers has no **1688 Status** field.
