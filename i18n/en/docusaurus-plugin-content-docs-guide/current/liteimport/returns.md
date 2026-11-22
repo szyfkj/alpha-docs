@@ -14,7 +14,10 @@ works the same for every shopping channel (1688, Taobao) and every storefront (w
 Telegram mini-app, Zalo mini-app).
 
 An order that hasn't been bought yet is still cancelled with **Cancel order**: a full refund
-at once, with no review.
+at once, with no review. One exception: while the order's Taobao purchase is being paid,
+neither the customer nor staff can cancel it. Wait for the payment to finish: if it goes
+through, the order counts as bought and can only be returned; if it doesn't, it can be
+cancelled again.
 
 ## The rules
 
