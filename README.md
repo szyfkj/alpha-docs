@@ -21,7 +21,7 @@ guide/                user guide, one folder per product
   index.md              hub listing every product             → /guide
   tms/                  authored                              → /guide/tms
   wms/, voice/,         stubs                                 → /guide/wms, /guide/voice,
-  liteimport/, video/                                           /guide/liteimport, /guide/video
+  liteimport/                                                   /guide/liteimport
 i18n/en/              English translations + theme strings     → /en/…
 sidebars.ts           developer guide sidebar
 sidebars-guide.ts     one sidebar per product guide
@@ -83,7 +83,7 @@ change are written when it reaches staging, flagged until it ships:
   banner above it.
 
 `source` is `<app>#<pr>`: the app's key (`tms`, `wms`, `voice`, `wms-android`,
-`liteimport`, `video`) and the number of the merged pull request. When the release
+`liteimport`) and the number of the merged pull request. When the release
 ships that PR, its blocks are unwrapped and its front matter key deleted. Use the
 same `source` in zh-Hans and in the English twin.
 

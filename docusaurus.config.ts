@@ -164,12 +164,6 @@ const config: Config = {
             {
               type: 'docSidebar',
               docsPluginId: 'guide',
-              sidebarId: 'guideVideoSidebar',
-              label: 'Video 短视频',
-            },
-            {
-              type: 'docSidebar',
-              docsPluginId: 'guide',
               sidebarId: 'guideMarketingSidebar',
               label: '营销培训手册',
             },
@@ -202,7 +196,6 @@ const config: Config = {
             { label: 'WMS 仓储管理', to: '/guide/wms/' },
             { label: 'Voice 语音', to: '/guide/voice/' },
             { label: 'Liteimport 跨境代采', to: '/guide/liteimport/' },
-            { label: 'Video 短视频', to: '/guide/video/' },
           ],
         },
         {
