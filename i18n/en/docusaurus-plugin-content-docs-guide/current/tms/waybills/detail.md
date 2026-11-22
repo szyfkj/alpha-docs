@@ -16,6 +16,12 @@ The detail pane has two tabs: **Details** and **Billings**.
 The top half carries the basics: sender, recipient, address, service, product category,
 package count.
 
+<Staging source="tms#375">
+
+Once the waybill's owner asks for the parcel back (through the [open API](/tms/waybills#申请退回寄件人)), a red **Return to sender requested** badge appears next to the status at the top of the details; hover over it to see the note given with the request. Until the request is withdrawn, the waybill is not consolidated and does not leave the warehouse. It is not a new waybill status: courier scans keep updating the status as usual.
+
+</Staging>
+
 A couple of fields are **editable in place** — hover and a small pencil appears:
 
 | Field | Note |
