@@ -104,7 +104,7 @@ staging: liteimport#100
 
 ## 粘贴淘宝链接
 
-在商城里粘贴淘宝商品链接，会直接打开这个商品，网页版和两个小程序都支持。可以识别的链接包括：
+在网页版商城的搜索框，或 Telegram、Zalo 小程序的搜索页里粘贴淘宝商品链接，会直接打开这个商品。可以识别的链接包括：
 
 - `item.taobao.com/item.htm?id=…`
 - `h5.m.taobao.com/…detail.htm?id=…`

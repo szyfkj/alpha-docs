@@ -104,7 +104,7 @@ An order with only Taobao products no longer shows the **1688 Order ID** block (
 
 ## Pasting a Taobao link
 
-Pasting a Taobao product link in the storefront opens that product, on the web and in both mini-apps. These links are recognised:
+Pasting a Taobao product link in the web storefront's search box, or on the search page of the Telegram and Zalo mini-apps, opens that product. These links are recognised:
 
 - `item.taobao.com/item.htm?id=…`
 - `h5.m.taobao.com/…detail.htm?id=…`
