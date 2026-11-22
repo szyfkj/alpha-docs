@@ -90,3 +90,26 @@ as soon as the consolidate step is done; later moves don't hold up its outbound.
 created earlier keep their steps.
 
 </Staging>
+
+<Staging source="wms#65">
+
+## The relocation is a move task of its own
+
+On **Pick → Consolidate → Relocate** and **Consolidate → Relocate** routes, the relocation is
+no longer a step of the consolidation task. It becomes a separate move task, created when the
+consolidation task completes:
+
+- Pick → Consolidate → Relocate: the consolidation task is consolidate → move to storage;
+- Consolidate → Relocate: the consolidation task is consolidate only.
+
+When the consolidation task completes, the WMS creates one pending move task for each new box,
+named "Relocate &lt;box number&gt; - TMS outbound &lt;master waybill number&gt;". It appears on
+the phone's **Move** page under **Move tasks**, with the box's current location. On the web
+console's **Workflows** page its type is **Move Location** and its status **Pending**. The
+worker scans the box and the destination location; once the box is moved, the move task is
+complete.
+
+Completing the consolidation task no longer completes the relocation with it. Consolidation
+tasks created before this change keep their steps, with the relocation inside.
+
+</Staging>
