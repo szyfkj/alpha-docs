@@ -118,7 +118,7 @@ Taobao closes a purchase that isn't paid in time, and a seller can close one too
 - **Buy again on Taobao:** creates a new Taobao purchase for the order's Taobao products. Like the first, it waits for the platform to pay it, within the same per-purchase and daily limits. It's available only when the customer has paid and the order isn't cancelled or refunded, and an order never has more than one purchase that isn't closed.
 - **Mark as settled:** for a closed purchase you dealt with another way, for example by refunding the customer (cancelling the order or approving their return) or by buying the goods by hand. Nothing is bought or refunded; the card shows when it was marked.
 
-When the order can't be bought again, the card only says that the purchase was closed and that it can be bought again once the customer has paid and while the order isn't cancelled or refunded.
+When the order can't be bought again (for example, it was cancelled or refunded), only **Buy again on Taobao** is missing: in its place the card says that the order can be bought again once the customer has paid and while it isn't cancelled or refunded. **Mark as settled** is still available.
 
 After a purchase is bought again, the order page lists all of the order's Taobao purchases, newest first, and only the newest has actions; an older one says it was closed and replaced by the newer purchase above. In **My Orders**, the customer sees the current purchase only.
 
