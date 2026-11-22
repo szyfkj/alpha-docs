@@ -49,9 +49,9 @@ When you import a bank statement in **Reconciliation**, an amount that uses only
 
 An order bought from several 1688 sellers has several 1688 order numbers.
 
-- **Order page:** open an order under **Orders** in the dashboard. **1688 Order ID** in **Shipping & Tracking** shows one link per 1688 order number, each opening that order on 1688. Before, the numbers shared one link, which 1688 couldn't open.
-- **Searching by 1688 order number:** type the start of a 1688 order number in the **Orders** list's search box to find every order with a number that starts that way. Before, only an order with a single 1688 order number could be found.
-- **All orders (platform admin):** the search box finds orders by our order number or by a 1688 order number (again matching its start). Before, every search there failed.
+- **Order page:** open an order under **Orders** in the dashboard. **1688 Order ID** in **Shipping & Tracking** shows one link per 1688 order number, each opening that order on 1688.
+- **Searching by 1688 order number:** type the start of a 1688 order number in the **Orders** list's search box to find every order with a number that starts that way.
+- **All orders (platform admin):** the search box finds orders by our order number or by a 1688 order number (again matching its start).
 
 In the storefront, the customer's order page also lists all of the order's 1688 order numbers, separated by commas.
 
