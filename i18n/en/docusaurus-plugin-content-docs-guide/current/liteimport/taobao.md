@@ -69,6 +69,8 @@ In your company's dashboard, open an order under **Orders**. Its Taobao products
 - each **Sub-order**'s tracking number and **Courier trace**;
 - the reason of the latest failure, and when it was **Last checked**.
 
+The **Purchase amount** uses the prices the Taobao purchasing channel charges when the purchase is created, which can differ slightly from the prices on the Taobao product page. If a spec the customer chose can't be bought through the Taobao purchasing channel, no purchase is created: the card shows **Create failed**, and the failure reason gives the ID of that spec.
+
 Staff who can edit orders can, on the card:
 
 - **Retry creating on Taobao:** try again when the purchase failed or wasn't created. The same order is never ordered twice on Taobao. It still waits for the platform to pay it. It isn't available on a cancelled or refunded order.
