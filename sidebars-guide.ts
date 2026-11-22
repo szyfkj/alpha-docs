@@ -118,7 +118,6 @@ const sidebars: SidebarsConfig = {
     'liteimport/affiliate-analytics',
   ],
 
-  guideVideoSidebar: ['video/index'],
   guideMarketingSidebar: [
     'marketing/index',
     {

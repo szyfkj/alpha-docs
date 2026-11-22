@@ -22,7 +22,6 @@ If you want to connect your own system and call the API, read the
 | [WMS Warehouse Management](/guide/wms/) | Inbound, stock, picking, outbound | Being written |
 | [Voice](/guide/voice/) | Voice interaction and call handling | Being written |
 | [Liteimport Cross-border Purchasing](/guide/liteimport/) | 1688 purchasing, parcel pre-alerts, consolidated shipping to Southeast Asia | Being written |
-| [Video](/guide/video/) | Short-video download, transcription and translation, editing, ad performance | Being written |
 
 ## How to read this
 

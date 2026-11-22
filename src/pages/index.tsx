@@ -17,7 +17,7 @@ type Guide = {
 };
 
 // Both guides list every product: what differs is which are written yet.
-const PRODUCT_NAMES = ['TMS', 'WMS', 'Voice', 'Liteimport', 'Video'];
+const PRODUCT_NAMES = ['TMS', 'WMS', 'Voice', 'Liteimport'];
 const PRODUCTS = (...ready: string[]) =>
   PRODUCT_NAMES.map((name) => ({ name, ready: ready.includes(name) }));
 
