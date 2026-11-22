@@ -103,6 +103,12 @@ A purchase **Awaiting payment** shows **A platform admin pays Taobao purchases.*
 
 </Staging>
 
+<Staging source="liteimport#112">
+
+**Confirm receipt** is now a platform admin's action, like paying: it releases the platform's payment to the seller and ends the chance to open a dispute. Company staff no longer see the **Confirm receipt** button on the card. The platform confirms receipt once the goods are at the warehouse; there's nothing for you to do.
+
+</Staging>
+
 <Staging source="liteimport#104">
 
 An order with only Taobao products no longer shows the **1688 Order ID** block (or its buttons to place and sync on 1688): there is nothing to do on 1688. **Retry creating on Taobao** isn't available on a cancelled or refunded order.
@@ -129,3 +135,15 @@ The search box on the Telegram and Zalo mini-apps' home page now also opens a pa
 ## Availability
 
 The Taobao channel is switched on by the platform for every storefront; there's nothing to set up in your company's dashboard. If your storefront's search shows no Taobao products, contact us.
+
+<Staging source="liteimport#112">
+
+The Taobao channel is on for every company by default, but the platform can turn it off for a single company. With it off, that company's storefront:
+
+- shows no Taobao products in search results, only 1688 ones;
+- shows a Taobao product page (including one opened from a pasted Taobao link) as not found;
+- can't check out a cart that still holds Taobao products; remove them from the cart first.
+
+Orders already placed aren't affected, and their Taobao purchases carry on as usual. Turning it on or off takes effect within about a minute. To have Taobao turned off or back on for your company, contact us.
+
+</Staging>
