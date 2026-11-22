@@ -117,6 +117,7 @@ const sidebars: SidebarsConfig = {
     'liteimport/custom-domains',
     'liteimport/affiliate-analytics',
     'liteimport/taobao',
+    'liteimport/returns',
   ],
 
   guideMarketingSidebar: [

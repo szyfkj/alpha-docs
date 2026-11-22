@@ -43,4 +43,10 @@ Liteimport 面向从中国进货、发往东南亚的客户：可以直接在 16
 - 需要接口对接的，看 [开发者指南](/tms/)。
 - [自定义域名](./custom-domains.md)：给商城、配送应用和小程序换上自己的域名。
 - [分销分析](./affiliate-analytics.md)：分销商带来的推荐、订单和佣金。
+<Staging source="liteimport#107">
+
+- [退货退款](./returns.md)：已采购的订单在包裹离开中国仓库前退回卖家并退款。
+
+</Staging>
+
 - 其他 Liteimport 操作说明，请先联系我们——这份文档正在补。
