@@ -30,6 +30,12 @@ Customers order Taobao products in the storefront (web, Telegram mini-app, Zalo 
 - **Purchase:** after the order is placed, its Taobao products are ordered on Taobao as one Taobao purchase, shipped to your company's China warehouse, the same as 1688 purchases. If placing it on Taobao fails, the customer's order is not affected, and staff can create it again from the dashboard (see [Handling Taobao purchases in the dashboard](#handling-taobao-purchases-in-the-dashboard)).
 - **Payment:** Taobao purchases are never paid automatically. The platform pays them, within a per-purchase and a daily limit. Until then the purchase shows **Awaiting payment**. A Taobao purchase is paid only for an order the customer has paid and that isn't cancelled or refunded.
 
+<Staging source="liteimport#127">
+
+**Automatic payment:** once the customer's payment completes, the platform pays the order's Taobao purchase automatically, without waiting for anyone. A purchase created after the customer has paid (for example by **Retry creating on Taobao** or **Buy again on Taobao**) is paid as soon as it's created. Automatic payment is held to the same per-purchase and daily limits: a purchase over the per-purchase limit, or one that would take the day's total over the daily limit, isn't paid automatically. It stays **Awaiting payment** for the platform to handle. Only orders that aren't cancelled or refunded are paid. If the platform turns automatic payment off, it pays each purchase by hand again.
+
+</Staging>
+
 **A cart with both 1688 and Taobao products:** at checkout, the Taobao products become an order of their own, the last of the checkout, just as each 1688 seller's products become their own order. The customer sees these orders in **My Orders** but pays once.
 
 - **The total doesn't change:** the customer pays what the checkout page showed. The service fee has a minimum per order, but the first 1688 order and the Taobao order are charged one service fee between them, split by the value of their goods, so the extra order doesn't add a second minimum fee.
@@ -77,6 +83,12 @@ Staff who can edit orders can, on the card:
 - **Refresh from Taobao:** read the latest status and tracking from Taobao now, without waiting for the next sync.
 
 A purchase **Awaiting payment** shows **A platform admin pays Taobao purchases.** Company staff can't pay it. **Confirm receipt** is a platform admin's action too: it releases the platform's payment to the seller and ends the chance to open a dispute. The platform confirms receipt once the goods are at the warehouse; there's nothing for you to do.
+
+<Staging source="liteimport#127">
+
+Once the customer has paid, the purchase is usually paid automatically and soon moves from **Awaiting payment** to **Paid**. If the customer has paid and a purchase stays **Awaiting payment**, it's usually over the platform's payment limits and waiting for the platform; contact us if it's urgent.
+
+</Staging>
 
 When the Taobao account's authorisation has lapsed or its calls are failing, the card shows **Taobao ordering paused**; purchases can't be created or updated until it recovers, so contact us.
 
