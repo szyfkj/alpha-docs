@@ -51,6 +51,18 @@ Customers order Taobao products in the storefront (web, Telegram mini-app, Zalo 
 - **Purchase:** after the order is placed, its Taobao products are ordered on Taobao as one Taobao purchase, shipped to your company's China warehouse, the same as 1688 purchases. If placing it on Taobao fails, the customer's order is not affected, and staff can create it again from the dashboard (see [Handling Taobao purchases in the dashboard](#handling-taobao-purchases-in-the-dashboard)).
 - **Payment:** Taobao purchases are never paid automatically. The platform pays them, within a per-purchase and a daily limit. Until then the purchase shows **Awaiting payment**.
 
+<Staging source="liteimport#111">
+
+**A cart with both 1688 and Taobao products:** at checkout, the Taobao products become an order of their own, the last of the checkout, just as each 1688 seller's products become their own order. The customer sees these orders in **My Orders** but pays once.
+
+- **The total doesn't change:** the customer pays what the checkout page showed. The service fee has a minimum per order, but the first 1688 order and the Taobao order are charged one service fee between them, split by the value of their goods, so the extra order doesn't add a second minimum fee.
+- **Shipping and coupons:** shipping is charged on the 1688 orders; a coupon is spread across the checkout's orders, as before.
+- **Handled separately:** cancelling, refunding or completing a 1688 order no longer affects the Taobao products. The Taobao order's status follows its Taobao purchase, and it can be returned or bought again on Taobao on its own.
+
+Checkouts with only Taobao or only 1688 products are unchanged. Orders placed earlier can still hold both kinds of products, and they are handled as before.
+
+</Staging>
+
 ## Order status and tracking
 
 When a customer opens the order in **My Orders**, a **Taobao purchase** section shows how the purchase is going:
