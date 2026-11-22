@@ -24,6 +24,12 @@ A keyword search in the storefront (web, Telegram mini-app, Zalo mini-app) shows
 - **When Taobao is unavailable** (for example, the day's lookups are used up), search shows the 1688 results only, and the customer sees no error.
 - **Languages:** Taobao provides product information in Chinese, English and Russian. Other languages start from the English text and are translated into the customer's language, the same way as 1688 products.
 
+<Staging source="liteimport#104">
+
+When Taobao is slow, search waits at most 6 seconds for it and then shows the 1688 results alone, so the customer isn't kept waiting.
+
+</Staging>
+
 ## Product page
 
 A Taobao product opens on the same page as a 1688 product, with its images, title, price range, attributes and the full list of variants (options, price, stock). At the bottom, **Add cart** and **Order now** are replaced by the notice **Ordering from Taobao is coming soon**.
@@ -61,6 +67,16 @@ Once the seller ships, the section also shows the **Tracking number** and the co
 
 For an order with only Taobao products, the order status follows the Taobao purchase: **Processing** once it is paid, **Shipped** once it is shipped, and **Completed** once it is signed for.
 
+<Staging source="liteimport#104">
+
+- **Warehouse pre-alert and shipping notice:** the first time the sync sees a tracking number, the warehouse gets a pre-alert for that parcel and the customer gets a tracking update notification, the same as for 1688 purchases. Each tracking number is pre-alerted once, with only the Taobao products in that parcel. If the pre-alert or the notification fails, the next sync retries it.
+- **Tracking:** once an order with only Taobao products is **Shipped**, its order page also shows **Tap to view tracking details**.
+- **Orders with both 1688 and Taobao products:** the order status doesn't follow the Taobao purchase. It follows the 1688 purchase, as for an order with only 1688 products, so the order can't show shipped or completed while its 1688 products haven't been bought.
+- **When the platform pays:** a Taobao purchase is paid only for an order the customer has paid and that isn't cancelled or refunded. Cancelling the order doesn't close the purchase on Taobao, but it will no longer be paid.
+- **Cancelling:** once the Taobao purchase is paid, or while it is being paid, the customer can't cancel the order and sees: This order has already been bought, so it cannot be cancelled here. It can still be returned for a refund before it leaves our warehouse: please contact us. A cancel by staff during the payment fails too; try again a moment later.
+
+</Staging>
+
 ## Handling Taobao purchases in the dashboard
 
 In your company's dashboard, open an order under **Orders**. Its Taobao products carry a **Taobao** badge and link to their product page on Taobao. Below them, the **Taobao purchase** card shows:
@@ -80,6 +96,12 @@ A purchase **Awaiting payment** shows **A platform admin pays Taobao purchases.*
 
 </Staging>
 
+<Staging source="liteimport#104">
+
+An order with only Taobao products no longer shows the **1688 Order ID** block (or its buttons to place and sync on 1688): there is nothing to do on 1688. **Retry creating on Taobao** isn't available on a cancelled or refunded order.
+
+</Staging>
+
 ## Pasting a Taobao link
 
 Pasting a Taobao product link in the storefront opens that product, on the web and in both mini-apps. These links are recognised:
@@ -90,6 +112,12 @@ Pasting a Taobao product link in the storefront opens that product, on the web a
 - `world.taobao.com/item/<item id>.htm`
 
 Short links starting with `m.tb.cn` can't be opened directly yet and are treated as a keyword search. Open the short link in a browser first, then copy the full link it leads to.
+
+<Staging source="liteimport#104">
+
+The search box on the Telegram and Zalo mini-apps' home page now also opens a pasted 1688 or Taobao product link, as the web storefront does; before, it searched for the link as keywords. A Taobao link sent to the chat bot is also recognised as the matching storefront product.
+
+</Staging>
 
 ## Availability
 
