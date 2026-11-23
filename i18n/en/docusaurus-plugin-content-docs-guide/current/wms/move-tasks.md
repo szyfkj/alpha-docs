@@ -32,6 +32,23 @@ Only locations of type **Bin**, **Shelf** or **Rack** in status **Available** or
 (0) counts as unlimited for that measure. When nothing has enough room, it says "No location
 with enough room".
 
+<Staging source="wms#68">
+
+The recommendation is never the **Temporary location** you entered. Even when the temporary
+location already holds this customer's packages, or is the empty location that fits best, it
+is skipped and the next rule applies. Changing the temporary location works the
+recommendation out again.
+
+When none of the three rules finds a location, there is a fourth:
+
+4. **Has the most room left (no empty location):** the location with room for the package
+   and the most remaining volume (then remaining weight), even if it holds other customers'
+   packages.
+
+"No location with enough room" appears only when no location has room for the package.
+
+</Staging>
+
 <Staging source="wms#38">
 
 **Recommended location** is now a field you can edit instead of read-only text. The
@@ -74,6 +91,15 @@ locations' current contents, then places the package in the temporary location:
 The move task now goes to the location in the **Recommended location** field, and tapping
 **Receive Package** no longer works the recommendation out again: a task is created when that
 location differs from the temporary location, and none when they're the same.
+
+</Staging>
+
+<Staging source="wms#68">
+
+**Recommended location** can't be the temporary location. Entering the temporary location's
+code shows "A-01-01 is the temporary location: the recommended location must be a different
+one", and the package can't be received until you enter another location. So every package
+you receive gets a move task.
 
 </Staging>
 
