@@ -17,14 +17,10 @@ A keyword search in the storefront (web, Telegram mini-app, Zalo mini-app) shows
 - **When Taobao is unavailable** (for example, the day's lookups are used up), search shows the 1688 results only, and the customer sees no error. When Taobao is slow, search waits at most 6 seconds for it and then shows the 1688 results alone, so the customer isn't kept waiting.
 - **Languages:** Taobao provides product information in Chinese, English and Russian. Other languages start from the English text and are translated into the customer's language, the same way as 1688 products.
 
-<Staging source="liteimport#138">
-
-**Image search:** when a customer sends a product photo to the support bot in chat, the search link the bot replies with opens the storefront's image search results (the same on the web, the Telegram mini-app and the Zalo mini-app). That page used to show 1688 products only. It now shows 1688 and Taobao products together in one list, each card with the same **1688** or **Taobao** badge, and each opens that channel's product page.
+**Image search:** when a customer sends a product photo to the support bot in chat, the search link the bot replies with opens the storefront's image search results (the same on the web, the Telegram mini-app and the Zalo mini-app). It shows 1688 and Taobao products together in one list, each card with the same **1688** or **Taobao** badge, and each opens that channel's product page.
 
 - **Taobao results can arrive a little later:** an image search on Taobao is usually slower than a keyword search, so on first open the page often shows the 1688 results first. While it's still waiting for Taobao, a small spinner shows next to the result count, and the page checks again by itself a few times. The Taobao products usually appear within half a minute, without the customer reloading.
 - **When Taobao is unavailable** (for example, the day's lookups are used up, the photo can't be read, or the platform has turned Taobao off for the company), the page shows the 1688 products only, and the customer sees no error.
-
-</Staging>
 
 ## Product page
 
@@ -124,10 +120,6 @@ The Taobao channel is on for every company by default, with nothing to set up in
 - shows a Taobao product page (including one opened from a pasted Taobao link) as not found;
 - can't check out a cart that still holds Taobao products; remove them from the cart first.
 
-<Staging source="liteimport#139">
-
 With it off, a Taobao product page shows **This product is not available** (see [When a product page can't be opened](./index.md#when-a-product-page-cant-be-opened)). When a customer sends a Taobao product link to the support bot in chat, on some chat channels the bot no longer answers "Product found!" with a link: it tells the customer the product isn't available and asks for another product link. On other chat channels the bot's reply can differ.
-
-</Staging>
 
 Orders already placed aren't affected, and their Taobao purchases carry on as usual. Turning it on or off takes effect within about a minute. If your storefront's search shows no Taobao products, or to have Taobao turned off or back on for your company, contact us.
