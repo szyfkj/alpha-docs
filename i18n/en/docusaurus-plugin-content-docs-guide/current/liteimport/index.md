@@ -64,7 +64,7 @@ In the storefront, the customer's order page also lists all of the order's 1688 
 When a product page in the storefront can't be opened (for example, the product link is wrong, or the product comes from a channel your company doesn't have turned on), the customer sees a page in the storefront's language instead of a blank error page in English:
 
 - **This product is not available**: there's no such product, or it can't be ordered through us. The page says the seller may have removed it or it can't be ordered through us, with a **Search for other products** button.
-- **We could not load this product**: the product can't be read right now, either because it's no longer available or because of a temporary problem. The page offers **Retry** and **Search for other products**. Trying again a little later usually opens it.
+- **We could not load this product**: the product can't be read right now, either because it's no longer available or because of a temporary problem. The page offers **Retry** and **Search for other products**. If it still won't open after retrying, the product may no longer be available.
 
 For now, a product the channel has taken down also shows **We could not load this product**; there's no separate "removed" message yet.
 

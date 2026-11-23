@@ -117,7 +117,7 @@ The Taobao channel is on for every company by default, with nothing to set up in
 
 <Staging source="liteimport#139">
 
-With it off, a Taobao product page shows **This product is not available** (see [When a product page can't be opened](./index.md#when-a-product-page-cant-be-opened)). When a customer sends a Taobao product link to the support bot in chat, the bot no longer answers "Product found!" with a link: it tells the customer the product isn't available and asks for another product link.
+With it off, a Taobao product page shows **This product is not available** (see [When a product page can't be opened](./index.md#when-a-product-page-cant-be-opened)). When a customer sends a Taobao product link to the support bot in chat, on some chat channels the bot no longer answers "Product found!" with a link: it tells the customer the product isn't available and asks for another product link. On other chat channels the bot's reply can differ.
 
 </Staging>
 
