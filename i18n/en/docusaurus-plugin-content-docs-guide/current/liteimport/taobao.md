@@ -28,13 +28,7 @@ Customers order Taobao products in the storefront (web, Telegram mini-app, Zalo 
 - **Cart:** one cart can hold 1688 and Taobao products together, and every line carries a **1688** or **Taobao** badge. A cart with only Taobao products can be ordered too.
 - **Checkout:** the Taobao products in a checkout go into one order.
 - **Purchase:** after the order is placed, its Taobao products are ordered on Taobao as one Taobao purchase, shipped to your company's China warehouse, the same as 1688 purchases. If placing it on Taobao fails, the customer's order is not affected, and staff can create it again from the dashboard (see [Handling Taobao purchases in the dashboard](#handling-taobao-purchases-in-the-dashboard)).
-- **Payment:** Taobao purchases are never paid automatically. The platform pays them, within a per-purchase and a daily limit. Until then the purchase shows **Awaiting payment**. A Taobao purchase is paid only for an order the customer has paid and that isn't cancelled or refunded.
-
-<Staging source="liteimport#127">
-
-**Automatic payment:** once the customer's payment completes, the platform pays the order's Taobao purchase automatically, without waiting for anyone. A purchase created after the customer has paid (for example by **Retry creating on Taobao** or **Buy again on Taobao**) is paid as soon as it's created. Automatic payment is held to the same per-purchase and daily limits: a purchase over the per-purchase limit, or one that would take the day's total over the daily limit, isn't paid automatically. It stays **Awaiting payment** for the platform to handle. Only orders that aren't cancelled or refunded are paid. If the platform turns automatic payment off, it pays each purchase by hand again.
-
-</Staging>
+- **Payment:** once the customer's payment completes, the platform pays the order's Taobao purchase automatically, without waiting for anyone. A purchase created after the customer has paid (for example by **Retry creating on Taobao** or **Buy again on Taobao**) is paid as soon as it's created. Until it's paid, the purchase shows **Awaiting payment**. Automatic payment is held to a per-purchase and a daily limit: a purchase over the per-purchase limit, or one that would take the day's total over the daily limit, isn't paid automatically. It stays **Awaiting payment** for the platform to handle. A Taobao purchase is paid only for an order the customer has paid and that isn't cancelled or refunded. If the platform turns automatic payment off, it pays each purchase by hand.
 
 **A cart with both 1688 and Taobao products:** at checkout, the Taobao products become an order of their own, the last of the checkout, just as each 1688 seller's products become their own order. The customer sees these orders in **My Orders** but pays once.
 
@@ -85,16 +79,12 @@ The **Purchase amount** uses the prices the Taobao purchasing channel charges wh
 
 Staff who can edit orders can, on the card:
 
-- **Retry creating on Taobao:** try again when the purchase failed or wasn't created. The same order is never ordered twice on Taobao. It still waits for the platform to pay it. It isn't available on a cancelled or refunded order.
+- **Retry creating on Taobao:** try again when the purchase failed or wasn't created. The same order is never ordered twice on Taobao. If the customer has already paid, the new purchase is paid automatically. It isn't available on a cancelled or refunded order.
 - **Refresh from Taobao:** read the latest status and tracking from Taobao now, without waiting for the next sync.
 
 A purchase **Awaiting payment** shows **A platform admin pays Taobao purchases.** Company staff can't pay it. **Confirm receipt** is a platform admin's action too: it releases the platform's payment to the seller and ends the chance to open a dispute. The platform confirms receipt once the goods are at the warehouse; there's nothing for you to do.
 
-<Staging source="liteimport#127">
-
 Once the customer has paid, the purchase is usually paid automatically and soon moves from **Awaiting payment** to **Paid**. If the customer has paid and a purchase stays **Awaiting payment**, it's usually over the platform's payment limits and waiting for the platform; contact us if it's urgent.
-
-</Staging>
 
 When the Taobao account's authorisation has lapsed or its calls are failing, the card shows **Taobao ordering paused**; purchases can't be created or updated until it recovers, so contact us.
 
@@ -104,7 +94,7 @@ An order with only Taobao products doesn't show the **1688 Order ID** block (or 
 
 Taobao closes a purchase that isn't paid in time, and a seller can close one too. The card of a **Closed** purchase explains why and offers two actions (for staff who can edit orders):
 
-- **Buy again on Taobao:** creates a new Taobao purchase for the order's Taobao products. Like the first, it waits for the platform to pay it, within the same per-purchase and daily limits. It's available only when the customer has paid and the order isn't cancelled or refunded, and an order never has more than one purchase that isn't closed.
+- **Buy again on Taobao:** creates a new Taobao purchase for the order's Taobao products. The new purchase is paid automatically, within the same per-purchase and daily limits: one over them stays **Awaiting payment** for the platform to handle. It's available only when the customer has paid and the order isn't cancelled or refunded, and an order never has more than one purchase that isn't closed.
 - **Mark as settled:** for a closed purchase you dealt with another way, for example by refunding the customer (cancelling the order or approving their return) or by buying the goods by hand. Nothing is bought or refunded; the card shows when it was marked.
 
 When the order can't be bought again (for example, it was cancelled or refunded), only **Buy again on Taobao** is missing: in its place the card says that the order can be bought again once the customer has paid and while it isn't cancelled or refunded. **Mark as settled** is still available.

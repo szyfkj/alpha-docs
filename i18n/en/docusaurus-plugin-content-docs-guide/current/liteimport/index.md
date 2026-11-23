@@ -51,11 +51,7 @@ An order bought from several 1688 sellers has several 1688 order numbers.
 - **Searching by 1688 order number:** type the start of a 1688 order number in the **Orders** list's search box to find every order with a number that starts that way.
 - **All orders (platform admin):** the search box finds orders by our order number or by a 1688 order number (again matching its start).
 
-<Staging source="liteimport#129">
-
 **Searching by Taobao purchase ID too:** the search boxes of the **Orders** list and of All orders also find an order by the start of its **Taobao purchase ID**. Type the beginning of the ID: digits from the middle of an ID find nothing. When only a few digits are typed and many IDs start with them, the search finds at most the newest 100 orders by Taobao purchase ID; type more digits to narrow it down.
-
-</Staging>
 
 In the storefront, the customer's order page also lists all of the order's 1688 order numbers, separated by commas.
 
