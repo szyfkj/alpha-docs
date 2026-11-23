@@ -88,7 +88,7 @@ An order with only Taobao products doesn't show the **1688 Order ID** block (or 
 
 Taobao closes a purchase that isn't paid in time, and a seller can close one too. The card of a **Closed** purchase explains why and offers two actions (for staff who can edit orders):
 
-- **Buy again on Taobao:** creates a new Taobao purchase for the order's Taobao products. Like the first, it waits for the platform to pay it, within the same per-purchase and daily limits. It's available only when the customer has paid and the order isn't cancelled or refunded, and an order never has more than one purchase that isn't closed.
+- **Buy again on Taobao:** creates a new Taobao purchase for the order's Taobao products. The new purchase is paid automatically, within the same per-purchase and daily limits: one over them stays **Awaiting payment** for the platform to handle. It's available only when the customer has paid and the order isn't cancelled or refunded, and an order never has more than one purchase that isn't closed.
 - **Mark as settled:** for a closed purchase you dealt with another way, for example by refunding the customer (cancelling the order or approving their return) or by buying the goods by hand. Nothing is bought or refunded; the card shows when it was marked.
 
 When the order can't be bought again (for example, it was cancelled or refunded), only **Buy again on Taobao** is missing: in its place the card says that the order can be bought again once the customer has paid and while it isn't cancelled or refunded. **Mark as settled** is still available.
