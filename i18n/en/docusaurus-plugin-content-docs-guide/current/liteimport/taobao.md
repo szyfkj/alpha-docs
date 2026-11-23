@@ -17,6 +17,15 @@ A keyword search in the storefront (web, Telegram mini-app, Zalo mini-app) shows
 - **When Taobao is unavailable** (for example, the day's lookups are used up), search shows the 1688 results only, and the customer sees no error. When Taobao is slow, search waits at most 6 seconds for it and then shows the 1688 results alone, so the customer isn't kept waiting.
 - **Languages:** Taobao provides product information in Chinese, English and Russian. Other languages start from the English text and are translated into the customer's language, the same way as 1688 products.
 
+<Staging source="liteimport#138">
+
+**Image search:** when a customer sends a product photo to the support bot in chat, the search link the bot replies with opens the storefront's image search results (the same on the web, the Telegram mini-app and the Zalo mini-app). That page used to show 1688 products only. It now shows 1688 and Taobao products together in one list, each card with the same **1688** or **Taobao** badge, and each opens that channel's product page.
+
+- **Taobao results can arrive a little later:** an image search on Taobao is usually slower than a keyword search, so on first open the page often shows the 1688 results first. While it's still waiting for Taobao, a small spinner shows next to the result count, and the page checks again by itself a few times. The Taobao products usually appear within half a minute, without the customer reloading.
+- **When Taobao is unavailable** (for example, the day's lookups are used up, the photo can't be read, or the platform has turned Taobao off for the company), the page shows the 1688 products only, and the customer sees no error.
+
+</Staging>
+
 ## Product page
 
 A Taobao product opens on the same page as a 1688 product, with its images, title, price range, attributes and the full list of variants (options, price, stock). At the bottom are **Add cart** and **Order now**, and the product can be bought once a variant is chosen.
