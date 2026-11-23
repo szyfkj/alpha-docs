@@ -62,18 +62,12 @@ For an order with only Taobao products, the order status follows the Taobao purc
 
 ## Handling Taobao purchases in the dashboard
 
-In your company's dashboard, open an order under **Orders**. Its Taobao products carry a **Taobao** badge and link to their product page on Taobao. Below them, the **Taobao purchase** card shows:
+In your company's dashboard, open an order under **Orders**. Its Taobao products carry a **TAOBAO** badge (in every interface language) and link to their product page on Taobao. Below them, the **Taobao purchase** card shows:
 
 - the state: **Not created yet**, **Create failed**, **Awaiting payment**, **Paid**, **Shipped**, **Delivered** or **Closed** (with the reason);
 - the **Taobao purchase ID**, **Purchase amount**, **Paid amount** and when it was paid;
 - each **Sub-order**'s tracking number and **Courier trace**;
 - the reason of the latest failure, and when it was **Last checked**.
-
-<Staging source="liteimport#130">
-
-The channel badge on a product in the dashboard's order page now shows the channel's name, **TAOBAO**, in every interface language. The Chinese interface no longer shows **淘宝** there.
-
-</Staging>
 
 The **Purchase amount** uses the prices the Taobao purchasing channel charges when the purchase is created, which can differ slightly from the prices on the Taobao product page. If a spec the customer chose can't be bought through the Taobao purchasing channel, no purchase is created: the card shows **Create failed**, and the failure reason gives the ID of that spec.
 
