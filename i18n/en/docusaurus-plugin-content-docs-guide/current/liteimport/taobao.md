@@ -117,9 +117,9 @@ The share text copied from the Taobao app can be pasted as it is; there's no nee
 The Taobao channel is on for every company by default, with nothing to set up in your company's dashboard, but the platform can turn it off for a single company. With it off, that company's storefront:
 
 - shows no Taobao products in search results, only 1688 ones;
-- shows a Taobao product page (including one opened from a pasted Taobao link) as not found;
+- shows **This product is not available** on a Taobao product page, including one opened from a pasted Taobao link (see [When a product page can't be opened](./index.md#when-a-product-page-cant-be-opened));
 - can't check out a cart that still holds Taobao products; remove them from the cart first.
 
-With it off, a Taobao product page shows **This product is not available** (see [When a product page can't be opened](./index.md#when-a-product-page-cant-be-opened)). When a customer sends a Taobao product link to the support bot in chat, on some chat channels the bot no longer answers "Product found!" with a link: it tells the customer the product isn't available and asks for another product link. On other chat channels the bot's reply can differ.
+With it off, when a customer sends a Taobao product link to the support bot in chat, on some chat channels the bot no longer answers "Product found!" with a link: it tells the customer the product isn't available and asks for another product link. On other chat channels the bot's reply can differ.
 
 Orders already placed aren't affected, and their Taobao purchases carry on as usual. Turning it on or off takes effect within about a minute. If your storefront's search shows no Taobao products, or to have Taobao turned off or back on for your company, contact us.
