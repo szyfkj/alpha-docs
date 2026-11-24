@@ -630,6 +630,38 @@ POST /api/delivery-events
 - 传 `package_id` 时，事件只记录在这个包裹上（同时传了 `waybill_id` 也以 `package_id` 为准）。
 - 传 `waybill_id` 时，事件记录在运单的每个包裹上。系统先检查所有包裹：任何一个包裹冲突就返回 `409`，**一个事件也不记录**；传 `"ignore_conflicts": true` 则不做冲突检查，照常记录。`201` 的响应体是第一个包裹（按创建先后）的事件。
 
+<Staging source="tms#376">
+
+### 回传事件发生的网点
+
+请求里可以加 `organization_unit_id`：事件发生的网点（站点或仓库），取值见 `GET /api/organization-units`。它必须是你自己组织的网点，否则返回 `400`，什么都不记录。
+
+```json
+{
+  "waybill_id": "uuid",
+  "event_type": "in_transit_hub_inbound",
+  "organization_unit_id": "uuid"
+}
+```
+
+传了这个字段时：
+
+- 事件的地点是这个网点，运单和包裹的当前站点也更新为这个网点（查询运单列表时的 `latest_station_name`）。
+- `in_transit_hub_inbound`（没传 `secondary_event_type`）发生在运单线路**最后一段的终点网点**时，记录为 `delivered`，运单完成。返回事件的 `metadata.station_event` 保留原始回传：`{"original_type": "in_transit_hub_inbound", "organization_unit_id": "…"}`。
+- 发生在线路中途的网点、不在线路上的网点，或运单没有线路时，仍记录为 `in_transit_hub_inbound`。
+- 冲突检查按回传的 `in_transit_hub_inbound` 进行。
+
+| 线路 | 入站网点 | 记录为 |
+|---|---|---|
+| A→B | B | `delivered` |
+| A→B→C | B | `in_transit_hub_inbound` |
+| A→B→C | C | `delivered` |
+| 没有线路 | 任意 | `in_transit_hub_inbound` |
+
+是否算终点按回传时的线路判断，之后改线路不会改写已记录的事件。不传 `organization_unit_id` 时，行为和以前完全一样。仓库系统不知道运单线路时，可以把每次入库都回传为 `in_transit_hub_inbound` 并带上网点，由 TMS 判断是否已送达。
+
+</Staging>
+
 ### 跨境里程碑
 
 走跨境路段的运单可以回传跨境里程碑：请求里加 `secondary_event_type`。每个里程碑对应一个普通的 `event_type`，运单和包裹状态按这个 `event_type` 变化；`event_type` 可以不传，由系统补上，传了就必须是对应的那个，否则返回 `400`。
