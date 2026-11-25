@@ -35,6 +35,59 @@ flowchart LR
 
 最常用的动作是 **HTTP 回调（Webhook）**：事件发生时，系统把数据 POST 到你填的地址。
 
+<Staging source="tms#311">
+
+## 按规则自动合并运单
+
+收到的运单符合你定的条件时，规则可以把它自动放进一票草稿状态的[合并主运单](../waybills/consolidate)，不用每次手动勾选合并：
+
+1. 在 **设置 → 自动化** 新建规则，触发选 **Waybill Received**，动作选 **HTTP Webhook**。
+2. **Webhook 地址** 填你的 TMS 地址加 `/api/waybills/auto-consolidate`，**HTTP 方法** 选 `POST`。
+3. 在 **请求正文模板（可选）** 里写合并的参数，例如：
+
+```json
+{
+  "match_waybill_service_ids": ["<服务 ID>"],
+  "match_waybill_subcontractor_id": "<承运商机构 ID>",
+  "match_route_id": "<路线 ID>",
+  "consolidated_service_id": "<主运单的服务 ID>",
+  "consolidated_route_id": "<主运单的路线 ID>"
+}
+```
+
+| 参数 | 必填 | 含义 |
+|---|---|---|
+| `match_waybill_service_ids` | 是 | 运单的服务必须是其中之一 |
+| `match_waybill_subcontractor_id` | 否 | 运单本身，或它的任何一段分段子运单，[指定给了](../waybills/subcontract)这个承运商。比如运单的最后一段交给了某家快递，就填那家快递 |
+| `match_route_id` | 否 | 运单的路线必须是这一条 |
+| `consolidated_service_id` | 是 | 主运单的服务。不必在 `match_waybill_service_ids` 里；主运单按这个服务的价格表计费 |
+| `consolidated_route_id` | 是 | 主运单的路线。主运单的寄件人是这条路线第一段的起点站点，收件人是最后一段的终点站点 |
+
+不用的选填参数可以删掉，也可以留空（`""`）。服务和路线的 ID：在 **设置 → 服务** 或 **设置 → 路线** 打开编辑对话框，浏览器地址栏里 `edit=` 后面的就是。承运商要填的是它所属机构的 ID，不是承运商详情页地址里的 ID。
+
+规则触发时：
+
+- 运单符合条件，而且已经有用**同样参数**建的、还是 **草稿** 状态的主运单：运单加进最新的那一票。主运单多一个包裹，装着这票运单的全部包裹，重量就是这票运单的重量；主运单的服务、路线、寄件人和收件人不变。
+- 还没有这样的草稿主运单：新建一票，标签里带 `auto-consolidate:`，没有寄件账户。所以主运单离开草稿状态之后，下一票符合条件的运单会另起一票新的主运单。
+- 运单不符合条件：什么都不做。
+
+用 **立即触发** 测试时，响应里的 `action` 是结果：`created`（新建了主运单）、`appended`（加进了已有的主运单）或 `skipped`（没合并）。`skipped` 时 `reason` 说明原因：
+
+| `reason` | 含义 |
+|---|---|
+| `service_mismatch` | 运单的服务不在 `match_waybill_service_ids` 里 |
+| `route_mismatch` | 运单的路线不是 `match_route_id` |
+| `subcontractor_mismatch` | 运单和它的分段子运单都没有指定给这个承运商 |
+| `already_consolidated` | 运单已经在一票主运单里 |
+| `leg_sub_waybill` | 这是分段子运单；只合并整票运单 |
+| `consolidated_master` | 这本身就是一票合并主运单 |
+| `no_packages` | 运单没有包裹 |
+| `waybill_canceled` | 运单已取消 |
+
+参数缺了或格式不对、服务或路线不是你机构的，或者路线第一段没有起点站点、最后一段没有终点站点，返回 400；运单不存在返回 404。
+
+</Staging>
+
 ## 测试你的回调
 
 编辑规则时可以**直接触发一次**看看对方收没收到。返回空响应体时页面会提示
