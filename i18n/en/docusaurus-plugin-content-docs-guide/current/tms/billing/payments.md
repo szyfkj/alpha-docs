@@ -32,6 +32,14 @@ After a customer transfers and uploads a slip (see [Invoices](./invoices)), it l
 
 If it doesn't match, send it back and ask the customer for the right document.
 
+<Staging source="tms#280">
+
+The verification sheet now starts with the payment's **Invoices**: each invoice number
+and the amount allocated to it, as in the payment's details. You can check the slip
+against those amounts without looking the invoice up.
+
+</Staging>
+
 :::warning
 **Verification is a control, not a formality.** Passing it moves the invoice status and
 the customer's balance. Don't click through without looking.
