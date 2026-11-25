@@ -57,6 +57,14 @@ Consolidating the same set of waybills again updates the existing draft master r
 creating a second one. If you enter a new number that time, the master and its legs are
 renamed to it.
 
+<Staging source="tms#318">
+
+If that master has been **Canceled**, you can consolidate the same set again and get a new
+master. The canceled master keeps its number, so when you leave the external number empty
+the new master's number ends in `-2` (`-3` after another cancel, and so on).
+
+</Staging>
+
 ### Auto-generate Virtual Package
 
 **Auto-generate Virtual Package** is on by default: it creates one virtual package on the
