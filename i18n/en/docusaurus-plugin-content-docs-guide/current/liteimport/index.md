@@ -70,6 +70,18 @@ In the storefront, the customer's order page also lists all of the order's 1688 
 The search boxes of the **Orders** list and of All orders also find an order by the start of its **Taobao purchase ID**. Type the beginning of the ID: digits from the middle of an ID find nothing. When only a few digits are typed and many IDs start with them, the search finds at most the newest 100 orders by Taobao purchase ID; type more digits to narrow it down.
 
 The order page's **Taobao purchase** card shows the Taobao purchase ID, its status and tracking; see [Handling Taobao purchases in the dashboard](./taobao.md#handling-taobao-purchases-in-the-dashboard).
+## When a product page can't be opened
+
+<Staging source="liteimport#139">
+
+When a product page in the storefront can't be opened (for example, the product link is wrong, or the product comes from a channel your company doesn't have turned on), the customer sees a page in the storefront's language instead of a blank error page in English:
+
+- **This product is not available**: there's no such product, or it can't be ordered through us. The page says the seller may have removed it or it can't be ordered through us, with a **Search for other products** button.
+- **We could not load this product**: the product can't be read right now, either because it's no longer available or because of a temporary problem. The page offers **Retry** and **Search for other products**. If it still won't open after retrying, the product may no longer be available.
+
+For now, a product the channel has taken down also shows **We could not load this product**; there's no separate "removed" message yet.
+
+</Staging>
 
 ## What you can read today
 
