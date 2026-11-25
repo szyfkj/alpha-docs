@@ -592,6 +592,12 @@ POST /api/delivery-events
 
 需要 `delivery.tracking` 套餐功能。
 
+<Staging source="tms#366">
+
+开通了 `agent_workbench` 套餐功能的组织，即使没有 `delivery.tracking` 也可以调用这个接口。两者都没有时返回 `403`，错误里写的是 `delivery.tracking`。登录用户调用时，权限要求不变。
+
+</Staging>
+
 ```json
 {
   "waybill_id": "uuid",
