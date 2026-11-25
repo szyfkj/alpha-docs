@@ -212,6 +212,12 @@ POST /api/quotes
 | `cargo_notes` | string | 否 | 货物备注 |
 | `addons` | array | 否 | 增值服务，每项 `{ "key": "..." }` |
 
+<Staging source="tms#357">
+
+新增可选字段 `service_ids`（uuid 数组，至少 1 项）：只按你自己的这几个服务（以及绑定到它们的承运方）报价。不传时照旧，按 `service_type` 的所有服务报价。
+
+</Staging>
+
 **地址对象**：
 
 | 字段 | 类型 | 必填 |
