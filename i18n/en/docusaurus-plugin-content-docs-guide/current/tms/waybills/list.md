@@ -55,7 +55,9 @@ selected, with an **Assign** dropdown on the right:
 | **Add Tracking Event** | Record a status by hand — see [Adding tracking events](./events) |
 | **Print Label** | Generate label PDFs — see [Printing labels](./labels) |
 | **Cancel Waybill** | Void these waybills |
-| **Consolidate Waybills** | Merge into one — see [Consolidating waybills](./consolidate). Hidden when the conditions aren't met |
+| **Consolidate Waybills** | Merge into one — see [Consolidating waybills](./consolidate) |
+
+With two or more waybills ticked, **Consolidate Waybills** always appears; when the conditions aren't met it's greyed out with the reason underneath. See [When you can consolidate](./consolidate#when-you-can-consolidate).
 
 The bar also totals the selected waybills' **count, weight, volume and largest
 dimensions** — the fastest way to judge whether a vehicle will take them.

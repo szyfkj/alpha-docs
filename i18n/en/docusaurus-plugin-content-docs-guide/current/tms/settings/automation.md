@@ -37,6 +37,112 @@ Pick an **Action Type**. A rule can carry several actions, numbered in order.
 The common one is an **HTTP webhook**: when the event fires, the system POSTs the data to
 an address you supply.
 
+## Consolidate waybills automatically by rule
+
+A rule can put each received waybill that meets your conditions into a draft
+[consolidated master](../waybills/consolidate), so you don't have to tick and consolidate
+them by hand:
+
+1. Under **Settings → Automation**, add a rule with the **Waybill Received** trigger and an
+   **HTTP Webhook** action.
+2. Set **Webhook URL** to your TMS address followed by `/api/waybills/auto-consolidate`, and
+   **HTTP Method** to `POST`.
+3. Put the consolidation parameters in **Request Body Template (Optional)**, for example:
+
+```json
+{
+  "match_waybill_service_ids": ["<service ID>"],
+  "match_waybill_subcontractor_id": "<subcontractor organization ID>",
+  "match_route_id": "<route ID>",
+  "consolidated_service_id": "<master's service ID>",
+  "consolidated_route_id": "<master's route ID>"
+}
+```
+
+| Parameter | Required | Meaning |
+|---|---|---|
+| `match_waybill_service_ids` | Yes | The waybill's service must be one of these |
+| `match_waybill_subcontractor_id` | No | The waybill itself, or any of its leg sub-waybills, is [assigned to](../waybills/subcontract) this subcontractor. For example, when a waybill's last leg is handed to a courier, enter that courier |
+| `match_route_id` | No | The waybill's route must be this one |
+| `consolidated_service_id` | Yes | The master's service. It doesn't have to be in `match_waybill_service_ids`; the master is billed with this service's rate cards |
+| `consolidated_route_id` | Yes | The master's route. The master's sender is the start station of the route's first leg, and its recipient the end station of the last leg |
+
+Optional parameters you don't use can be left out or left empty (`""`). To find a service or
+route ID, open its edit dialog under **Settings → Services** or **Settings → Routes**: it's
+the value after `edit=` in the browser's address bar. For the subcontractor, enter the ID of
+its organization, not the ID in the subcontractor's detail page address.
+
+When the rule fires:
+
+- If the waybill matches and there is a master made with the **same parameters** that is
+  still a **Draft**, the waybill joins the newest one. The master gets one more package,
+  holding all of the waybill's packages and weighing what the waybill weighs; its service,
+  route, sender and recipient don't change.
+- If there's no such draft master, a new one is created, with an `auto-consolidate:` tag and
+  no sender account. So once a master leaves Draft, the next matching waybill starts a new
+  master.
+- If the waybill doesn't match, nothing happens.
+
+When you test with **Fire Now**, `action` in the response is the outcome: `created` (a new
+master), `appended` (added to an existing master) or `skipped` (not consolidated). With
+`skipped`, `reason` says why:
+
+| `reason` | Meaning |
+|---|---|
+| `service_mismatch` | The waybill's service isn't in `match_waybill_service_ids` |
+| `route_mismatch` | The waybill's route isn't `match_route_id` |
+| `subcontractor_mismatch` | Neither the waybill nor its leg sub-waybills are assigned to that subcontractor |
+| `already_consolidated` | The waybill is already in a master |
+| `leg_sub_waybill` | It's a leg sub-waybill; only whole waybills are consolidated |
+| `consolidated_master` | It's a consolidated master itself |
+| `no_packages` | The waybill has no packages |
+| `waybill_canceled` | The waybill is canceled |
+
+A missing or malformed parameter, a service or route that isn't your organization's, or a
+route whose first leg has no start station or last leg no end station returns 400; an
+unknown waybill returns 404.
+
+The trigger can also be **Delivery Event Created**: when a delivery event (such as picked up or
+delivered) occurs, the waybill the event belongs to is consolidated, with the same parameters and
+results as above.
+
+### Consolidating once paid: multi-leg waybills and masters
+
+The trigger can also be **Waybill Paid**, so a waybill is consolidated only once it's paid.
+Two things to know:
+
+- **Multi-leg waybills**: a waybill on a multi-leg route is billed for transport on its leg
+  sub-waybills (`-0`, `-1`, …), so the payment events come from the legs, not from the
+  waybill. Once every billing of the waybill and all its legs (canceled ones aside) is
+  paid, a leg's event consolidates the waybill it belongs to, and the `waybill` in the
+  response is that waybill. Until then the leg is still skipped with `leg_sub_waybill`.
+- **Consolidated masters**: a master can itself go into a new master, whole: the new master
+  gets one package holding all of the old master's packages. Only a master made by the
+  **same rule** is skipped, with `consolidated_master`. Otherwise a rule that consolidates
+  into the same service and route would wrap each new master again once it's paid.
+
+### With Alpha WMS: the warehouse consolidates the packages
+
+If you've connected **Alpha WMS** under **Settings → Integrations**, auto-consolidation has
+the warehouse consolidate the packages, and the master no longer gets a package holding all
+of the waybill's packages:
+
+- **A new master**: before answering, the system asks Alpha WMS to consolidate the waybill's
+  packages, even when there's only one. The master starts with no packages; the warehouse
+  adds the consolidated package to it once it's done. If the warehouse refuses or can't be
+  reached, the new master is canceled and the call fails.
+- **Joining an existing master**: the waybill's packages are first added to that master's
+  consolidation in the warehouse, then the waybill joins the master. If the warehouse's
+  consolidation is already closed (completed, canceled or being sealed), the waybill doesn't
+  join; it starts a new master instead (`action` is `created`), which later matching waybills
+  join. Any other refusal from the warehouse (packages not in the warehouse, already
+  consolidated or shipped), or no answer, fails the call and the waybill isn't added.
+- **Masters made before this** (they already have a package holding all of a waybill's
+  packages): unchanged, each joining waybill adds a package, and the warehouse isn't told.
+
+A warehouse failure returns 500, with the warehouse's reply in `error`. Organizations without
+Alpha WMS aren't affected and consolidate as described above.
+
 ## Testing your webhook
 
 While editing a rule you can **fire it once** to see whether the other end receives it.
