@@ -23,6 +23,12 @@ missed scan, or a subcontractor who just phones in an update. Then you add one b
 | **Notes** | No | Context, e.g. "customer confirmed receipt by phone" |
 | **Proof of Delivery Photos** | No | Up to 5 |
 
+<Staging source="tms#302">
+
+The dialog no longer has a **Location** box: you fill in **Event Type**, **Date & Time**, **Notes** and photos. Location coordinates are recorded when drivers scan, not typed by hand.
+
+</Staging>
+
 4. Click **Add Event**.
 
 Every ticked waybill gets the same event.
