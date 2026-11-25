@@ -110,3 +110,16 @@ store a package, use **Inbound** as before. Error messages appear in the app's l
 **Scan Outbound** still only works for packages received in this warehouse.
 
 </Staging>
+
+<Staging source="wms#62">
+
+**Scan Inbound** and **Scan Outbound** also accept the carrier number of a package in this
+warehouse, in any case. The WMS knows the carrier number (the sub-package number in the TMS)
+only for boxes whose TMS label it has fetched: boxes packed on the phone whose label arrived
+after **Finish packing**, see [Packing boxes on the phone](./mobile-consolidate.md). The
+success message shows the WMS package number, for example "DEMO-0001 scanned in". When a
+carrier number matches more than one package, it says "DEMO-0001 matches more than one
+package — scan the WMS package number" and nothing is scanned; scan the WMS package number
+instead.
+
+</Staging>
