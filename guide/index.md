@@ -19,7 +19,7 @@ sidebar_position: 1
 | [TMS 运输管理](/guide/tms/) | 运单、配送排车、司机扫码、计费对账 | 可用 |
 | [WMS 仓储管理](/guide/wms/) | 入库、库存、拣货、出库 | 文档编写中 |
 | [Voice 语音](/guide/voice/) | 语音交互与通话处理 | 文档编写中 |
-| [Liteimport 跨境代采](/guide/liteimport/) | 1688 代采、包裹预报、集运到东南亚 | 文档编写中 |
+| [Liteimport 跨境代采](/guide/liteimport/) | 1688 和淘宝代采、包裹预报、集运到东南亚 | 文档编写中 |
 
 ## 团队培训
 

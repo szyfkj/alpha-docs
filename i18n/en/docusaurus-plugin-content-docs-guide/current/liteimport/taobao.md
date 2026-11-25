@@ -1,12 +1,13 @@
 ---
 id: taobao
 title: Taobao products
+description: "Liteimport's Taobao channel: search and buy Taobao products in the storefront, follow Taobao purchases, and handle them in the dashboard."
 sidebar_position: 4
 ---
 
 # Taobao products
 
-Besides 1688, customers can find, view and buy Taobao products in the storefront.
+Taobao is one of Liteimport's two shopping channels; the other is 1688. Customers can find, view and buy Taobao products in the storefront and check them out in the same cart as 1688 products.
 
 ## Search
 
