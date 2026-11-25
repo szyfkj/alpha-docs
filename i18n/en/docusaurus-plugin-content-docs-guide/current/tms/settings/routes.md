@@ -38,6 +38,12 @@ A route on a waybill belongs to an organization. On a waybill a contractor hande
 - The waybill's **Route:** line, the **Route** filter in the waybill list, route conditions in automation rules, and billing all use your own route. So when you bill a contractor, prices you set for your route match.
 - Whether a waybill counts as cross-border when you add a tracking event also follows your own route; when you have none, the contractor's route is used.
 
+<Staging source="tms#312">
+
+When you create a waybill yourself (by import or through the API) without choosing a route, the system picks one of your routes by the same rules, as if you had chosen it at creation, legs included. Rules can test the sender account's type (such as Retail), the weight and other conditions. A route you choose always wins; when no rule matches, the waybill has no route. Waybills created earlier without a route aren't filled in: set their route by hand if you need one.
+
+</Staging>
+
 ### Deleting
 
 Deleting a route or a leg asks for confirmation. Deleting a leg warns that **every route
