@@ -51,6 +51,12 @@ menu appear.
 **Scanning is granted per station.** It decides what a driver can choose in the scanner's
 event type dropdown — see [Driver scanning](../driver/scan).
 
+<Staging source="tms#350">
+
+**Scan → Override Conflicts: record an event despite a conflict.** When you **Add Tracking Event** from the waybill list and the new event conflicts with an existing one (for example, In Transit on a waybill that's already Delivered), the system stops it. A member with this sub-permission gets the same **Conflicting Events Detected** prompt as the organization owner and can click **Create Anyway** to record it; members without it only see the error and can't record the event. Ticking the whole Scan group includes it. In the team member list it shows as **Scan: Override Conflicts**.
+
+</Staging>
+
 **There is a second gate beyond permissions.** If a menu is still missing with the
 permission granted, the feature isn't in your organization's plan — see
 [Plans and features](./features).
