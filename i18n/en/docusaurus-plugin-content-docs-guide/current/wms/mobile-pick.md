@@ -113,3 +113,21 @@ Completing the consolidation task no longer completes the relocation with it. Co
 tasks created before this change keep their steps, with the relocation inside.
 
 </Staging>
+
+<Staging source="wms#73">
+
+## Consolidate routes also move the box to storage
+
+On **Consolidate** and **Consolidate → Relocate** routes, the consolidation task now has a
+**move to storage** step after consolidate, so the new box is put away as on
+**Pick → Consolidate**:
+
+- Consolidate: consolidate → move to storage;
+- Consolidate → Relocate: consolidate → move to storage; the relocation is still a separate
+  move task, created when the consolidation task completes (see the previous section).
+
+The WMS notifies the TMS as soon as the consolidate step is done; the move to storage doesn't
+hold up its outbound. The steps listed in **Consolidation by route** under
+**Settings → API Keys** change to match. Consolidation tasks created earlier keep their steps.
+
+</Staging>
