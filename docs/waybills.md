@@ -54,6 +54,12 @@ POST /api/waybills
 
 `receiverDistrictName`（区/县）可选但强烈建议传。其余可选：`senderName`、`senderAddress`、`senderCityName`、`senderDistrictName`、`senderPostCode`、`receiverPhone2`。
 
+<Staging source="tms#326">
+
+`receiverPostCode` 最多 20 个字符。超过 20 个字符时返回 `422` 参数校验失败（错误码 `1000`），`error` 为 `Validation failed: receiverPostCode: receiverPostCode must be at most 20 characters`，运单不会创建。
+
+</Staging>
+
 传了 `route_id` 时，收发双方从线路的首尾节点推导，上述字段全部变为可选。
 
 :::tip
