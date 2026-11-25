@@ -68,6 +68,16 @@ dimensions are recorded as 0. The master has a package straight away, so you can
 With it off, the master has no package until the warehouse physically consolidates the
 goods and the consolidated package is created.
 
+<Staging source="tms#328">
+
+Until then, the master and its leg sub-waybills have no packages, so booking them with a
+carrier through a [third-party integration](../settings/labels-integrations#third-party-integrations)
+fails with a message that the waybill has no packages to book, instead of reporting success
+without booking anything. A booking started by an [automation rule](../settings/automation)
+shows that run as failed; run it again once the package exists.
+
+</Staging>
+
 ## Afterwards
 
 - A new **master waybill** is created; planning, labelling and tracking all work against
