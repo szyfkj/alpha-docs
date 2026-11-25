@@ -53,6 +53,15 @@ customer or the warehouse:
   use." and nothing is created.
 - Searching the waybill list for the number you entered (without `CONS-`) finds the master.
 
+<Staging source="tms#347">
+
+An external waybill number only has to be unique within your organization: you get "This
+external waybill number is already in use." only when one of your own organization's waybills
+holds it. Another organization's waybill with the same number (including one assigned to you)
+is no conflict, and the master is created as usual.
+
+</Staging>
+
 Consolidating the same set of waybills again updates the existing draft master rather than
 creating a second one. If you enter a new number that time, the master and its legs are
 renamed to it.
