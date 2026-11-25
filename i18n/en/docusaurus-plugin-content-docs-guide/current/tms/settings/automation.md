@@ -37,6 +37,15 @@ Pick an **Action Type**. A rule can carry several actions, numbered in order.
 The common one is an **HTTP webhook**: when the event fires, the system POSTs the data to
 an address you supply.
 
+<Staging source="tms#339">
+
+The HTTP webhook's method list now offers **DELETE** (alongside POST, PUT, PATCH and GET).
+With DELETE the system sends the same data and signature as with POST, which suits asking
+the other end to undo something, such as cancelling its order when a waybill is cancelled.
+For ordinary event pushes, keep using POST.
+
+</Staging>
+
 ## Testing your webhook
 
 While editing a rule you can **fire it once** to see whether the other end receives it.

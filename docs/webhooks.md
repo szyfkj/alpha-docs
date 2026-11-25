@@ -38,6 +38,12 @@ sidebar_position: 6
 后台的 `method` 下拉里虽然能选 `PUT` / `PATCH`，但服务端只实现了 `POST`、`GET`、`DELETE`。选 `PUT` 或 `PATCH` 会导致推送直接失败。**请用 `POST`。**
 :::
 
+<Staging source="tms#339">
+
+`method` 下拉里现在也能选 `DELETE`。选 `DELETE` 时，系统发送的 JSON 请求体和签名与 `POST` 完全相同，只是请求方法不同，适合让对方执行撤销类操作（比如取消已下的订单）。推送事件到你自己的系统仍请用 `POST`。
+
+</Staging>
+
 ## 可订阅的触发器
 
 | 触发器 | 时机 | 推送内容 |

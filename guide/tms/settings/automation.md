@@ -35,6 +35,12 @@ flowchart LR
 
 最常用的动作是 **HTTP 回调（Webhook）**：事件发生时，系统把数据 POST 到你填的地址。
 
+<Staging source="tms#339">
+
+HTTP 回调的请求方法下拉里新增了 **DELETE**（原有 POST、PUT、PATCH、GET）。选 DELETE 时，发送的数据和签名与 POST 相同，适合让对方执行撤销类操作，比如运单取消时一并取消对方系统里的订单。一般的事件推送仍请用 POST。
+
+</Staging>
+
 ## 测试你的回调
 
 编辑规则时可以**直接触发一次**看看对方收没收到。返回空响应体时页面会提示
