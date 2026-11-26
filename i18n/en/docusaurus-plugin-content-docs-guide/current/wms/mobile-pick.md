@@ -39,6 +39,17 @@ sorted by location and shows where each package is now. A pick has three steps:
 
 Progress is saved on every scan, so the same task can be continued on another phone.
 
+<Staging source="wms#74">
+
+The phone remembers the locations of its last pick in this warehouse: step 1 opens with the
+staging location from the last time **Start picking** succeeded on this phone, and step 3
+opens with the target location from the last time **Finish pick** succeeded. If it's right,
+just tap the button; to use another location, scan or type it instead. Staging and target are
+remembered separately and only on this phone, so on another phone or in another warehouse
+the fields start empty.
+
+</Staging>
+
 ## Finishing early
 
 When packages can't be found, tap **Finish early** in step 2. At least one package must be
